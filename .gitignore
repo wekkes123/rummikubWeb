@@ -1,0 +1,36 @@
+# Node.js dependencies
+react-frontend/node_modules/
+react-frontend/.parcel-cache/
+react-frontend/.next/
+react-frontend/.DS_Store
+
+# Python virtual environment
+python-backend/venv/
+python-backend/__pycache__/
+
+# Environment variables
+.env
+*.env
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Build outputs
+react-frontend/build/
+dist/
+coverage/
+
+# IDE settings
+.idea/
+.vscode/
+*.iml
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Electron cache
+electron/.cache/
