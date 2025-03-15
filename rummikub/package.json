@@ -13,8 +13,8 @@
     "react-dom": "^19.0.0",
     "react-i18next": "^15.4.1",
     "react-scripts": "^5.0.1",
-    "typescript": "^5.8.2",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "antd": "^5.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
