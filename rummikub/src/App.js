@@ -15,16 +15,6 @@ function App() {
     return (
         <Router>
             <div>
-                <nav>
-                    <ul>
-                        <li>
-                            <Link to="/">Home</Link>
-                        </li>
-                        <li>
-                            <Link to="/test">Test</Link>
-                        </li>
-                    </ul>
-                </nav>
                 <Routes>
                     <Route path="/" element={<Frontpage />} />
                     <Route path="/test" element={<TestPage />} />
