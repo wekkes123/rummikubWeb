@@ -3,7 +3,7 @@ import { Button, Modal } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons'; // Import icon
 
 function TestPage() {
-    const [, setIsModalVisible] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
     const showHelp = () => {
         setIsModalVisible(true);
@@ -42,6 +42,7 @@ function TestPage() {
             <Modal
                 title="Help: Game Rules & Website Purpose"
                 onOk={handleOk}
+                visible={isModalVisible}
                 onCancel={handleOk}  // Closes the modal on clicking the X button or outside the modal
                 okText="Close"
                 closable={true}  // Ensures that the X button is shown
