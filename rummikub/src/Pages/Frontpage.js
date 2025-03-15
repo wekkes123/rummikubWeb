@@ -100,7 +100,7 @@ const FrontPage = () => {
                 }}>
                     <Title style={{
                         fontSize: 48,
-                        marginBottom: 60,
+                        marginBottom: 70,
                         color: 'black',
                         fontWeight: 'bold',
                         textAlign: 'center'
@@ -108,7 +108,7 @@ const FrontPage = () => {
                         Rummikub
                     </Title>
 
-                    <Space direction="vertical" size="large" style={{ width: 240 }}>
+
                         <Button
                             type="primary"
                             size="large"
@@ -116,9 +116,11 @@ const FrontPage = () => {
                             block
                             style={{
                                 height: 50,
+                                width: 240,
                                 fontSize: 18,
                                 fontWeight: 'bold',
-                                color: 'black'
+                                color: 'black',
+                                marginBottom: 48, //This is the minimum for elderly users with bad motor skills
                             }}
                         >
                             {t('start')}
@@ -131,9 +133,11 @@ const FrontPage = () => {
                             block
                             style={{
                                 height: 50,
+                                width: 240,
                                 fontSize: 18,
                                 fontWeight: 'bold',
                                 color: 'black',
+                                marginBottom: 48,
                             }}
                         >
                             {t('tutorial')}
@@ -146,14 +150,15 @@ const FrontPage = () => {
                             block
                             style={{
                                 height: 50,
+                                width: 240,
                                 fontSize: 18,
                                 fontWeight: 'bold',
                                 color: 'black',
+                                marginBottom: 48,
                             }}
                         >
                             {t('settings')}
                         </Button>
-                    </Space>
                 </Content>
             </Layout>
         </ConfigProvider>
