@@ -1,25 +1,64 @@
-// src/TileGrid.js
-import React from 'react';
-import Tile from './Tile';  // Import the Tile component
-import tileData from './TileData';  // Import the tile data
+import React, { useState } from 'react';
+import Tile from './Tile';
+import tileData from './TileData';
 
 const TileGrid = () => {
+    const [playerTray, setPlayerTray] = useState(tileData.slice(0, 30)); // Example of 10 tiles in tray
+    const [gameMat, setGameMat] = useState([]);
+
+    const moveTileToMat = (tile) => {
+        setPlayerTray(playerTray.filter(t => t !== tile));
+        setGameMat([...gameMat, tile]);
+    };
+
+    const moveTileToTray = (tile) => {
+        setGameMat(gameMat.filter(t => t !== tile));
+        setPlayerTray([...playerTray, tile]);
+    };
+
     return (
-        <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, 100px)', // Adjust based on tile size
-            gap: '10px',
-            justifyContent: 'center',
-            alignItems: 'center'
-        }}>
-            {tileData.map((tile, index) => (
-                <Tile
-                    key={index}
-                    image={tile.image}  // Path to your image files
-                    value={tile.value}
-                    color={tile.color}  // Pass the color for styling purposes (game logic)
-                />
-            ))}
+        <div style={{ textAlign: 'center' }}>
+            <h2>Player's Tray</h2>
+            <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, 100px)',
+                gap: '10px',
+                justifyContent: 'center',
+                backgroundColor: 'lightgray',
+                padding: '10px',
+                borderRadius: '10px'
+            }}>
+                {playerTray.map((tile, index) => (
+                    <Tile
+                        key={index}
+                        image={tile.image}
+                        value={tile.value}
+                        color={tile.color}
+                        onClick={() => moveTileToMat(tile)}
+                    />
+                ))}
+            </div>
+
+            <h2>Game Mat</h2>
+            <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, 100px)',
+                gap: '10px',
+                justifyContent: 'center',
+                backgroundColor: 'gray',
+                padding: '10px',
+                borderRadius: '10px'
+            }}>
+                {gameMat.map((tile, index) => (
+                    <Tile
+                        key={index}
+                        image={tile.image}
+                        value={tile.value}
+                        color={tile.color}
+                        onClick={() => moveTileToTray(tile)}
+                    />
+                ))}
+            </div>
         </div>
     );
 };
