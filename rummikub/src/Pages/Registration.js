@@ -1,21 +1,32 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Layout, Button, Typography, Space, ConfigProvider } from 'antd';
-import { PlayCircleOutlined, ReadOutlined, SettingOutlined } from '@ant-design/icons';
-import ukFlag from '../images/Flag_of_the_United_Kingdom.png';
-import nlFlag from '../images/Flag_of_Belgium.png';
+import { Layout, Button, Typography, Space, ConfigProvider, Input, Form } from 'antd';
+import {ArrowLeftOutlined, PlayCircleOutlined, ReadOutlined, SettingOutlined} from '@ant-design/icons';
+import nlFlag from "../images/Flag_of_Belgium.png";
+import ukFlag from "../images/Flag_of_the_United_Kingdom.png";
 
 const { Content } = Layout;
 const { Title } = Typography;
 
-const FrontPage = () => {
+const Registration = () => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
 
     const changeLanguage = (lang) => {
         i18n.changeLanguage(lang);
         localStorage.setItem('lang', lang);
+    };
+
+    useEffect(() => {
+        const savedLang = localStorage.getItem('lang');
+        if (savedLang) {
+            i18n.changeLanguage(savedLang);
+        }
+    }, [i18n]);
+
+    const handleBack = () => {
+        navigate('/');
     };
 
     return (
@@ -28,6 +39,22 @@ const FrontPage = () => {
             }}
         >
             <Layout style={{ minHeight: '100vh', backgroundColor: '#58B4D1', position: 'relative' }}>
+                <Button
+                    type="primary"
+                    icon={<ArrowLeftOutlined />}
+                    onClick={handleBack}
+                    style={{
+                        position: 'absolute',
+                        color: 'black',
+                        top: 20,
+                        right: 20,
+                        zIndex: 1,
+                        fontWeight: 'bold'
+                    }}
+                >
+                    {t('back')}
+                </Button>
+
                 <Space
                     style={{
                         position: 'absolute',
@@ -91,72 +118,26 @@ const FrontPage = () => {
                     padding: '50px 16px',
                     marginBottom: '20vh',
                 }}>
-                    <Title style={{
-                        fontSize: 48,
-                        marginBottom: 70,
-                        color: 'black',
-                        fontWeight: 'bold',
-                        textAlign: 'center'
-                    }}>
-                        Rummikub
-                    </Title>
 
+                    <Form style={{ width: '100%', maxWidth: 300 }}>
+                        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+                            <Input
+                                placeholder={t('username')}
+                                size="large"
+                                style={{ height: 50 }}
+                            />
 
-                        <Button
-                            type="primary"
-                            size="large"
-                            icon={<PlayCircleOutlined />}
-                            block
-                            style={{
-                                height: 50,
-                                width: 240,
-                                fontSize: 18,
-                                fontWeight: 'bold',
-                                color: 'black',
-                                marginBottom: 48, //This is the minimum for elderly users with bad motor skills
-                            }}
-                            onClick={() => navigate('/registration')}
-                        >
-                            {t('start')}
-                        </Button>
-
-                        <Button
-                            type="primary"
-                            size="large"
-                            icon={<ReadOutlined />}
-                            block
-                            style={{
-                                height: 50,
-                                width: 240,
-                                fontSize: 18,
-                                fontWeight: 'bold',
-                                color: 'black',
-                                marginBottom: 48,
-                            }}
-                        >
-                            {t('tutorial')}
-                        </Button>
-
-                        <Button
-                            type="primary"
-                            size="large"
-                            icon={<SettingOutlined />}
-                            block
-                            style={{
-                                height: 50,
-                                width: 240,
-                                fontSize: 18,
-                                fontWeight: 'bold',
-                                color: 'black',
-                                marginBottom: 48,
-                            }}
-                        >
-                            {t('settings')}
-                        </Button>
+                            <Input
+                                placeholder={t('email')}
+                                size="large"
+                                style={{ height: 50 }}
+                            />
+                        </Space>
+                    </Form>
                 </Content>
             </Layout>
         </ConfigProvider>
     );
 };
 
-export default FrontPage;
+export default Registration;
