@@ -1,19 +1,56 @@
 import React, { useState } from 'react';
-import Tile from './Tile';
 import tileData from './TileData';
 
-const TileGrid = () => {
-    const [playerTray, setPlayerTray] = useState(tileData.slice(0, 30)); // Example of 10 tiles in tray
-    const [gameMat, setGameMat] = useState([]);
+const TileContainer = ({ tile, onClick }) => (
+    <div
+        style={{
+            width: '80px',
+            height: '120px',
+            backgroundColor: 'white',
+            border: '1px solid black',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: '10px'
+        }}
+        onClick={onClick}
+    >
+        {tile && (
+            <img
+                src={`/tiles/${tile.image}`}
+                alt={`Tile ${tile.value}`}
+                style={{ width: '70px', height: '110px', borderRadius: '10px' }}
+            />
+        )}
+    </div>
+);
 
-    const moveTileToMat = (tile) => {
-        setPlayerTray(playerTray.filter(t => t !== tile));
-        setGameMat([...gameMat, tile]);
+const TileGrid = () => {
+    const [playerTray, setPlayerTray] = useState(tileData.slice(0, 60));
+    const [gameMat, setGameMat] = useState(Array(15 * 15).fill(null));
+    const [heldTile, setHeldTile] = useState(null);
+
+    const handlePickUpTile = (tile) => {
+        if (!heldTile) {
+            setHeldTile(tile);
+            setPlayerTray(playerTray.filter(t => t !== tile));
+        }
     };
 
-    const moveTileToTray = (tile) => {
-        setGameMat(gameMat.filter(t => t !== tile));
-        setPlayerTray([...playerTray, tile]);
+    const handlePlaceTile = (index) => {
+        if (heldTile && !gameMat[index]) {
+            const newMat = [...gameMat];
+            newMat[index] = heldTile;
+            setGameMat(newMat);
+            setHeldTile(null); // Reset heldTile after placement
+        }
+    };
+
+    const returnToTray = () => {
+        if (heldTile) {
+            setPlayerTray([...playerTray, heldTile]);
+            setHeldTile(null); // Reset heldTile when returning to tray
+        }
     };
 
     return (
@@ -21,41 +58,42 @@ const TileGrid = () => {
             <h2>Player's Tray</h2>
             <div style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, 100px)',
+                gridTemplateColumns: 'repeat(10, 80px)',
                 gap: '10px',
-                justifyContent: 'center',
                 backgroundColor: 'lightgray',
                 padding: '10px',
                 borderRadius: '10px'
             }}>
                 {playerTray.map((tile, index) => (
-                    <Tile
+                    <TileContainer
                         key={index}
-                        image={tile.image}
-                        value={tile.value}
-                        color={tile.color}
-                        onClick={() => moveTileToMat(tile)}
+                        tile={tile}
+                        onClick={() => handlePickUpTile(tile)}
                     />
                 ))}
             </div>
 
+            {heldTile && (
+                <div>
+                    <h3>Holding Tile:</h3>
+                    <TileContainer tile={heldTile} onClick={returnToTray} />
+                </div>
+            )}
+
             <h2>Game Mat</h2>
             <div style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, 100px)',
-                gap: '10px',
-                justifyContent: 'center',
+                gridTemplateColumns: 'repeat(15, 80px)',
+                gap: '5px',
                 backgroundColor: 'gray',
                 padding: '10px',
                 borderRadius: '10px'
             }}>
                 {gameMat.map((tile, index) => (
-                    <Tile
+                    <TileContainer
                         key={index}
-                        image={tile.image}
-                        value={tile.value}
-                        color={tile.color}
-                        onClick={() => moveTileToTray(tile)}
+                        tile={tile}
+                        onClick={() => handlePlaceTile(index)}
                     />
                 ))}
             </div>
