@@ -1,5 +1,7 @@
 import { React } from 'react';
 import { useTranslation } from "react-i18next";
+import { Button } from 'antd';
+import TileGrid from './TileGrid';
 import "./i18n";
 //import SeededRandomGenerator from './Components/SeededRNG';
 
@@ -15,8 +17,9 @@ function App() {
             yo
             <h1>{t("welcome")}</h1>
             <p>{t("description")}</p>
-            <button onClick={() => changeLanguage("en")}>English</button>
-            <button onClick={() => changeLanguage("nl")}>Nederlands</button>
+            <Button onClick={() => changeLanguage("en")}>English</Button>
+            <Button onClick={() => changeLanguage("nl")}>Nederlands</Button>
+            <TileGrid />
         </div>
     );
 }
