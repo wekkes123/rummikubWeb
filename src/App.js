@@ -112,7 +112,7 @@ const App = () => {
   return (
       <DndProvider backend={HTML5Backend} key={dndKey}>
         <div className="app">
-          <h1>Tile Dragging Game</h1>
+          <h1>Rummikub drag test game</h1>
 
           <div className="controls">
             <button

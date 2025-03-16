@@ -16,9 +16,25 @@ h1 {
   margin-bottom: 20px;
   display: flex;
   justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
 }
 
-.toggle-button {
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.board-size-input {
+  width: 60px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.toggle-button, .reset-button {
   padding: 10px 20px;
   font-size: 16px;
   border-radius: 5px;
@@ -36,6 +52,15 @@ h1 {
 .toggle-button.disabled {
   background-color: #f44336;
   color: white;
+}
+
+.reset-button {
+  background-color: #2196f3;
+  color: white;
+}
+
+.reset-button:hover {
+  background-color: #0b7dda;
 }
 
 .game-board {
@@ -74,6 +99,7 @@ h1 {
   border-radius: 10px;
   background-color: #efefef;
   min-height: 100px;
+  flex-wrap: wrap;
 }
 
 .tile {
@@ -86,4 +112,21 @@ h1 {
 
 .tile:hover {
   transform: scale(1.05);
+}
+
+@media (max-width: 600px) {
+  .game-board {
+    width: 90vw;
+    height: 90vw;
+  }
+
+  .controls {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .tile {
+    width: 50px;
+    height: 50px;
+  }
 }
