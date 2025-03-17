@@ -29,6 +29,7 @@ const PlayerHand = ({ tiles, moveTile, isDraggingEnabled }) => {
                     key={tile.id}
                     id={tile.id}
                     color={tile.color}
+                    value={tile.value}
                     location="hand"
                     moveTile={moveTile}
                     isDraggingEnabled={isDraggingEnabled}
