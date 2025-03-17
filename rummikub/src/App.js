@@ -7,13 +7,16 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import Registration from "./Pages/Registration";
 
 function App() {
+    const handleBackToFrontPage = () => {
+        window.location.href = '/';
+    };
     return (
         <Router>
                 <Routes>
                     <Route path="/" element={<Frontpage />} />
                     <Route path="/test" element={<TestPage />} />
                     <Route path="/registration" element={<Registration />} />
-                    <Route path="/game" element={<GamePage />} />
+                    <Route path="/game" element={<GamePage onBackToFrontPage={handleBackToFrontPage}/>} />
                 </Routes>
         </Router>
     );

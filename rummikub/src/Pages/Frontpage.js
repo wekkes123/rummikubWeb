@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Layout, Button, Typography, Space, ConfigProvider } from 'antd';
-import { PlayCircleOutlined, ReadOutlined, SettingOutlined } from '@ant-design/icons';
+import {Layout, Button, Typography, Space, ConfigProvider, Modal} from 'antd';
+import {PlayCircleOutlined, QuestionCircleOutlined, ReadOutlined, SettingOutlined} from '@ant-design/icons';
 import ukFlag from '../images/Flag_of_the_United_Kingdom.png';
 import nlFlag from '../images/Flag_of_Belgium.png';
 
@@ -18,7 +18,19 @@ const FrontPage = () => {
         localStorage.setItem('lang', lang);
     };
 
+    const [isModalVisible, setIsModalVisible] = useState(false);
+
+    const showHelp = () => {
+        setIsModalVisible(true);
+    };
+
+    const handleOk = () => {
+        setIsModalVisible(false);
+    };
+
+
     return (
+
         <ConfigProvider
             theme={{
                 token: {
@@ -81,6 +93,49 @@ const FrontPage = () => {
                         />
                         <span style={{fontSize: 16}}>English</span>
                     </Button>
+                    <Button
+                        type="primary"
+                        shape="square"
+                        icon={<QuestionCircleOutlined style={{ fontSize: '50px', color: '#fff' }} />} // Icon style to fill button
+                        size="large"
+                        onClick={showHelp}
+                        style={{
+                            height: 90,
+                            width: 'auto',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            padding: '8px',
+                            backgroundColor: '#FFB703', // Set button color
+                            borderColor: '#e6f7ff', // Set button border color
+                        }}
+                    />
+                    <Modal
+                        title="Help: Game Rules & Website Purpose"
+                        onOk={handleOk}
+                        visible={isModalVisible}
+                        onCancel={handleOk}  // Closes the modal on clicking the X button or outside the modal
+                        okText="Close"
+                        closable={true}  // Ensures that the X button is shown
+                        footer={[
+                            <Button key="ok" type="primary" onClick={handleOk}>
+                                Close
+                            </Button>
+                        ]}
+                    >
+                        <h3>Game Rules:</h3>
+                        <ul>
+                            <li>Each player takes turns placing tiles on the board.</li>
+                            <li>Tiles are placed in sets of numbers or colors.</li>
+                            <li>The goal is to arrange all tiles in valid combinations.</li>
+                            <li>The first move should have a commbined value of over 30.</li>
+                            <li>Jokers can be used as substitutes for other tiles.</li>
+                        </ul>
+
+                        <h3>Website Purpose:</h3>
+                        <p>This website is designed to allow users to play Rummikub online, track their progress, and learn about dementia detection through gameplay.</p>
+                    </Modal>
                 </Space>
 
                 <Content style={{
