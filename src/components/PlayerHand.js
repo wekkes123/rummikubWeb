@@ -14,7 +14,7 @@ const PlayerHand = ({ tiles, moveTile, isDraggingEnabled }) => {
             isOver: !!monitor.isOver(),
         }),
         canDrop: () => isDraggingEnabled,
-    }), [moveTile, isDraggingEnabled]); // Add dependencies here
+    }), [moveTile, isDraggingEnabled]);
 
     return (
         <div
@@ -28,6 +28,7 @@ const PlayerHand = ({ tiles, moveTile, isDraggingEnabled }) => {
                 <Tile
                     key={tile.id}
                     id={tile.id}
+                    value={tile.value}
                     color={tile.color}
                     location="hand"
                     moveTile={moveTile}

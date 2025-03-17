@@ -8,11 +8,11 @@ import './App.css';
 const App = () => {
   // State for tiles in hand and on board
   const [handTiles, setHandTiles] = useState([
-    { id: 1, color: '#ff5252' },
-    { id: 2, color: '#000000' },
-    { id: 3, color: '#2196f3' },
-    { id: 4, color: '#ffc107' },
-    { id: 5, color: '#9c27b0' },
+    { id: 1, color: 'red', value: 1 },
+    { id: 2, color: 'black', value: 1 },
+    { id: 3, color: 'blue', value: 10 },
+    { id: 4, color: 'red', value: 12 },
+    { id: 5, color: 'orange', value: 1 },
   ]);
 
   const [boardState, setBoardState] = useState(

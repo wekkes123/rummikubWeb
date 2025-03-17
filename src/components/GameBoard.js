@@ -18,6 +18,7 @@ const GameBoard = ({ boardState, moveTile, isDraggingEnabled }) => {
                             {cell && (
                                 <Tile
                                     id={cell.id}
+                                    value={cell.value}
                                     color={cell.color}
                                     location="board"
                                     position={{ x, y }}
