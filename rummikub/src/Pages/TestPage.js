@@ -14,7 +14,7 @@ function TestPage() {
     };
 
     return (
-        <div>
+        <div style={{ position: 'relative', height: '100vh', backgroundColor: '#87CEEB' }}> {/* Background for contrast */}
             <h1>This is the Test Page</h1>
             <p>Content for the test page goes here.</p>
 
@@ -26,6 +26,9 @@ function TestPage() {
                 size="large"
                 onClick={showHelp}
                 style={{
+                    position: 'absolute', // Positioning in the top left
+                    top: '10px',
+                    left: '10px',
                     width: '60px', // Set the width of the button
                     height: '60px', // Set the height of the button
                     display: 'flex',
@@ -37,6 +40,36 @@ function TestPage() {
                     borderColor: '#FFB703', // Set button border color
                 }}
             />
+
+            {/* Rummikub Holder */}
+            <div style={{
+                position: 'absolute',
+                bottom: '100px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '400px',
+                height: '120px',
+                backgroundColor: '#E0E0E0',
+                border: '2px solid black',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center'
+            }}>
+                <div style={{ width: '90%', height: '40%', backgroundColor: '#C0C0C0', marginBottom: '5px' }}></div>
+                <div style={{ width: '90%', height: '40%', backgroundColor: '#C0C0C0' }}></div>
+            </div>
+
+            {/* Support Leg */}
+            <div style={{
+                position: 'absolute',
+                bottom: '40px',
+                left: '60%',
+                width: '10px',
+                height: '50px',
+                backgroundColor: 'black',
+                transform: 'rotate(-10deg)'
+            }}></div>
 
             {/* Modal displaying the rules and website purpose */}
             <Modal
@@ -57,7 +90,7 @@ function TestPage() {
                     <li>Each player takes turns placing tiles on the board.</li>
                     <li>Tiles are placed in sets of numbers or colors.</li>
                     <li>The goal is to arrange all tiles in valid combinations.</li>
-                    <li>The first move should have a commbined value of over 30.</li>
+                    <li>The first move should have a combined value of over 30.</li>
                     <li>Jokers can be used as substitutes for other tiles.</li>
                 </ul>
 

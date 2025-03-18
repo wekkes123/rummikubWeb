@@ -93,24 +93,32 @@ const FrontPage = () => {
                         />
                         <span style={{fontSize: 16}}>English</span>
                     </Button>
-                    <Button
-                        type="primary"
-                        shape="square"
-                        icon={<QuestionCircleOutlined style={{ fontSize: '50px', color: '#fff' }} />} // Icon style to fill button
-                        size="large"
-                        onClick={showHelp}
-                        style={{
-                            height: 90,
-                            width: 'auto',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            padding: '8px',
-                            backgroundColor: '#FFB703', // Set button color
-                            borderColor: '#e6f7ff', // Set button border color
-                        }}
-                    />
+                </Space>
+                <Space
+                    style={{
+                        position: 'absolute',
+                        top: 20,
+                        right: 20,
+                        zIndex: 1
+                    }}
+                ><Button
+                    type="primary"
+                    shape="square"
+                    icon={<QuestionCircleOutlined style={{ fontSize: '70px', color: '#fff' }} />} // Icon style to fill button
+                    size="large"
+                    onClick={showHelp}
+                    style={{
+                        height: 90,
+                        width: 90,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: '8px',
+                        backgroundColor: '#FFB703', // Set button color
+                        borderColor: '#e6f7ff', // Set button border color
+                    }}
+                />
                     <Modal
                         title="Help: Game Rules & Website Purpose"
                         onOk={handleOk}
