@@ -1,12 +1,15 @@
 import React, { useState, useCallback } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import GameBoard from './components/GameBoard';
 import PlayerHand from './components/PlayerHand';
 import TileData from './components/TileData';
+import ImageGallery from './components/ImageGallery'; // Import your existing ImageGallery component
 import './App.css';
 
-const App = () => {
+// Main Game Component
+const GameComponent = () => {
   // State for tiles in hand and on board
   const generateHandTiles = (count) => {
     const shuffledTiles = [...TileData].sort(() => Math.random() - 0.5); // Shuffle the tiles
@@ -19,8 +22,6 @@ const App = () => {
   };
 
   const [handTiles, setHandTiles] = useState(generateHandTiles(60)); // Get 5 random tiles
-
-
   const [boardState, setBoardState] = useState(
       Array(5).fill().map(() => Array(5).fill(null))
   );
@@ -119,6 +120,9 @@ const App = () => {
       <DndProvider backend={HTML5Backend} key={dndKey}>
         <div className="app">
           <h1>Rummikub drag test game</h1>
+          <div className="nav-links">
+            <Link to="/image">View Image Gallery</Link>
+          </div>
 
           <div className="controls">
             <button
@@ -145,6 +149,18 @@ const App = () => {
           </div>
         </div>
       </DndProvider>
+  );
+};
+
+// Main App Component with Router
+const App = () => {
+  return (
+      <Router>
+        <Routes>
+          <Route path="/" element={<GameComponent />} />
+          <Route path="/image" element={<ImageGallery />} />
+        </Routes>
+      </Router>
   );
 };
 
