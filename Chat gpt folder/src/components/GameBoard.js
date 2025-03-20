@@ -3,10 +3,15 @@ import BoardSpace from './BoardSpace';
 import Tile from './Tile';
 
 const GameBoard = ({ boardState, moveTile, isDraggingEnabled }) => {
+    const boardSize = boardState.length;
+
     return (
-        <div className="game-board">
+        <div className="game-board" style={{
+            gridTemplateColumns: `repeat(${boardSize}, 1fr)`, // Set columns dynamically based on the board size
+            gridTemplateRows: `repeat(${boardSize}, 1fr)` // Set rows dynamically based on the board size
+        }}>
             {boardState.map((row, y) => (
-                <div key={y} className="board-row">
+                <div key={y} className="board-row" style={{ display: 'flex' }}>
                     {row.map((cell, x) => (
                         <BoardSpace
                             key={`${x}-${y}`}

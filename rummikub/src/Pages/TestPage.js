@@ -14,7 +14,7 @@ function TestPage() {
     };
 
     return (
-        <div style={{ position: 'relative', height: '100vh', backgroundColor: '#87CEEB' }}> {/* Background for contrast */}
+        <div> {/* Background for contrast */}
             <h1>This is the Test Page</h1>
             <p>Content for the test page goes here.</p>
 
@@ -41,35 +41,6 @@ function TestPage() {
                 }}
             />
 
-            {/* Rummikub Holder */}
-            <div style={{
-                position: 'absolute',
-                bottom: '100px',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                width: '400px',
-                height: '120px',
-                backgroundColor: '#E0E0E0',
-                border: '2px solid black',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center'
-            }}>
-                <div style={{ width: '90%', height: '40%', backgroundColor: '#C0C0C0', marginBottom: '5px' }}></div>
-                <div style={{ width: '90%', height: '40%', backgroundColor: '#C0C0C0' }}></div>
-            </div>
-
-            {/* Support Leg */}
-            <div style={{
-                position: 'absolute',
-                bottom: '40px',
-                left: '60%',
-                width: '10px',
-                height: '50px',
-                backgroundColor: 'black',
-                transform: 'rotate(-10deg)'
-            }}></div>
 
             {/* Modal displaying the rules and website purpose */}
             <Modal
@@ -97,6 +68,7 @@ function TestPage() {
                 <h3>Website Purpose:</h3>
                 <p>This website is designed to allow users to play Rummikub online, track their progress, and learn about dementia detection through gameplay.</p>
             </Modal>
+            <div className="trapezium"></div>
         </div>
     );
 }

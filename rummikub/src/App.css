@@ -28,6 +28,25 @@
   color: #61dafb;
 }
 
+.trapezium {
+  width: 99vw; /* Full viewport width */
+  height: 25vw; /* Height as a percentage of the viewport width */
+  background-color: #D9D9D9;
+  clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
+  border: 2px solid #333; /* Small border around the trapezium */
+  position: relative;
+}
+
+.trapezium::before {
+  content: ''; /* Empty content for the line */
+  position: absolute;
+  background-color: black;
+  top: 50%; /* Place it in the middle of the trapezium */
+  left: 0;
+  width: 100%; /* Make the line span the full width */
+  border-top: 2px solid #333; /* White line in the middle */
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
