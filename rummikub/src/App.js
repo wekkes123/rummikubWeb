@@ -9,6 +9,9 @@ import Registration from "./Pages/Registration";
 //<Route path="/game" element={<GamePage />} />
 
 function App() {
+    const handleBackToFrontPage = () => {
+        window.location.href = '/';
+    };
     return (
         <Router>
                 <Routes>

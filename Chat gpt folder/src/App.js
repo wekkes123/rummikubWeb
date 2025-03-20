@@ -3,17 +3,23 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import GameBoard from './components/GameBoard';
 import PlayerHand from './components/PlayerHand';
+import TileData from './components/TileData';
 import './App.css';
 
 const App = () => {
   // State for tiles in hand and on board
-  const [handTiles, setHandTiles] = useState([
-    { id: 1, color: '#ff5252' },
-    { id: 2, color: '#000000' },
-    { id: 3, color: '#2196f3' },
-    { id: 4, color: '#ffc107' },
-    { id: 5, color: '#9c27b0' },
-  ]);
+  const generateHandTiles = (count) => {
+    const shuffledTiles = [...TileData].sort(() => Math.random() - 0.5); // Shuffle the tiles
+    return shuffledTiles.slice(0, count).map((tile, index) => ({
+      id: index + 1, // Generate unique ID
+      color: tile.color,
+      value: tile.value,
+      image: tile.image,
+    }));
+  };
+
+  const [handTiles, setHandTiles] = useState(generateHandTiles(60)); // Get 5 random tiles
+
 
   const [boardState, setBoardState] = useState(
       Array(5).fill().map(() => Array(5).fill(null))

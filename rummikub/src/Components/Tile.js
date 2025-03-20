@@ -1,34 +1,46 @@
-import React from 'react';
-import { Image } from 'antd';
+import React, { useEffect } from 'react';
+import { useDrag } from 'react-dnd';
+import tileData from './TileData';
+import {Image} from 'antd'
 
-const Tile = ({ image, value, color, onClick }) => {
-    const colorStyle = color === 'orange' ? '#FF7F00' :
-        color === 'blue' ? '#0000FF' :
-            color === 'black' ? '#000000' :
-                color === 'red' ? '#FF0000' :
-                    'gray';
+const Tile = ({ id, value, color, location, position, moveTile, isDraggingEnabled }) => {
+    const [{ isDragging }, drag, dragPreview] = useDrag(() => ({
+        type: 'tile',
+        item: { id, location, position },
+        canDrag: isDraggingEnabled,
+        collect: (monitor) => ({
+            isDragging: !!monitor.isDragging(),
+        }),
+    }), [id, location, position, isDraggingEnabled]); // Add dependencies here
+
+    const tileImage = tileData.find(tile => tile.value === String(value) && tile.color === color)?.image;
 
     return (
         <div
-            onClick={onClick}
+            ref={drag}
+            className="tile"
             style={{
-                display: 'inline-block',
-                width: '80px',
-                height: '120px',
-                backgroundColor: colorStyle,
-                margin: '5px',
-                textAlign: 'center',
-                borderRadius: '10px',
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                cursor: 'pointer'
+                backgroundColor: color,
+                opacity: isDragging ? 0.5 : 1,
+                cursor: isDraggingEnabled ? 'move' : 'not-allowed',
+                width: '60px',
+                height: '80px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '8px',
+                boxShadow: '2px 2px 5px rgba(0,0,0,0.3)',
             }}
         >
-            <Image
-                src={`/tiles/${image}`}
-                alt={`Tile ${value}`}
-                style={{ width: '100%', height: '100%', borderRadius: '10px' }}
-                preview={false}
-            />
+            {tileImage && (
+                <Image
+                    src={`/tiles/${tileImage}`}
+                    alt={`${color} ${value}`}
+                    style={{ maxWidth: '100%', maxHeight: '90%' }}
+                    preview={false}
+                />
+            )}
+
         </div>
     );
 };
