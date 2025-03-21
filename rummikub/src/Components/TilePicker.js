@@ -12,14 +12,13 @@ export function shuffleArray(array, rngFunction) {
     return result;
 }
 
-const RummikubTilePicker = () => {
+const TilePicker = () => {
     const [seed, setSeed] = useState("default_seed");
     const [tileSet, setTileSet] = useState([]);
     const [rng, setRng] = useState(() => createSeededRNG(seed));
-    const [tileCount, setTileCount] = useState({});
 
-    // Use tileData directly for generation
-    const allTiles = [...tileData]; // All available tiles including jokers
+    // Duplicate each tile to ensure there are two of each
+    const allTiles = [...tileData, ...tileData]; // Double the tiles so each tile appears twice
 
     useEffect(() => {
         if (seed) {
@@ -34,17 +33,7 @@ const RummikubTilePicker = () => {
         }
 
         const shuffledTiles = shuffleArray(allTiles, rng);
-        let pickedTiles = [];
-        let availableTiles = shuffledTiles.filter(tile => (tileCount[tile.value] || 0) < 2); // Only pick tiles that can be picked
-
-        while (pickedTiles.length < numTiles && availableTiles.length > 0) {
-            const tile = availableTiles.pop();
-            pickedTiles.push(tile);
-            setTileCount(prev => ({
-                ...prev,
-                [tile.value]: (prev[tile.value] || 0) + 1
-            }));
-        }
+        const pickedTiles = shuffledTiles.slice(0, numTiles); // Pick the specified number of tiles
 
         setTileSet(pickedTiles);
     };
@@ -139,4 +128,4 @@ const RummikubTilePicker = () => {
     );
 };
 
-export default RummikubTilePicker;
+export default TilePicker;

@@ -2,9 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { Button, Modal } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import CPUOpponent from '../Components/RummikubAPItest';
-import RummikubTilePicker from '../Components/RummikubTilePicker';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import TilePicker from '../Components/TilePicker';
 
 function TestPage() {
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -45,7 +43,7 @@ function TestPage() {
                 </div>
 
                 {/* Rummikub Tile Picker with Dragging functionality */}
-                <RummikubTilePicker isDraggingEnabled={isDraggingEnabled} />
+                <TilePicker isDraggingEnabled={isDraggingEnabled} />
 
             {/* Display CPU Status */}
             <h2>CPU Status: {cpuStatus}</h2>
