@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import GameBoard from './components/GameBoard';
 import PlayerHand from './components/PlayerHand';
 import TileData from './components/TileData';
-import ImageGallery from './components/ImageGallery'; // Import your existing ImageGallery component
+import RummikubSolver from './components/RummikubSolver'; // Import your existing RummikubSolver component
 import './App.css';
 
 // Main Game Component
@@ -23,7 +23,7 @@ const GameComponent = () => {
 
   const [handTiles, setHandTiles] = useState(generateHandTiles(60)); // Get 5 random tiles
   const [boardState, setBoardState] = useState(
-      Array(5).fill().map(() => Array(5).fill(null))
+      Array(6).fill().map(() => Array(10).fill(null))
   );
 
   // State for enabling/disabling drag functionality
@@ -158,7 +158,7 @@ const App = () => {
       <Router>
         <Routes>
           <Route path="/" element={<GameComponent />} />
-          <Route path="/image" element={<ImageGallery />} />
+          <Route path="/image" element={<RummikubSolver />} />
         </Routes>
       </Router>
   );
