@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Button, Modal } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import CPUOpponent from '../Components/RummikubAPItest';
+import RummikubTilePicker from '../Components/RummikubTilePicker';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 function TestPage() {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [cpuStatus, setCpuStatus] = useState("Waiting for move...");
+
+    // State to enable/disable dragging functionality
+    const [isDraggingEnabled, setIsDraggingEnabled] = useState(true);
 
     const showHelp = () => setIsModalVisible(true);
     const handleOk = () => setIsModalVisible(false);
@@ -18,10 +24,28 @@ function TestPage() {
         }
     };
 
+    // Toggle drag functionality (similar to GameComponent)
+    const toggleDragging = useCallback(() => {
+        setIsDraggingEnabled(prev => !prev);
+    }, []);
+
     return (
         <div style={{ backgroundColor: '#58B4D1', padding: "20px" }}>
             <h1>This is the Test Page</h1>
             <p>Content for the test page goes here.</p>
+
+                {/* Drag functionality toggle */}
+                <div className="controls">
+                    <button
+                        className={`toggle-button ${isDraggingEnabled ? 'enabled' : 'disabled'}`}
+                        onClick={toggleDragging}
+                    >
+                        Dragging is {isDraggingEnabled ? 'Enabled' : 'Disabled'}
+                    </button>
+                </div>
+
+                {/* Rummikub Tile Picker with Dragging functionality */}
+                <RummikubTilePicker isDraggingEnabled={isDraggingEnabled} />
 
             {/* Display CPU Status */}
             <h2>CPU Status: {cpuStatus}</h2>
