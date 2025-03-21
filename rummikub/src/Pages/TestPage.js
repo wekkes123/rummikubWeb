@@ -1,55 +1,69 @@
 import React, { useState } from 'react';
 import { Button, Modal } from 'antd';
-import { QuestionCircleOutlined } from '@ant-design/icons'; // Import icon
+import { QuestionCircleOutlined } from '@ant-design/icons';
+import CPUOpponent from '../Components/RummikubAPItest';
 
 function TestPage() {
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [cpuStatus, setCpuStatus] = useState("Waiting for move...");
 
-    const showHelp = () => {
-        setIsModalVisible(true);
-    };
+    const showHelp = () => setIsModalVisible(true);
+    const handleOk = () => setIsModalVisible(false);
 
-    const handleOk = () => {
-        setIsModalVisible(false);
+    const handleCPUMove = (move) => {
+        if (move) {
+            setCpuStatus("CPU played a move!");
+        } else {
+            setCpuStatus("CPU has no valid move and must draw a tile.");
+        }
     };
 
     return (
-        <div> {/* Background for contrast */}
+        <div style={{ backgroundColor: '#58B4D1', padding: "20px" }}>
             <h1>This is the Test Page</h1>
             <p>Content for the test page goes here.</p>
 
-            {/* Help Button with Icon filling the button and custom color */}
+            {/* Display CPU Status */}
+            <h2>CPU Status: {cpuStatus}</h2>
+
+            {/* CPU Opponent Component */}
+            <CPUOpponent
+                rack={["r1", "r2", "r3"]} // Example tiles
+                table={["r4", "r5", "r6"]} // Example sets on table
+                isFirstMove={false}
+                onMoveMade={handleCPUMove}
+            />
+
+            {/* Help Button */}
             <Button
                 type="primary"
                 shape="square"
-                icon={<QuestionCircleOutlined style={{ fontSize: '30px', color: '#fff' }} />} // Icon style to fill button
+                icon={<QuestionCircleOutlined style={{ fontSize: '30px', color: '#fff' }} />}
                 size="large"
                 onClick={showHelp}
                 style={{
-                    position: 'absolute', // Positioning in the top left
+                    position: 'absolute',
                     top: '10px',
                     left: '10px',
-                    width: '60px', // Set the width of the button
-                    height: '60px', // Set the height of the button
+                    width: '60px',
+                    height: '60px',
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    padding: 0, // Remove any padding
-                    borderRadius: '10px', // Optional: Add rounded corners to the button
-                    backgroundColor: '#FFB703', // Set button color
-                    borderColor: '#FFB703', // Set button border color
+                    padding: 0,
+                    borderRadius: '10px',
+                    backgroundColor: '#FFB703',
+                    borderColor: '#FFB703',
                 }}
             />
 
-
-            {/* Modal displaying the rules and website purpose */}
+            {/* Help Modal */}
             <Modal
                 title="Help: Game Rules & Website Purpose"
                 onOk={handleOk}
                 visible={isModalVisible}
-                onCancel={handleOk}  // Closes the modal on clicking the X button or outside the modal
+                onCancel={handleOk}
                 okText="Close"
-                closable={true}  // Ensures that the X button is shown
                 footer={[
                     <Button key="ok" type="primary" onClick={handleOk}>
                         Close
@@ -68,7 +82,6 @@ function TestPage() {
                 <h3>Website Purpose:</h3>
                 <p>This website is designed to allow users to play Rummikub online, track their progress, and learn about dementia detection through gameplay.</p>
             </Modal>
-            <div className="trapezium"></div>
         </div>
     );
 }

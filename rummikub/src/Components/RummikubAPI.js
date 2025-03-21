@@ -10,7 +10,7 @@ const API_URL = "https://rummikubsolverapi-production.up.railway.app/solve";
 export const getBestMove = async (rack, table, isFirstMove) => {
     const payload = {
         rack,
-        table: table.flat(), // Flatten the nested array
+        table: table.length ? table.reduce((acc, set) => acc.concat(set), []) : [], // Flatten table
         config: {
             numbers: 13,
             colours: 4,
@@ -19,11 +19,20 @@ export const getBestMove = async (rack, table, isFirstMove) => {
         }
     };
 
+    // Create URL with query parameters
+    const url = new URL(API_URL);
     const params = { maximise: "tiles", initial_meld: isFirstMove };
-    const headers = { accept: "application/json", "Content-Type": "application/json" };
+    url.search = new URLSearchParams(params).toString();
+
+    const headers = {
+        accept: "application/json",
+        "Content-Type": "application/json"
+    };
 
     try {
-        const response = await fetch(`${API_URL}?maximise=tiles&initial_meld=${isFirstMove}`, {
+        console.log("Sending request:", JSON.stringify(payload, null, 2));  // Log the request payload
+
+        const response = await fetch(url, {
             method: "POST",
             headers,
             body: JSON.stringify(payload),
@@ -35,6 +44,7 @@ export const getBestMove = async (rack, table, isFirstMove) => {
         }
 
         const result = await response.json();
+        console.log("API Response:", result); // Log the full response
 
         if (result.success) {
             return {
@@ -42,6 +52,7 @@ export const getBestMove = async (rack, table, isFirstMove) => {
                 setsToMake: result.sets_to_make
             };
         } else {
+            console.warn("API Response indicates no valid move.");
             return null;
         }
     } catch (error) {
