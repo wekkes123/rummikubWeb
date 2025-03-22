@@ -4,35 +4,44 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import TileData from "../Components/TileData";
 import GameBoard from '../Components/GameBoard';
 import PlayerHand from '../Components/PlayerHand';
+import { createSeededRNG, shuffleArray } from '../Components/SeededRNG'; // Import seeded RNG
 import './game.css';
 const GameComponent = () => {
-    // State for tiles in hand and on board
-    const generateHandTiles = (count) => {
-        const shuffledTiles = [...TileData].sort(() => Math.random() - 0.5); // Shuffle the tiles
-        return shuffledTiles.slice(0, count).map((tile, index) => ({
-            id: index + 1, // Generate unique ID
-            color: tile.color,
-            value: tile.value,
-            image: tile.image,
-        }));
-    };
-
-    const [handTiles, setHandTiles] = useState(generateHandTiles(60)); // Get 5 random tiles
+    // State for seed input and RNG function
+    const [seed, setSeed] = useState('defaultSeed123');
+    const [rng, setRng] = useState(() => createSeededRNG(Date.now())); // Default RNG based on time
+    const [handTiles, setHandTiles] = useState([]);
     const [boardState, setBoardState] = useState(
         Array(5).fill().map(() => Array(5).fill(null))
     );
-
-    // State for enabling/disabling drag functionality
     const [isDraggingEnabled, setIsDraggingEnabled] = useState(true);
-    // A key to force DndProvider to remount
     const [dndKey, setDndKey] = useState(0);
 
-    // Toggle drag functionality
-    const toggleDragging = useCallback(() => {
-        setIsDraggingEnabled(prev => !prev);
-        // Increment the key to force DndProvider to remount
-        setDndKey(prev => prev + 1);
-    }, []);
+    const handleSeedChange = (e) => {
+        const newSeed = e.target.value;
+        setSeed(newSeed);
+        // Recreate RNG with new seed
+        setRng(() => createSeededRNG(newSeed));
+        // Re-generate the hand tiles based on the new seed
+        generateHandTiles(newSeed);
+    };
+
+    // Generate hand tiles based on seed
+    const generateHandTiles = (seed) => {
+        const shuffledTiles = shuffleArray(TileData, createSeededRNG(seed)); // Use the RNG for shuffling
+        setHandTiles(shuffledTiles.slice(0, 14).map((tile, index) => ({
+            id: index + 1,
+            color: tile.color,
+            value: tile.value,
+            image: tile.image,
+        })));
+    };
+
+    useEffect(() => {
+        if (seed) {
+            generateHandTiles(seed); // Generate tiles when seed changes
+        }
+    }, [rng, seed]);
 
     // Function to move tiles between locations
     const moveTile = useCallback((id, sourceLocation, targetLocation, targetPosition, sourcePosition) => {
@@ -57,7 +66,6 @@ const GameComponent = () => {
 
         // Case 2: Moving from board to hand
         else if (sourceLocation === 'board' && targetLocation === 'hand') {
-            // Find the tile on the board
             let tileToMove = null;
             let tileX = -1, tileY = -1;
 
@@ -112,11 +120,15 @@ const GameComponent = () => {
         }
     }, [boardState, handTiles, isDraggingEnabled]);
 
+    // Toggle drag functionality
+    const toggleDragging = useCallback(() => {
+        setIsDraggingEnabled(prev => !prev);
+        setDndKey(prev => prev + 1);
+    }, []);
+
     return (
         <DndProvider backend={HTML5Backend} key={dndKey}>
             <div className="app">
-                <h1>Rummikub drag test game</h1>
-
                 <div className="controls">
                     <button
                         className={`toggle-button ${isDraggingEnabled ? 'enabled' : 'disabled'}`}
@@ -124,6 +136,17 @@ const GameComponent = () => {
                     >
                         Dragging is {isDraggingEnabled ? 'Enabled' : 'Disabled'}
                     </button>
+                </div>
+
+                <div className="seed-input">
+                    <label htmlFor="seed">Enter Seed:</label>
+                    <input
+                        id="seed"
+                        type="text"
+                        value={seed}
+                        onChange={handleSeedChange}
+                        placeholder="Enter any seed (e.g., a string or number)"
+                    />
                 </div>
 
                 <GameBoard
@@ -145,30 +168,4 @@ const GameComponent = () => {
     );
 };
 
-const GamePage = ({ onBackToFrontPage }) => {
-    const [username, setUsername] = useState('');
-    const [age, setAge] = useState('');
-
-    useEffect(() => {
-        // Get the username and age from localStorage
-        const storedUsername = localStorage.getItem('username');
-        const storedAge = localStorage.getItem('age');
-
-        // Set the state with the stored values
-        if (storedUsername) setUsername(storedUsername);
-        if (storedAge) setAge(storedAge);
-    }, []);
-
-    return (
-        <div>
-            <h1>Game Page</h1>
-            <GameComponent></GameComponent>
-            <p><strong>Username:</strong> {username}</p>
-            <p><strong>Age:</strong> {age}</p>
-            <button onClick={onBackToFrontPage}>Back to Front Page</button>
-
-        </div>
-    );
-};
-
-export default GamePage;
+export default GameComponent;

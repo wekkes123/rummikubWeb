@@ -1,6 +1,5 @@
 import React from 'react';
 import { useDrop } from 'react-dnd';
-import Tile from './Tile';
 
 const BoardSpace = ({ x, y, children, moveTile, isDraggingEnabled }) => {
     const [{ isOver }, drop] = useDrop(() => ({
