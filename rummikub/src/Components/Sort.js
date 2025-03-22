@@ -11,7 +11,7 @@ const sortTiles = (tiles, sortBy) => {
 
         if (sortBy === "color") {
             return a.color.localeCompare(b.color) || a.value - b.value;
-        } else {
+        } else if (sortBy === "value"){
             return a.value - b.value || a.color.localeCompare(b.color);
         }
     });

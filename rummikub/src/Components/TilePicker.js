@@ -104,7 +104,7 @@ const TilePicker = () => {
                                 location="picked" // Adjust location if needed
                                 position={index} // Adjust position logic if needed
                                 moveTile={() => {}}  // Assuming no dragging is required for now
-                                isDraggingEnabled={false} // Dragging disabled for now
+                                isDraggingEnabled={true} // Dragging disabled for now
                             />
                         );
                     })}
