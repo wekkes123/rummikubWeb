@@ -1,68 +1,53 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { Button, Modal } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import CPUOpponent from '../Components/RummikubAPItest';
 import TilePicker from '../Components/TilePicker';
+import TileSorter from '../Components/Sort';
+import Tile from '../Components/Tile';
+import TileData from '../Components/TileData';
 
 function TestPage() {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [cpuStatus, setCpuStatus] = useState("Waiting for move...");
+    const [sortBy, setSortBy] = useState("number");
 
-    // State to enable/disable dragging functionality
-    const [isDraggingEnabled, setIsDraggingEnabled] = useState(true);
+    const tiles = TileData
 
-    const showHelp = () => setIsModalVisible(true);
-    const handleOk = () => setIsModalVisible(false);
-
-    const handleCPUMove = (move) => {
-        if (move) {
-            setCpuStatus("CPU played a move!");
-        } else {
-            setCpuStatus("CPU has no valid move and must draw a tile.");
-        }
-    };
-
-    // Toggle drag functionality (similar to GameComponent)
-    const toggleDragging = useCallback(() => {
-        setIsDraggingEnabled(prev => !prev);
-    }, []);
+    const sortedTiles = TileSorter({ tiles, sortby: sortBy });
 
     return (
         <div style={{ backgroundColor: '#58B4D1', padding: "20px" }}>
             <h1>This is the Test Page</h1>
-            <p>Content for the test page goes here.</p>
 
-                {/* Drag functionality toggle */}
-                <div className="controls">
-                    <button
-                        className={`toggle-button ${isDraggingEnabled ? 'enabled' : 'disabled'}`}
-                        onClick={toggleDragging}
-                    >
-                        Dragging is {isDraggingEnabled ? 'Enabled' : 'Disabled'}
-                    </button>
-                </div>
+            <TilePicker />
 
-                {/* Rummikub Tile Picker with Dragging functionality */}
-                <TilePicker isDraggingEnabled={isDraggingEnabled} />
+            <h3>Sorting by: {sortBy}</h3>
+            <Button onClick={() => setSortBy(sortBy === "color" ? "number" : "color")}>
+                Toggle Sort
+            </Button>
 
-            {/* Display CPU Status */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '10px' }}>
+                {sortedTiles.map((tile, index) => (
+                    <Tile key={index} {...tile} isDraggingEnabled={true} />
+                ))}
+            </div>
+
             <h2>CPU Status: {cpuStatus}</h2>
 
-            {/* CPU Opponent Component */}
             <CPUOpponent
-                rack={["r1", "r2", "r3"]} // Example tiles
-                table={["r4", "r5", "r6"]} // Example sets on table
+                rack={["r1", "r2", "r3"]}
+                table={["r4", "r5", "r6"]}
                 isFirstMove={false}
-                onMoveMade={handleCPUMove}
+                onMoveMade={(move) => setCpuStatus(move ? "CPU played a move!" : "CPU has no valid move and must draw a tile.")}
             />
 
-            {/* Help Button */}
             <Button
                 type="primary"
                 shape="square"
                 icon={<QuestionCircleOutlined style={{ fontSize: '30px', color: '#fff' }} />}
                 size="large"
-                onClick={showHelp}
+                onClick={() => setIsModalVisible(true)}
                 style={{
                     position: 'absolute',
                     top: '10px',
@@ -79,15 +64,14 @@ function TestPage() {
                 }}
             />
 
-            {/* Help Modal */}
             <Modal
                 title="Help: Game Rules & Website Purpose"
-                onOk={handleOk}
                 visible={isModalVisible}
-                onCancel={handleOk}
+                onOk={() => setIsModalVisible(false)}
+                onCancel={() => setIsModalVisible(false)}
                 okText="Close"
                 footer={[
-                    <Button key="ok" type="primary" onClick={handleOk}>
+                    <Button key="ok" type="primary" onClick={() => setIsModalVisible(false)}>
                         Close
                     </Button>
                 ]}
