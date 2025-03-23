@@ -34,14 +34,14 @@ const PlayerHand = ({ tiles, moveTile, isDraggingEnabled }) => {
             <Button
                 onClick={valueSort}
                 className="swap-sort-button"
-                style={{ marginBottom: '10px'}}
+                style={{ marginBottom: '10px' }}
             >
                 Swap Sort ({'By Value'})
             </Button>
             <Button
                 onClick={colorSort}
                 className="swap-sort-button"
-                style={{ marginBottom: '10px'}}
+                style={{ marginBottom: '10px' }}
             >
                 Swap Sort ({'By Color'})
             </Button>
@@ -52,6 +52,9 @@ const PlayerHand = ({ tiles, moveTile, isDraggingEnabled }) => {
                     backgroundColor: isOver && isDraggingEnabled ? '#f0f0f0' : '#efefef',
                 }}
             >
+                <div className="player-hand-line"></div>
+
+
                 {sortedTiles.map((tile) => (
                     <Tile
                         key={tile.id}
@@ -64,7 +67,7 @@ const PlayerHand = ({ tiles, moveTile, isDraggingEnabled }) => {
                     />
                 ))}
             </div>
-    </div>
+        </div>
     );
 };
 

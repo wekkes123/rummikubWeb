@@ -5,6 +5,7 @@
     padding: 20px;
     min-height: 100vh;
     font-family: Arial, sans-serif;
+    background-color: #58B4D1;
 }
 
 h1 {
@@ -91,15 +92,27 @@ h1 {
 }
 
 .player-hand {
+    position: relative; /* Add this */
     display: flex;
     justify-content: center;
-    gap: 10px;
-    padding: 20px;
+    gap: 15px;
+    padding: 30px;
     border: 2px solid #333;
-    border-radius: 10px;
     background-color: #efefef;
     min-height: 100px;
     flex-wrap: wrap;
+    clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
+}
+
+.player-hand-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 2px; /* Line thickness */
+    background-color: black;
+    transform: translateY(-50%);
+    z-index: 1000; /* Ensure it appears above everything */
 }
 
 .tile {
@@ -129,6 +142,45 @@ h1 {
     background-color: #45a049;
 }
 
+/* Start button styles */
+.start-button {
+    width: 100vw;
+    height: 80vh;
+    background-color: #4caf50;
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.start-button:hover {
+    background-color: #45a049;
+}
+
+/* Stop button styles */
+.stop-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: red;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 15px 30px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.stop-button:hover {
+    background-color: darkred;
+}
+
+/* Media query for smaller screens */
 @media (max-width: 800px) {
     .game-board {
         width: 90vw;
