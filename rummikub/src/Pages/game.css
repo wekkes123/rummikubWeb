@@ -1,0 +1,199 @@
+.app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background-color: #58B4D1;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.controls {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.board-size-input {
+    width: 60px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.toggle-button, .reset-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    outline: none;
+}
+
+.toggle-button.enabled {
+    background-color: #4caf50;
+    color: white;
+}
+
+.toggle-button.disabled {
+    background-color: #f44336;
+    color: white;
+}
+
+.reset-button {
+    background-color: #2196f3;
+    color: white;
+}
+
+.reset-button:hover {
+    background-color: #0b7dda;
+}
+
+.game-board {
+    width: 500px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 40px;
+    border: 2px solid #333;
+}
+
+.board-row {
+    display: flex;
+    flex: 1;
+}
+
+.board-space {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hand-section {
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+}
+
+.player-hand {
+    position: relative; /* Add this */
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 30px;
+    border: 2px solid #333;
+    background-color: #efefef;
+    min-height: 100px;
+    flex-wrap: wrap;
+    clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
+}
+
+.player-hand-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 2px; /* Line thickness */
+    background-color: black;
+    transform: translateY(-50%);
+    z-index: 1000; /* Ensure it appears above everything */
+}
+
+.tile {
+    width: 70px;
+    height: 70px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s;
+}
+
+.tile:hover {
+    transform: scale(1.05);
+}
+
+.swap-sort-button {
+    background-color: #4caf50;
+    color: white;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    border: none;
+    outline: none;
+}
+
+.swap-sort-button:hover {
+    background-color: #45a049;
+}
+
+/* Start button styles */
+.start-button {
+    width: 100vw;
+    height: 80vh;
+    background-color: #4caf50;
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.start-button:hover {
+    background-color: #45a049;
+}
+
+/* Stop button styles */
+.stop-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: red;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 15px 30px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.stop-button:hover {
+    background-color: darkred;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 800px) {
+    .game-board {
+        width: 90vw;
+        height: 90vw;
+    }
+
+    .controls {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .tile {
+        width: 50px;
+        height: 50px;
+    }
+}

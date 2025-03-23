@@ -13,7 +13,9 @@ export function shuffleArray(array, rngFunction) {
 }
 
 const TilePicker = () => {
-    const [seed, setSeed] = useState("default_seed");
+    const [seed, setSeed] = useState(() => {
+        return localStorage.getItem('seed') || 'default_seed';
+    });
     const [tileSet, setTileSet] = useState([]);
     const [rng, setRng] = useState(() => createSeededRNG(seed));
 
@@ -22,7 +24,11 @@ const TilePicker = () => {
 
     useEffect(() => {
         if (seed) {
+            // Update the rng when the seed changes
             setRng(() => createSeededRNG(seed));
+
+            // Store the seed in localStorage whenever it changes
+            localStorage.setItem('seed', seed);
         }
     }, [seed]);
 
@@ -54,7 +60,7 @@ const TilePicker = () => {
                     id="seed"
                     type="text"
                     value={seed}
-                    onChange={(e) => setSeed(e.target.value)}
+                    onChange={(e) => setSeed(e.target.value)}  // Update the seed value
                     placeholder="Enter seed for randomization"
                     style={{
                         width: '100%',
@@ -104,7 +110,7 @@ const TilePicker = () => {
                                 location="picked" // Adjust location if needed
                                 position={index} // Adjust position logic if needed
                                 moveTile={() => {}}  // Assuming no dragging is required for now
-                                isDraggingEnabled={false} // Dragging disabled for now
+                                isDraggingEnabled={true} // Dragging disabled for now
                             />
                         );
                     })}
