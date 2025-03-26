@@ -17,7 +17,7 @@ function TestPage() {
 
     const tiles = TileData; // Assuming TileData contains the tile objects
 
-    const sortedTiles = TileSorter({ tiles, sortby: sortBy });
+    const sortedTiles = TileSorter( tiles, sortBy);
 
     const moveTiles1 = [
         { value: 5, color: 'red' },
@@ -33,7 +33,7 @@ function TestPage() {
 
     const moveTiles3 = [
         { value: 1, color: 'blue' },
-        { value: 1, color: 'red' },
+        { value: 1, color: 'blue' },
         { value: 'Joker', color: 'red' }
     ];
 
