@@ -56,7 +56,9 @@ const PlayerHand = ({ tiles, moveTile, isDraggingEnabled }) => {
                 Sort by Color
             </Button>
 
+
             <div className="player-hand" style={{ backgroundColor: '#efefef', display: 'flex' }}>
+                <div className={'player-hand-line'}></div>
                 {displayTiles.map((tile, index) => (
                     <TileSlot
                         key={index}
