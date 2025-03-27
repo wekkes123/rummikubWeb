@@ -14,7 +14,7 @@ const BoardSpace = ({ x, y, children, moveTile, isDraggingEnabled }) => {
             isOver: !!monitor.isOver(),
         }),
         canDrop: () => isDraggingEnabled,
-    }), [x, y, moveTile, isDraggingEnabled]); // Add dependencies here
+    }), [x, y, moveTile, isDraggingEnabled]);
 
     return (
         <div
@@ -23,6 +23,11 @@ const BoardSpace = ({ x, y, children, moveTile, isDraggingEnabled }) => {
             style={{
                 backgroundColor: isOver && isDraggingEnabled ? '#f0f0f0' : '#ffffff',
                 border: '1px solid #ccc',
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
             }}
         >
             {children}
