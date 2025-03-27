@@ -92,12 +92,7 @@ const GameBoard = ({ boardState, moveTile, isDraggingEnabled }) => {
             borderRadius: '8px',
             margin: '0 auto', // Center the board
         }}>
-            <Button
-                onClick={() => setHeight(getHeight() + 1)}
-                style={{ marginBottom: '10px' }}
-                className={'swap-sort-button'}>
-                test
-            </Button>
+
             <div className="game-board" style={{
                 display: 'flex',
                 flexDirection: 'column',

@@ -72,13 +72,6 @@ h1 {
   flex: 1;
 }
 
-.board-space {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .hand-section {
   width: fit-content;
   text-align: center;

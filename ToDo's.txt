@@ -25,4 +25,8 @@ manier om te indicaten dat een tile op een illigale plaats staat wanneer een spe
 
 undo button voor move
 
+verticale centering van de tiles in hand(tussen bovenkant en middenlijn)
+
+zwarte hoekejs in elk tile foto verwijderen -> naar png omzetten eerst
+
 als je denkt aan andere todo's -> deze lijst aanvullen
