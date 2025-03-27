@@ -1,0 +1,26 @@
+ToDo's
+
+Pick from pile knop
+
+animatie van een tile uit de pile die in jou hand gaat
+animatie van een tile uit de pile die in de hand van de robot gaat
+
+move validator checked alleen of een move die alleen nieuwe tiles neerlegt mogen
+-> wat als je een tile hangt aan een bestaande run? -> ipv move te checken kijken of het board goed is
+
+end turn knop en vervolgens:
+1 lock de tiles van te kunnen bewegen
+2 verander alle interactable knoppen naar grijs (fade animatie best)
+3 verzamel de status van het board
+4 maak een api call naar de robot
+5 maak een manier voor de robot om tiles op het board te spelen, met animatie
+
+Code cleanup, remove alle AI comments, delete unused variabele, sorteren van files, removen van test file uit de main project
+
+design principles opnieuw opzoeken, gigantische lijst maken waar we nog aanpassingen moeten maken en de site aanpassen om deze design principles te fitten
+
+automatisch detectie of het board bijna vol zit -> nieuwe rij of colom toevoegen(horizontale uitbreiding zou het beste zijn hier hebben we meer plaats dan verticaal) en dit ook voor de player hand, als er maar 2 tiles vrij zijn -> hand player uitbreiden
+
+manier om te indicaten dat een tile op een illigale plaats staat wanneer een speler zijn beurt probeert te eindigen(ronde border die groter en kleiner wordt? maybe nie te kut er laten uitzien)
+
+als je denkt aan andere todo's -> deze lijst aanvullen
