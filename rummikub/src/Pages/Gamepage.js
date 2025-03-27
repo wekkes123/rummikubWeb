@@ -115,6 +115,19 @@ const GameComponent = () => {
                 setBoardState(newBoardState);
             }
         }
+        else if (sourceLocation === 'hand' && targetLocation === 'hand') {
+            setHandTiles(prev => {
+                const updatedTiles = [...prev];
+                const sourceIndex = updatedTiles.findIndex(t => t.id === id);
+                if (sourceIndex === -1) return prev;
+
+                const [movedTile] = updatedTiles.splice(sourceIndex, 1);
+                updatedTiles.splice(targetPosition, 0, movedTile);
+
+                return updatedTiles;
+            });
+
+        }
     }, [boardState, handTiles, isDraggingEnabled]);
 
     const toggleDragging = useCallback(() => {

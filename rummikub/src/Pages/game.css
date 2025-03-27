@@ -87,12 +87,12 @@ h1 {
 
 .hand-section {
     width: 100%;
-    max-width: 600px;
+    max-width: 65vw;
     text-align: center;
 }
 
 .player-hand {
-    position: relative; /* Add this */
+    position: relative;
     display: flex;
     justify-content: center;
     gap: 15px;
@@ -113,6 +113,22 @@ h1 {
     background-color: black;
     transform: translateY(-50%);
     z-index: 1000; /* Ensure it appears above everything */
+}
+
+.tile-slot {
+    width: 50px;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px dashed #aaa;
+    margin: 5px;
+}
+
+.empty-slot {
+    width: 50px;
+    height: 70px;
+    background-color: transparent;
 }
 
 .tile {
@@ -144,8 +160,8 @@ h1 {
 
 /* Start button styles */
 .start-button {
-    width: 100vw;
-    height: 80vh;
+    width: 50vw;
+    height: 50vh;
     background-color: #4caf50;
     color: white;
     font-size: 2rem;
