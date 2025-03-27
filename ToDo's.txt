@@ -23,4 +23,6 @@ automatisch detectie of het board bijna vol zit -> nieuwe rij of colom toevoegen
 
 manier om te indicaten dat een tile op een illigale plaats staat wanneer een speler zijn beurt probeert te eindigen(ronde border die groter en kleiner wordt? maybe nie te kut er laten uitzien)
 
+undo button voor move
+
 als je denkt aan andere todo's -> deze lijst aanvullen
