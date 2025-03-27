@@ -23,7 +23,7 @@ const GameComponent = () => {
 
   const [handTiles, setHandTiles] = useState(generateHandTiles(60)); // Get 5 random tiles
   const [boardState, setBoardState] = useState(
-      Array(6).fill().map(() => Array(10).fill(null))
+      Array(6).fill().map(() => Array(100).fill(null))
   );
 
   // State for enabling/disabling drag functionality

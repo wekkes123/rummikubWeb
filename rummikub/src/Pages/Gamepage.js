@@ -14,7 +14,7 @@ const GameComponent = () => {
     });
     const [rng, setRng] = useState(() => createSeededRNG(seed));
     const [handTiles, setHandTiles] = useState([]);
-    const [boardState, setBoardState] = useState(Array(5).fill().map(() => Array(5).fill(null)));
+    const [boardState, setBoardState] = useState(Array(10).fill().map(() => Array(20).fill(null)));
     const [isDraggingEnabled, setIsDraggingEnabled] = useState(true);
     const [dndKey, setDndKey] = useState(0);
 
@@ -144,40 +144,17 @@ const GameComponent = () => {
 
                 {isGameStarted && (
                     <>
-                        <div className="controls">
-                            <button
-                                className={`toggle-button ${isDraggingEnabled ? 'enabled' : 'disabled'}`}
-                                onClick={toggleDragging}
-                            >
-                                Dragging is {isDraggingEnabled ? 'Enabled' : 'Disabled'}
-                            </button>
-                        </div>
-
-                        <div className="seed-input">
-                            <label htmlFor="seed">Enter Seed:</label>
-                            <input
-                                id="seed"
-                                type="text"
-                                value={seed}
-                                onChange={handleSeedChange}
-                                placeholder="Enter any seed (e.g., a string or number)"
-                            />
-                        </div>
-
                         <GameBoard
                             boardState={boardState}
                             moveTile={moveTile}
                             isDraggingEnabled={isDraggingEnabled}
                         />
+                        <PlayerHand
+                            tiles={handTiles}
+                            moveTile={moveTile}
+                            isDraggingEnabled={isDraggingEnabled}
+                        />
 
-                        <div className="hand-section">
-                            <h2>Your Tiles</h2>
-                            <PlayerHand
-                                tiles={handTiles}
-                                moveTile={moveTile}
-                                isDraggingEnabled={isDraggingEnabled}
-                            />
-                        </div>
 
                         <button className="stop-button" onClick={handleStopClick}>Stop Game</button>
                     </>

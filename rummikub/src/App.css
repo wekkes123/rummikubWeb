@@ -7,6 +7,10 @@
   font-family: Arial, sans-serif;
 }
 
+body {
+  overflow: hidden;
+}
+
 h1 {
   margin-bottom: 20px;
   color: #333;
@@ -76,40 +80,11 @@ h1 {
 }
 
 .hand-section {
-  width: 100%;
-  max-width: 600px;
+  width: fit-content;
   text-align: center;
 }
 
-.player-hand {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  padding: 20px;
-  border: 2px solid #333;
-  border-radius: 10px;
-  background-color: #efefef;
-  min-height: 100px;
-  flex-wrap: wrap;
-}
 
 .tile:hover {
   transform: scale(1.05);
-}
-
-@media (max-width: 600px) {
-  .game-board {
-    width: 90vw;
-    height: 90vw;
-  }
-
-  .controls {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .tile {
-    width: 50px;
-    height: 50px;
-  }
 }

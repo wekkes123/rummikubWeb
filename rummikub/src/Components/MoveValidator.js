@@ -5,7 +5,7 @@ const isValidMove = (tiles) => {
 
     const uniqueTiles = new Set(tiles.map(tile => `${tile.value}-${tile.color}`));
     if (uniqueTiles.size !== tiles.length) {
-        return false; // If there are duplicates, it's not a valid move
+        return false;
     }
 
     const jokers = tiles.filter(tile => tile.value === "Joker");

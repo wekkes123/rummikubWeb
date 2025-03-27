@@ -4,7 +4,8 @@ import { useDrop } from 'react-dnd';
 import Tile from './Tile';
 import TileSorter from './Sort';
 
-const MAX_SLOTS = 20;
+const MAX_SLOTS = 20; // Increased to support two rows
+const SLOTS_PER_ROW = MAX_SLOTS/2; // 20 slots per row
 
 const PlayerHand = ({ tiles, moveTile, isDraggingEnabled }) => {
     const [displayTiles, setDisplayTiles] = useState([...tiles, ...Array(MAX_SLOTS - tiles.length).fill(null)]);
@@ -24,7 +25,7 @@ const PlayerHand = ({ tiles, moveTile, isDraggingEnabled }) => {
             ...Array(MAX_SLOTS - updatedDisplayTiles.length).fill(null)
         ];
         setDisplayTiles(finalDisplayTiles);
-    }, [ tiles]);
+    }, [tiles]);
 
     const applySort = (sortBy) => {
         const newSortedTiles = TileSorter(tiles.filter(Boolean), sortBy);
@@ -33,7 +34,7 @@ const PlayerHand = ({ tiles, moveTile, isDraggingEnabled }) => {
 
     const moveTileInHand = (tileId, newIndex) => {
         const tileIndex = displayTiles.findIndex(tile => tile && tile.id === tileId);
-        if (tileIndex === -1 || tileIndex === newIndex) return; // Tile not found or same position
+        if (tileIndex === -1 || tileIndex === newIndex) return;
 
         const updatedTiles = [...displayTiles];
         [updatedTiles[tileIndex], updatedTiles[newIndex]] = [updatedTiles[newIndex], updatedTiles[tileIndex]];
@@ -41,34 +42,53 @@ const PlayerHand = ({ tiles, moveTile, isDraggingEnabled }) => {
         setDisplayTiles(updatedTiles);
     };
 
+    // Split tiles into two rows
+    const firstRowTiles = displayTiles.slice(0, SLOTS_PER_ROW);
+    const secondRowTiles = displayTiles.slice(SLOTS_PER_ROW);
+
     return (
-        <div>
-            <Button
-                onClick={() => applySort('value')}
-                style={{ marginBottom: '10px' }}
-                className={'swap-sort-button'}>
-                Sort by Value
-            </Button>
-            <Button
-                onClick={() => applySort('color')}
-                style={{ marginBottom: '10px' }}
-                className={'swap-sort-button'}>
-                Sort by Color
-            </Button>
+        <div className="hand-section">
+            <div className="sorting-buttons">
+                <Button
+                    onClick={() => applySort('value')}
+                    style={{ marginBottom: '10px' }}
+                    className={'swap-sort-button'}>
+                    Sort by Value
+                </Button>
+                <Button
+                    onClick={() => applySort('color')}
+                    style={{ marginBottom: '10px' }}
+                    className={'swap-sort-button'}>
+                    Sort by Color
+                </Button>
+            </div>
 
-
-            <div className="player-hand" style={{ backgroundColor: '#efefef', display: 'flex' }}>
+            <div className="player-hand">
                 <div className={'player-hand-line'}></div>
-                {displayTiles.map((tile, index) => (
-                    <TileSlot
-                        key={index}
-                        index={index}
-                        tile={tile}
-                        moveTile={moveTile}
-                        moveTileInHand={moveTileInHand}
-                        isDraggingEnabled={isDraggingEnabled}
-                    />
-                ))}
+                <div className="first-row" style={{ display: 'flex', width: 'fit-content', justifyContent: 'center' }}>
+                    {firstRowTiles.map((tile, index) => (
+                        <TileSlot
+                            key={`first-${index}`}
+                            index={index}
+                            tile={tile}
+                            moveTile={moveTile}
+                            moveTileInHand={moveTileInHand}
+                            isDraggingEnabled={isDraggingEnabled}
+                        />
+                    ))}
+                </div>
+                <div className="second-row" style={{ display: 'flex', width: 'fit-content', justifyContent: 'center' }}>
+                    {secondRowTiles.map((tile, index) => (
+                        <TileSlot
+                            key={`second-${index}`}
+                            index={index + SLOTS_PER_ROW}
+                            tile={tile}
+                            moveTile={moveTile}
+                            moveTileInHand={moveTileInHand}
+                            isDraggingEnabled={isDraggingEnabled}
+                        />
+                    ))}
+                </div>
             </div>
         </div>
     );
