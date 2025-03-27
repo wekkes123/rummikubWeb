@@ -64,15 +64,6 @@ h1 {
     background-color: #0b7dda;
 }
 
-.game-board {
-    width: 500px;
-    height: 500px;
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 40px;
-    border: 2px solid #333;
-}
-
 .board-row {
     display: flex;
     flex: 1;
@@ -196,20 +187,3 @@ h1 {
     background-color: darkred;
 }
 
-/* Media query for smaller screens */
-@media (max-width: 800px) {
-    .game-board {
-        width: 90vw;
-        height: 90vw;
-    }
-
-    .controls {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .tile {
-        width: 50px;
-        height: 50px;
-    }
-}

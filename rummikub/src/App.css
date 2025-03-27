@@ -1,57 +1,115 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.app {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 20px;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.controls {
+  margin-bottom: 20px;
+  display: flex;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.board-size-input {
+  width: 60px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.toggle-button, .reset-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  outline: none;
+}
+
+.toggle-button.enabled {
+  background-color: #4caf50;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.toggle-button.disabled {
+  background-color: #f44336;
+  color: white;
 }
 
-.trapezium {
-  width: 99vw; /* Full viewport width */
-  height: 25vw; /* Height as a percentage of the viewport width */
-  background-color: #D9D9D9;
-  clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
-  border: 2px solid #333; /* Small border around the trapezium */
-  position: relative;
+.reset-button {
+  background-color: #2196f3;
+  color: white;
 }
 
-.trapezium::before {
-  content: ''; /* Empty content for the line */
-  position: absolute;
-  background-color: black;
-  top: 50%; /* Place it in the middle of the trapezium */
-  left: 0;
-  width: 100%; /* Make the line span the full width */
-  border-top: 2px solid #333; /* White line in the middle */
+.reset-button:hover {
+  background-color: #0b7dda;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.board-row {
+  display: flex;
+  flex: 1;
+}
+
+.board-space {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hand-section {
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
+}
+
+.player-hand {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+  border: 2px solid #333;
+  border-radius: 10px;
+  background-color: #efefef;
+  min-height: 100px;
+  flex-wrap: wrap;
+}
+
+.tile:hover {
+  transform: scale(1.05);
+}
+
+@media (max-width: 600px) {
+  .game-board {
+    width: 90vw;
+    height: 90vw;
   }
-  to {
-    transform: rotate(360deg);
+
+  .controls {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .tile {
+    width: 50px;
+    height: 50px;
   }
 }
