@@ -7,7 +7,7 @@ import TileSorter from './Sort';
 const MAX_SLOTS = 20; // Increased to support two rows
 const SLOTS_PER_ROW = MAX_SLOTS/2; // 20 slots per row
 
-const PlayerHand = ({ tiles, moveTile, isDraggingEnabled }) => {
+const PlayerHand = ({ tiles, moveTile, isDraggingEnabled, isHidden }) => {
     const [displayTiles, setDisplayTiles] = useState([...tiles, ...Array(MAX_SLOTS - tiles.length).fill(null)]);
 
     useEffect(() => {
@@ -47,7 +47,7 @@ const PlayerHand = ({ tiles, moveTile, isDraggingEnabled }) => {
     const secondRowTiles = displayTiles.slice(SLOTS_PER_ROW);
 
     return (
-        <div className="hand-section">
+        <div className={`hand-section ${isHidden ? 'hidden' : ''}`}>
             <div className="sorting-buttons">
                 <Button
                     onClick={() => applySort('value')}
@@ -63,7 +63,7 @@ const PlayerHand = ({ tiles, moveTile, isDraggingEnabled }) => {
                 </Button>
             </div>
 
-            <div className="player-hand">
+            <div className='player-hand'>
                 <div className={'player-hand-line'}></div>
                 <div className="first-row" style={{ display: 'flex', width: 'fit-content', justifyContent: 'center' }}>
                     {firstRowTiles.map((tile, index) => (

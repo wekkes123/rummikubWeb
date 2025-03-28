@@ -12,13 +12,17 @@ function DevPage() {
         // Get username, age, and seed from localStorage
         const savedUsername = localStorage.getItem('username');
         const savedAge = localStorage.getItem('age');
-        const savedSeed = localStorage.getItem('seed');
+        let savedSeed = localStorage.getItem('seed');
+        if (!savedSeed) {
+            savedSeed = 'default_seed';
+            localStorage.setItem('seed', savedSeed);
+        }
         const savedGameTime = localStorage.getItem('lastGameTime');
 
         if (savedUsername) setUsername(savedUsername);
         if (savedAge) setAge(savedAge);
         if (savedSeed) setSeed(savedSeed);
-        if (savedGameTime) setLastGameTime(savedGameTime); // Set last game time from localStorage
+        if (savedGameTime) setLastGameTime(savedGameTime);
     }, []);
 
     const handleSeedChange = (e) => {
@@ -52,7 +56,6 @@ function DevPage() {
         a.download = 'devpage_data.json'; // Filename for the download
         a.click();
 
-        // Clean up the URL object
         URL.revokeObjectURL(url);
     };
 
@@ -63,7 +66,6 @@ function DevPage() {
             <p><strong>Age:</strong> {age || 'Not set'}</p>
             <p><strong>Seed:</strong> {seed || 'Not set'}</p>
 
-            {/* Display the last game time */}
             <p><strong>Last Game Time:</strong> {lastGameTime ? `${lastGameTime} seconds` : 'No game played yet'}</p>
 
             <div className="seed-input-container">
