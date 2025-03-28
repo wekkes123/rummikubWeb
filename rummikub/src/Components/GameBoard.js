@@ -90,7 +90,7 @@ const GameBoard = ({ boardState, moveTile, isDraggingEnabled }) => {
             height: '60vh',
             backgroundColor: '#58B4D1',
             borderRadius: '8px',
-            margin: '5vh',
+            //margin: '5vh',
         }}>
 
             <div className="game-board" style={{

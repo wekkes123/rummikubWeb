@@ -4,6 +4,7 @@ import GamePage from "./Pages/Gamepage";
 import Frontpage from "./Pages/Frontpage";
 import TestPage from "./Pages/TestPage";
 import DevPage from "./Pages/DevPage";
+import HorizontalLayout from "./Components/HorizontalLayout";
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import Registration from "./Pages/Registration";
 import "./App.css"
@@ -16,6 +17,7 @@ function App() {
     };
     return (
         <Router>
+            {/*<HorizontalLayout>*/}
                 <Routes>
                     <Route path="/" element={<Frontpage />} />
                     <Route path="/test" element={<TestPage />} />
@@ -23,6 +25,7 @@ function App() {
                     <Route path="/game" element={<GamePage />} />
                     <Route path="/dev" element={<DevPage />} />
                 </Routes>
+            {/*}</HorizontalLayout>*/}
         </Router>
     );
 }

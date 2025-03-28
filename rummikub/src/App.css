@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
   min-height: 100vh;
   font-family: Arial, sans-serif;
   background-color: #58B4D1;
@@ -29,14 +28,6 @@ h1 {
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-.board-size-input {
-  width: 60px;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
 }
 
 .toggle-button, .reset-button {

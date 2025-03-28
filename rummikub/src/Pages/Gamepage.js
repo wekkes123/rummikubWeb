@@ -157,7 +157,6 @@ const GameComponent = () => {
                         />
                         <div className="player-hand-layout-container">
                             <div className="left-button-panel">
-                                {/* Add your left panel content here*/}
                                 <PileButton
                                     //onClick={handleButtonClick}
                                     disabled={false}
@@ -170,12 +169,11 @@ const GameComponent = () => {
                                 isDraggingEnabled={isDraggingEnabled}
                             />
                             <div className="right-button-panel">
-                                {/* Add your right panel content here */}
                             </div>
                         </div>
 
-                        <Button className="stop-button" onClick={handleStopClick}>Stop Game</Button>
-                        <Button className="end-button" onClick={handleEndClick}>End Turn</Button>
+                        {/*<Button className="stop-button" onClick={handleStopClick}>Stop Game</Button>*/}
+                        {/*<Button className="end-button" onClick={handleEndClick}>End Turn</Button>*/}
                     </>
                 )}
             </div>
