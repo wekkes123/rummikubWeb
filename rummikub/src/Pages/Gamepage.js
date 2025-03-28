@@ -5,31 +5,29 @@ import TileData from "../Components/TileData";
 import GameBoard from '../Components/GameBoard';
 import PlayerHand from '../Components/PlayerHand';
 import { createSeededRNG, shuffleArray } from '../Components/SeededRNG'; // Import seeded RNG
-import './game.css';
+import {Button} from "antd";
 
 const GameComponent = () => {
-    const [seed, setSeed] = useState(() => {
-        const storedSeed = localStorage.getItem('seed');
-        return storedSeed ? storedSeed : 'default_seed';
+    const [seed] = useState(() => {
+        let storedSeed = localStorage.getItem('seed');
+        if (!storedSeed) {
+            storedSeed = 'default_seed';
+            localStorage.setItem('seed', storedSeed);
+        }
+        return storedSeed;
     });
-    const [rng, setRng] = useState(() => createSeededRNG(seed));
+
+    const [rng] = useState(() => createSeededRNG(seed));
     const [handTiles, setHandTiles] = useState([]);
     const [boardState, setBoardState] = useState(Array(10).fill().map(() => Array(20).fill(null)));
     const [isDraggingEnabled, setIsDraggingEnabled] = useState(true);
     const [dndKey, setDndKey] = useState(0);
+    const [playesTurn, setPlayesTurn] = useState(true);
 
     // Timer states
     const [isGameStarted, setIsGameStarted] = useState(false);
     const [gameStartTime, setGameStartTime] = useState(null);
-    const [gameEndTime, setGameEndTime] = useState(null);
-
-    const handleSeedChange = (e) => {
-        const newSeed = e.target.value;
-        setSeed(newSeed);
-        localStorage.setItem('seed', newSeed);
-        setRng(() => createSeededRNG(newSeed));
-        generateHandTiles(newSeed);
-    };
+    const [setGameEndTime] = useState(null);
 
     const generateHandTiles = (seed) => {
         const shuffledTiles = shuffleArray(TileData, createSeededRNG(seed));
@@ -60,6 +58,12 @@ const GameComponent = () => {
         localStorage.setItem('lastGameTime', gameTime);
         setIsGameStarted(false);
     };
+
+    const handleEndClick = () => {
+        if (playesTurn) setPlayesTurn(false);
+        else setPlayesTurn(true);
+        toggleDragging();
+    }
 
     const moveTile = useCallback((id, sourceLocation, targetLocation, targetPosition, sourcePosition) => {
         if (!isDraggingEnabled) return;
@@ -139,7 +143,7 @@ const GameComponent = () => {
         <DndProvider backend={HTML5Backend} key={dndKey}>
             <div className="app">
                 {!isGameStarted && (
-                    <button className="start-button" onClick={handleStartClick}>Start Game</button>
+                    <Button className="start-button" onClick={handleStartClick}>Start Game</Button>
                 )}
 
                 {isGameStarted && (
@@ -153,10 +157,12 @@ const GameComponent = () => {
                             tiles={handTiles}
                             moveTile={moveTile}
                             isDraggingEnabled={isDraggingEnabled}
+                            isHidden={!playesTurn}
                         />
 
 
-                        <button className="stop-button" onClick={handleStopClick}>Stop Game</button>
+                        <Button className="stop-button" onClick={handleStopClick}>Stop Game</Button>
+                        <Button className="end-button" onClick={handleEndClick}>End Turn</Button>
                     </>
                 )}
             </div>
