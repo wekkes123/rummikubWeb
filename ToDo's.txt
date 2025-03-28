@@ -1,6 +1,6 @@
 ToDo's
 
-Pick from pile knop
+Pick from pile knop -Wout
 
 animatie van een tile uit de pile die in jou hand gaat
 animatie van een tile uit de pile die in de hand van de robot gaat
