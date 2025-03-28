@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import TileData from "../Components/TileData";
@@ -6,8 +7,11 @@ import GameBoard from '../Components/GameBoard';
 import PlayerHand from '../Components/PlayerHand';
 import { createSeededRNG, shuffleArray } from '../Components/SeededRNG'; // Import seeded RNG
 import {Button} from "antd";
+import { useNavigate } from 'react-router-dom';
+import {ArrowLeftOutlined} from "@ant-design/icons";
 
 const GameComponent = () => {
+    const { t } = useTranslation();
     const [seed] = useState(() => {
         let storedSeed = localStorage.getItem('seed');
         if (!storedSeed) {
@@ -23,11 +27,12 @@ const GameComponent = () => {
     const [isDraggingEnabled, setIsDraggingEnabled] = useState(true);
     const [dndKey, setDndKey] = useState(0);
     const [playesTurn, setPlayesTurn] = useState(true);
+    const navigate = useNavigate();
 
     // Timer states
     const [isGameStarted, setIsGameStarted] = useState(false);
     const [gameStartTime, setGameStartTime] = useState(null);
-    const [setGameEndTime] = useState(null);
+    const [gameEndTime, setGameEndTime] = useState(null);
 
     const generateHandTiles = (seed) => {
         const shuffledTiles = shuffleArray(TileData, createSeededRNG(seed));
@@ -64,6 +69,10 @@ const GameComponent = () => {
         else setPlayesTurn(true);
         toggleDragging();
     }
+
+    const handleBack = () => {
+        navigate('/');
+    };
 
     const moveTile = useCallback((id, sourceLocation, targetLocation, targetPosition, sourcePosition) => {
         if (!isDraggingEnabled) return;
@@ -142,8 +151,23 @@ const GameComponent = () => {
     return (
         <DndProvider backend={HTML5Backend} key={dndKey}>
             <div className="app">
+                <Button
+                    type="primary"
+                    icon={<ArrowLeftOutlined />}
+                    onClick={handleBack}
+                    style={{
+                        position: 'absolute',
+                        color: 'black',
+                        top: 20,
+                        right: 20,
+                        zIndex: 1,
+                        fontWeight: 'bold'
+                    }}
+                >
+                    {t('back')}
+                </Button>
                 {!isGameStarted && (
-                    <Button className="start-button" onClick={handleStartClick}>Start Game</Button>
+                    <Button className="start-button" onClick={handleStartClick}>{t('start-game')}</Button>
                 )}
 
                 {isGameStarted && (
@@ -161,8 +185,8 @@ const GameComponent = () => {
                         />
 
 
-                        <Button className="stop-button" onClick={handleStopClick}>Stop Game</Button>
-                        <Button className="end-button" onClick={handleEndClick}>End Turn</Button>
+                        <Button className="stop-button" onClick={handleStopClick}>{t('stop-game')}</Button>
+                        <Button className="end-button" onClick={handleEndClick}>{t('end-turn')}</Button>
                     </>
                 )}
             </div>

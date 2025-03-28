@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Layout, Button, Typography, Space, ConfigProvider, Input, Form } from 'antd';
-import {ArrowLeftOutlined, PlayCircleOutlined, ReadOutlined, SettingOutlined} from '@ant-design/icons';
+import {
+    ArrowLeftOutlined,
+    QuestionCircleOutlined,
+} from '@ant-design/icons';
 import nlFlag from "../images/Flag_of_Belgium.png";
 import ukFlag from "../images/Flag_of_the_United_Kingdom.png";
+import HelpModal from "../Components/RulesModal";
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -29,6 +33,12 @@ const Registration = () => {
 
     const handleBack = () => {
         navigate('/');
+    };
+
+    const [isModalVisible, setIsModalVisible] = useState(false);
+
+    const showHelp = () => {
+        setIsModalVisible(true);
     };
 
     const handleFormSubmit = () => {
@@ -125,6 +135,33 @@ const Registration = () => {
                         />
                         <span style={{fontSize: 16}}>English</span>
                     </Button>
+                </Space>
+                <Space
+                    style={{
+                        position: 'absolute',
+                        top: 100,
+                        right: 20,
+                        zIndex: 1
+                    }}
+                ><Button
+                    type="primary"
+                    shape="square"
+                    icon={<QuestionCircleOutlined style={{ fontSize: '70px', color: '#fff' }} />} // Icon style to fill button
+                    size="large"
+                    onClick={showHelp}
+                    style={{
+                        height: 90,
+                        width: 90,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: '8px',
+                        backgroundColor: '#FFB703', // Set button color
+                        borderColor: '#e6f7ff', // Set button border color
+                    }}
+                />
+                    <HelpModal isVisible={isModalVisible} onClose={() => setIsModalVisible(false)} />
                 </Space>
 
                 <Content style={{

@@ -2,5 +2,19 @@
   "start": "Play",
   "tutorial": "Tutorial",
   "settings": "Settings",
-  "back": "Back to menu"
+  "back": "Back to menu",
+  "start-game": "Start Game",
+  "stop-game": "Stop Game",
+  "end-turn": "End Turn",
+  "sort-value": "Sort by Value",
+  "sort-colour": "Sort by Colour",
+  "help-modal-title": "Help: Game Rules & Website Purpose",
+  "game-rules": "Game Rules:",
+  "rules-des-1": "Each player takes turns placing tiles on the board.",
+  "rules-des-2": "Tiles are placed in sets of numbers or colors.",
+  "rules-des-3": "The goal is to arrange all tiles in valid combinations.",
+  "rules-des-4": "The first move should have a combined value of over 30.",
+  "rules-des-5": "Jokers can be used as substitutes for other tiles.",
+  "website-purpose": "Website Purpose:",
+  "website-description": "This website is designed to allow users to play Rummikub online, track their progress, and learn about dementia detection through gameplay."
 }
