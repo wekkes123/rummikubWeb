@@ -87,11 +87,12 @@ h1 {
   max-width: 95vw;
   text-align: center;
   transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  visibility: visible;
 }
 
 .hand-section.hidden {
   transform: translateY(100%);
-  opacity: 0;
+  visibility: hidden;
 }
 
 .player-hand {
