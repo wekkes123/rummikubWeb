@@ -43,8 +43,8 @@ const GameBoard = ({ boardState, moveTile, isDraggingEnabled }) => {
     const initializeGameBoard = () => {
         const availableWidth = dimensions.width;
         const availableHeight = dimensions.height;
-        setWidth(Math.floor(availableWidth / 100));
-        setHeight(Math.floor(availableHeight / 127));
+        setWidth(Math.floor(availableWidth / 60));
+        setHeight(Math.floor(availableHeight / 80));
     };
 
 
@@ -75,8 +75,8 @@ const GameBoard = ({ boardState, moveTile, isDraggingEnabled }) => {
         const tileHeight = tileWidth / 0.7; // Calculate height based on correct ratio
 
         return {
-            spaceWidth: Math.min(spaceWidth, tileWidth * 1.1, 60), // Give some padding
-            spaceHeight: Math.min(spaceHeight, tileHeight * 1.1, 87), // Give some padding
+            spaceWidth: Math.min(spaceWidth, tileWidth * 1.1, 40), // Give some padding
+            spaceHeight: Math.min(spaceHeight, tileHeight * 1.1, 60), // Give some padding
             tileWidth,
             tileHeight
         };
@@ -90,21 +90,21 @@ const GameBoard = ({ boardState, moveTile, isDraggingEnabled }) => {
             height: '60vh',
             backgroundColor: '#58B4D1',
             borderRadius: '8px',
-            margin: '0 auto', // Center the board
+            margin: '5vh',
         }}>
 
             <div className="game-board" style={{
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '20px', // 20px gap between rows
+                gap: '20px',
                 width: 'fit-content',
-                margin: '0 auto' // Center the grid inside the container
+                margin: '0 auto'
             }}>
                 {Array(height).fill().map((_, y) => (
                     <div key={y} className="board-row" style={{
                         display: 'flex',
                         flexDirection: 'row',
-                        gap: '20px', // 20px gap between columns
+                        gap: '20px',
                     }}>
                         {Array(width).fill().map((_, x) => {
                             const cell = boardState[y] && boardState[y][x] ? boardState[y][x] : null;

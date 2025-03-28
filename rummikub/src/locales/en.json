@@ -2,5 +2,6 @@
   "start": "Play",
   "tutorial": "Tutorial",
   "settings": "Settings",
-  "back": "Back to menu"
+  "back": "Back to menu",
+  "pile": "Take New Tile"
 }

@@ -117,13 +117,16 @@ const TileSlot = ({ index, tile, moveTile, moveTileInHand, isDraggingEnabled }) 
             className="tile-slot"
             style={{
                 backgroundColor: isOver ? '#ddd' : 'transparent',
-                width: '60px',
-                height: '90px',
+                width: '40px',
+                height: '60px',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
                 border: '1px dashed #aaa',
-                margin: '5px',
+                marginLeft: '10px',
+                marginRight: '10px',
+                marginBottom: '10px',
+                marginTop: '20px'
             }}
         >
             {tile ? (

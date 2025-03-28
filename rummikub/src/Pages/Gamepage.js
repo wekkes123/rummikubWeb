@@ -4,8 +4,9 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import TileData from "../Components/TileData";
 import GameBoard from '../Components/GameBoard';
 import PlayerHand from '../Components/PlayerHand';
+import PileButton from '../Components/PileButton';
 import { createSeededRNG, shuffleArray } from '../Components/SeededRNG'; // Import seeded RNG
-import './game.css';
+import '../css/game.css';
 
 const GameComponent = () => {
     const [seed, setSeed] = useState(() => {
@@ -149,14 +150,24 @@ const GameComponent = () => {
                             moveTile={moveTile}
                             isDraggingEnabled={isDraggingEnabled}
                         />
-                        <PlayerHand
-                            tiles={handTiles}
-                            moveTile={moveTile}
-                            isDraggingEnabled={isDraggingEnabled}
-                        />
+                        <div className="player-hand-layout-container">
+                            <div className="left-button-panel">
+                                {/* Add your left panel content here*/}
+                                <PileButton
+                                    //onClick={handleButtonClick}
+                                    disabled={false}
+                                />
 
-
-                        <button className="stop-button" onClick={handleStopClick}>Stop Game</button>
+                            </div>
+                            <PlayerHand
+                                tiles={handTiles}
+                                moveTile={moveTile}
+                                isDraggingEnabled={isDraggingEnabled}
+                            />
+                            <div className="right-button-panel">
+                                {/* Add your right panel content here */}
+                            </div>
+                        </div>
                     </>
                 )}
             </div>
