@@ -5,7 +5,9 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import TileData from "../Components/TileData";
 import GameBoard from '../Components/GameBoard';
 import PlayerHand from '../Components/PlayerHand';
+import PileButton from '../Components/PileButton';
 import { createSeededRNG, shuffleArray } from '../Components/SeededRNG'; // Import seeded RNG
+import '../css/game.css';
 import {Button} from "antd";
 import { useNavigate } from 'react-router-dom';
 import {ArrowLeftOutlined} from "@ant-design/icons";
@@ -177,13 +179,24 @@ const GameComponent = () => {
                             moveTile={moveTile}
                             isDraggingEnabled={isDraggingEnabled}
                         />
-                        <PlayerHand
-                            tiles={handTiles}
-                            moveTile={moveTile}
-                            isDraggingEnabled={isDraggingEnabled}
-                            isHidden={!playesTurn}
-                        />
+                        <div className="player-hand-layout-container">
+                            <div className="left-button-panel">
+                                {/* Add your left panel content here*/}
+                                <PileButton
+                                    //onClick={handleButtonClick}
+                                    disabled={false}
+                                />
 
+                            </div>
+                            <PlayerHand
+                                tiles={handTiles}
+                                moveTile={moveTile}
+                                isDraggingEnabled={isDraggingEnabled}
+                            />
+                            <div className="right-button-panel">
+                                {/* Add your right panel content here */}
+                            </div>
+                        </div>
 
                         <Button className="stop-button" onClick={handleStopClick}>{t('stop-game')}</Button>
                         <Button className="end-button" onClick={handleEndClick}>{t('end-turn')}</Button>

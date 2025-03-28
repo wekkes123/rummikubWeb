@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {Space, Button }from "antd";
-import './dev.css';
+import '../css/dev.css';
 
 function DevPage() {
     const [username, setUsername] = useState('');
