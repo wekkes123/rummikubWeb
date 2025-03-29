@@ -24,6 +24,13 @@ const GameComponent = () => {
         return storedSeed;
     });
 
+    const [leftHanded, setLeftHanded] = useState(false);
+
+    useEffect(() => {
+        const storedPreference = localStorage.getItem('handPreference');
+        setLeftHanded(storedPreference === 'left');
+    }, []);
+
     const [rng] = useState(() => createSeededRNG(seed));
     const [handTiles, setHandTiles] = useState([]);
     const [boardState, setBoardState] = useState(Array(10).fill().map(() => Array(20).fill(null)));
@@ -187,7 +194,7 @@ const GameComponent = () => {
                             tiles={handTiles}
                             moveTile={moveTile}
                             isDraggingEnabled={isDraggingEnabled}
-                            leftHanded={true}
+                            leftHanded={leftHanded}
                         />
 
                         {/*<Button className="stop-button" onClick={handleStopClick}>Stop Game</Button>*/}

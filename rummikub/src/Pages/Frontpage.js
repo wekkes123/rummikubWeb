@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Layout, Button, Typography, Space, ConfigProvider, Modal } from 'antd';
 import { PlayCircleOutlined, QuestionCircleOutlined, ReadOutlined, SettingOutlined } from '@ant-design/icons';
 import LanguageButtons from '../Components/UI/LanguageButtons';
-import HelpModal from '../Components/Logic/RulesModal';
+import HelpModal from '../Components/UI/RulesModal';
 
 const { Content } = Layout;
 const { Title } = Typography;
