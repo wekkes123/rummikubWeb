@@ -1,23 +1,17 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import {Layout, Button, Typography, Space, ConfigProvider, Modal} from 'antd';
-import {PlayCircleOutlined, QuestionCircleOutlined, ReadOutlined, SettingOutlined} from '@ant-design/icons';
-import ukFlag from '../images/Flag_of_the_United_Kingdom.png';
-import nlFlag from '../images/Flag_of_Belgium.png';
+import { Layout, Button, Typography, Space, ConfigProvider, Modal } from 'antd';
+import { PlayCircleOutlined, QuestionCircleOutlined, ReadOutlined, SettingOutlined } from '@ant-design/icons';
+import LanguageButtons from '../Components/UI/LanguageButtons';
 import HelpModal from '../Components/Logic/RulesModal';
 
 const { Content } = Layout;
 const { Title } = Typography;
 
 const FrontPage = () => {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const navigate = useNavigate();
-
-    const changeLanguage = (lang) => {
-        i18n.changeLanguage(lang);
-        localStorage.setItem('lang', lang);
-    };
 
     const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -25,9 +19,7 @@ const FrontPage = () => {
         setIsModalVisible(true);
     };
 
-
     return (
-
         <ConfigProvider
             theme={{
                 token: {
@@ -45,51 +37,7 @@ const FrontPage = () => {
                         zIndex: 1
                     }}
                 >
-                    <Button
-                        onClick={() => changeLanguage('nl')}
-                        style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            height: 'auto',
-                            padding: '8px',
-                            backgroundColor: i18n.language === 'nl' ? '#e6f7ff' : undefined,
-                            borderColor: i18n.language === 'nl' ? '#FFB703' : undefined,
-                            borderWidth: '2px',
-                            borderStyle: 'solid'
-                        }}
-                    >
-                        <img
-                            src={nlFlag}
-                            alt="Nederlands"
-                            style={{height: 40, marginBottom: 4}}
-                        />
-                        <span style={{fontSize: 16}}>Nederlands</span>
-                    </Button>
-
-                    <Button
-                        onClick={() => changeLanguage('en')}
-                        style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            height: 'auto',
-                            padding: '8px',
-                            backgroundColor: i18n.language === 'en' ? '#e6f7ff' : undefined,
-                            borderColor: i18n.language === 'en' ? '#FFB703' : undefined,
-                            borderWidth: '2px',
-                            borderStyle: 'solid'
-                        }}
-                    >
-                        <img
-                            src={ukFlag}
-                            alt="English"
-                            style={{height: 40, marginBottom: 4}}
-                        />
-                        <span style={{fontSize: 16}}>English</span>
-                    </Button>
+                    <LanguageButtons />
                 </Space>
                 <Space
                     style={{
@@ -98,24 +46,25 @@ const FrontPage = () => {
                         right: 20,
                         zIndex: 1
                     }}
-                ><Button
-                    type="primary"
-                    shape="square"
-                    icon={<QuestionCircleOutlined style={{ fontSize: '70px', color: '#fff' }} />} // Icon style to fill button
-                    size="large"
-                    onClick={showHelp}
-                    style={{
-                        height: 90,
-                        width: 90,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        padding: '8px',
-                        backgroundColor: '#FFB703', // Set button color
-                        borderColor: '#e6f7ff', // Set button border color
-                    }}
-                />
+                >
+                    <Button
+                        type="primary"
+                        shape="square"
+                        icon={<QuestionCircleOutlined style={{ fontSize: '70px', color: '#fff' }} />}
+                        size="large"
+                        onClick={showHelp}
+                        style={{
+                            height: 90,
+                            width: 90,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            padding: '8px',
+                            backgroundColor: '#FFB703',
+                            borderColor: '#e6f7ff',
+                        }}
+                    />
                     <HelpModal isVisible={isModalVisible} onClose={() => setIsModalVisible(false)} />
                 </Space>
 
@@ -137,58 +86,58 @@ const FrontPage = () => {
                         Rummikub
                     </Title>
 
+                    <Button
+                        type="primary"
+                        size="large"
+                        icon={<PlayCircleOutlined />}
+                        block
+                        style={{
+                            height: 50,
+                            width: 240,
+                            fontSize: 18,
+                            fontWeight: 'bold',
+                            color: 'black',
+                            marginBottom: 48,
+                        }}
+                        onClick={() => navigate('/registration')}
+                    >
+                        {t('start')}
+                    </Button>
 
-                        <Button
-                            type="primary"
-                            size="large"
-                            icon={<PlayCircleOutlined />}
-                            block
-                            style={{
-                                height: 50,
-                                width: 240,
-                                fontSize: 18,
-                                fontWeight: 'bold',
-                                color: 'black',
-                                marginBottom: 48, //This is the minimum for elderly users with bad motor skills
-                            }}
-                            onClick={() => navigate('/registration')}
-                        >
-                            {t('start')}
-                        </Button>
+                    <Button
+                        type="primary"
+                        size="large"
+                        icon={<ReadOutlined />}
+                        block
+                        style={{
+                            height: 50,
+                            width: 240,
+                            fontSize: 18,
+                            fontWeight: 'bold',
+                            color: 'black',
+                            marginBottom: 48,
+                        }}
+                    >
+                        {t('tutorial')}
+                    </Button>
 
-                        <Button
-                            type="primary"
-                            size="large"
-                            icon={<ReadOutlined />}
-                            block
-                            style={{
-                                height: 50,
-                                width: 240,
-                                fontSize: 18,
-                                fontWeight: 'bold',
-                                color: 'black',
-                                marginBottom: 48,
-                            }}
-                        >
-                            {t('tutorial')}
-                        </Button>
-
-                        <Button
-                            type="primary"
-                            size="large"
-                            icon={<SettingOutlined />}
-                            block
-                            style={{
-                                height: 50,
-                                width: 240,
-                                fontSize: 18,
-                                fontWeight: 'bold',
-                                color: 'black',
-                                marginBottom: 48,
-                            }}
-                        >
-                            {t('settings')}
-                        </Button>
+                    <Button
+                        type="primary"
+                        size="large"
+                        icon={<SettingOutlined />}
+                        block
+                        style={{
+                            height: 50,
+                            width: 240,
+                            fontSize: 18,
+                            fontWeight: 'bold',
+                            color: 'black',
+                            marginBottom: 48,
+                        }}
+                        onClick={() => navigate('/settings')}
+                    >
+                        {t('settings')}
+                    </Button>
                 </Content>
             </Layout>
         </ConfigProvider>

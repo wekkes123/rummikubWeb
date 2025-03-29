@@ -8,6 +8,7 @@ import HorizontalLayout from "./Components/UI/HorizontalLayout";
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import Registration from "./Pages/Registration";
 import "./App.css"
+import SettingsPage from "./Pages/SettingsPage";
 
 //<Route path="/game" element={<GamePage />} />
 
@@ -20,7 +21,7 @@ function App() {
             {/*<HorizontalLayout>*/}
                 <Routes>
                     <Route path="/" element={<Frontpage />} />
-                    <Route path="/test" element={<TestPage />} />
+                    <Route path="/settings" element={<SettingsPage />} />
                     <Route path="/registration" element={<Registration />} />
                     <Route path="/game" element={<GamePage />} />
                     <Route path="/dev" element={<DevPage />} />

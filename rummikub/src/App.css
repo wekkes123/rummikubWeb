@@ -150,49 +150,4 @@ h1 {
   transform: scale(1.05);
 }
 
-.start-button {
-  width: 50vw;
-  height: 50vh;
-  background-color: #4caf50;
-  color: white;
-  font-size: 2rem;
-  font-weight: bold;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
 
-.stop-button {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background-color: red;
-  color: white;
-  font-size: 1.5rem;
-  font-weight: bold;
-  padding: 15px 30px;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.end-button {
-  position: absolute;
-  top: 50px;
-  left: 10px;
-  background-color: blue;
-  color: white;
-  font-size: 1.5rem;
-  font-weight: bold;
-  padding: 15px 30px;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.end-button:hover {
-  background-color: darkblue;
-}

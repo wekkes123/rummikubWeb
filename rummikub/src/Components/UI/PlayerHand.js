@@ -7,8 +7,8 @@ import TileSorter from '../Logic/Sort';
 import { useTranslation } from 'react-i18next';
 import '../../css/button.css'
 
-const MAX_SLOTS = 20; // Increased to support two rows
-const SLOTS_PER_ROW = MAX_SLOTS/2; // 20 slots per row
+const MAX_SLOTS = 20;
+const SLOTS_PER_ROW = MAX_SLOTS/2;
 
 const PlayerHand = ({ tiles, moveTile, isDraggingEnabled, isHidden, leftHanded = false }) => {
     const [displayTiles, setDisplayTiles] = useState([...tiles, ...Array(MAX_SLOTS - tiles.length).fill(null)]);
@@ -47,7 +47,6 @@ const PlayerHand = ({ tiles, moveTile, isDraggingEnabled, isHidden, leftHanded =
         setDisplayTiles(updatedTiles);
     };
 
-    // Split tiles into two rows
     const firstRowTiles = displayTiles.slice(0, SLOTS_PER_ROW);
     const secondRowTiles = displayTiles.slice(SLOTS_PER_ROW);
 
@@ -57,7 +56,7 @@ const PlayerHand = ({ tiles, moveTile, isDraggingEnabled, isHidden, leftHanded =
                 <div className="left-button-panel" >
                     <div style={{ display: leftHanded ? 'block' : 'none' }} >
                         <PileButton
-                            // onClick={handleButtonClick}
+                            //onClick={handleButtonClick}
                             disabled={false}
                         />
 
