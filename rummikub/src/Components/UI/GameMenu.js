@@ -2,10 +2,14 @@ import React, { useState } from 'react';
 import { Menu, Button, Drawer } from 'antd';
 import { HomeOutlined, SettingOutlined, MenuOutlined } from '@ant-design/icons';
 import {useNavigate} from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+
 
 const GameMenu = () => {
     const [menuVisible, setMenuVisible] = useState(false);
     const navigate = useNavigate();
+    const { t } = useTranslation();
+
 
     const toggleMenu = () => {
         setMenuVisible(!menuVisible);
@@ -54,10 +58,10 @@ const GameMenu = () => {
                     onClick={({ key }) => handleMenuClick(key)}
                 >
                     <Menu.Item key="home" icon={<HomeOutlined />}>
-                        Home
+                        {t('home')}
                     </Menu.Item>
                     <Menu.Item key="settings" icon={<SettingOutlined />}>
-                        Settings
+                        {t('settings')}
                     </Menu.Item>
                 </Menu>
             </Drawer>
