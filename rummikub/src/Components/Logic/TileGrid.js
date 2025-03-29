@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Tile from './Tile';
+import Tile from '../UI/Tile';
 import tileData from './TileData';
 
 const TileGrid = () => {

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from 'antd';
 import { useDrop } from 'react-dnd';
 import Tile from './Tile';
-import TileSorter from './Sort';
+import TileSorter from '../Logic/Sort';
 import { useTranslation } from 'react-i18next';
 
 const MAX_SLOTS = 20; // Increased to support two rows

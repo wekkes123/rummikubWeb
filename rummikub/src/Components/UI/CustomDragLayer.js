@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDragLayer } from 'react-dnd';
-import tileData from './TileData';
+import tileData from '../Logic/TileData';
 import { Image } from 'antd';
 
 const CustomDragLayer = () => {

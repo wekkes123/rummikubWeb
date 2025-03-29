@@ -2,12 +2,12 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DndProvider } from 'react-dnd';
 import { TouchBackend } from 'react-dnd-touch-backend';
-import TileData from "../Components/TileData";
-import GameBoard from '../Components/GameBoard';
-import PlayerHand from '../Components/PlayerHand';
-import PileButton from '../Components/PileButton';
-import CustomDragLayer from '../Components/CustomDragLayer';
-import { createSeededRNG, shuffleArray } from '../Components/SeededRNG'; // Import seeded RNG
+import TileData from "../Components/Logic/TileData";
+import GameBoard from '../Components/UI/GameBoard';
+import PlayerHand from '../Components/UI/PlayerHand';
+import PileButton from '../Components/UI/PileButton';
+import CustomDragLayer from '../Components/UI/CustomDragLayer';
+import { createSeededRNG, shuffleArray } from '../Components/Logic/SeededRNG'; // Import seeded RNG
 import '../css/game.css';
 import {Button} from "antd";
 import { useNavigate } from 'react-router-dom';
@@ -155,6 +155,7 @@ const GameComponent = () => {
         <DndProvider backend={TouchBackend} options={{ enableMouseEvents: true }} key={dndKey}>
             <CustomDragLayer />
             <div className="app">
+                {/*
                 <Button
                     type="primary"
                     icon={<ArrowLeftOutlined />}
@@ -169,7 +170,7 @@ const GameComponent = () => {
                     }}
                 >
                     {t('back')}
-                </Button>
+                </Button>*/}
                 {!isGameStarted && (
                     <Button className="start-button" onClick={handleStartClick}>{t('start-game')}</Button>
                 )}

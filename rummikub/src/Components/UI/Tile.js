@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDrag } from 'react-dnd';
-import tileData from './TileData';
+import tileData from '../Logic/TileData';
 import { Image } from 'antd';
 
 const Tile = ({ id, value, color, location, position, moveTile, isDraggingEnabled }) => {

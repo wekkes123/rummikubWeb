@@ -4,7 +4,7 @@ import GamePage from "./Pages/Gamepage";
 import Frontpage from "./Pages/Frontpage";
 import TestPage from "./Pages/TestPage";
 import DevPage from "./Pages/DevPage";
-import HorizontalLayout from "./Components/HorizontalLayout";
+import HorizontalLayout from "./Components/UI/HorizontalLayout";
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import Registration from "./Pages/Registration";
 import "./App.css"

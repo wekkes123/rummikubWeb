@@ -1,7 +1,7 @@
 import React from 'react';
-import '../css/button.css';
+import '../../css/button.css';
 import { useTranslation } from 'react-i18next';
-import pile from '../images/draw-pile.png';
+import pile from '../../images/draw-pile.png';
 
 const PileButton = ({
                         onClick,

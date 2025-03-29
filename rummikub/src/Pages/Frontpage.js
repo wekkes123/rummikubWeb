@@ -5,7 +5,7 @@ import {Layout, Button, Typography, Space, ConfigProvider, Modal} from 'antd';
 import {PlayCircleOutlined, QuestionCircleOutlined, ReadOutlined, SettingOutlined} from '@ant-design/icons';
 import ukFlag from '../images/Flag_of_the_United_Kingdom.png';
 import nlFlag from '../images/Flag_of_Belgium.png';
-import HelpModal from '../Components/RulesModal';
+import HelpModal from '../Components/Logic/RulesModal';
 
 const { Content } = Layout;
 const { Title } = Typography;

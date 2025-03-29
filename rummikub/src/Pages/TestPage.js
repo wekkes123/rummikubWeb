@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Button, Modal } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import CPUOpponent from '../Components/RummikubAPItest';
-import TilePicker from '../Components/TilePicker';
-import TileSorter from '../Components/Sort';
-import Tile from '../Components/Tile';
-import TileData from '../Components/TileData';
-import isValidMove from "../Components/MoveValidator";
+import CPUOpponent from '../Components/Logic/RummikubAPItest';
+import TilePicker from '../Components/Logic/TilePicker';
+import TileSorter from '../Components/Logic/Sort';
+import Tile from '../Components/UI/Tile';
+import TileData from '../Components/Logic/TileData';
+import isValidMove from "../Components/Logic/MoveValidator";
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 

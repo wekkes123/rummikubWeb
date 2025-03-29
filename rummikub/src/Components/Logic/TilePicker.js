@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createSeededRNG } from "./SeededRNG";
-import Tile from "./Tile";  // Make sure Tile is correctly imported
+import Tile from "../UI/Tile";  // Make sure Tile is correctly imported
 import tileData from './TileData'; // Import your tileData
 
 export function shuffleArray(array, rngFunction) {
