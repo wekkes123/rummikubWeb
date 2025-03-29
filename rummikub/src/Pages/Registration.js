@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons';
 import nlFlag from "../images/Flag_of_Belgium.png";
 import ukFlag from "../images/Flag_of_the_United_Kingdom.png";
-import HelpModal from "../Components/Logic/RulesModal";
+import HelpModal from "../Components/UI/RulesModal";
 
 const { Content } = Layout;
 const { Title } = Typography;

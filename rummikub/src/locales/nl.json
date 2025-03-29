@@ -2,6 +2,8 @@
   "start": "Spelen",
   "tutorial": "Voorbeeld Spel",
   "settings": "Instellingen",
+  "back": "Teruggaan naar menu",
+  "home" : "Menu",
   "start-game": "Start Spel",
   "stop-game": "Stop Spel",
   "end-turn": "Eindig Beurt",
@@ -21,4 +23,5 @@
   "yes": "ja",
   "no": "nee",
   "Right-Handed": "Rechthandig"
+  "pile": "Nieuwe Tegel Nemen"
 }
