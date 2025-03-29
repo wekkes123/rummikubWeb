@@ -5,7 +5,6 @@ import { TouchBackend } from 'react-dnd-touch-backend';
 import TileData from "../Components/Logic/TileData";
 import GameBoard from '../Components/UI/GameBoard';
 import PlayerHand from '../Components/UI/PlayerHand';
-import PileButton from '../Components/UI/PileButton';
 import CustomDragLayer from '../Components/UI/CustomDragLayer';
 import { createSeededRNG, shuffleArray } from '../Components/Logic/SeededRNG'; // Import seeded RNG
 import '../css/game.css';
@@ -182,22 +181,12 @@ const GameComponent = () => {
                             moveTile={moveTile}
                             isDraggingEnabled={isDraggingEnabled}
                         />
-                        <div className="player-hand-layout-container">
-                            <div className="left-button-panel">
-                                <PileButton
-                                    //onClick={handleButtonClick}
-                                    disabled={false}
-                                />
-
-                            </div>
-                            <PlayerHand
-                                tiles={handTiles}
-                                moveTile={moveTile}
-                                isDraggingEnabled={isDraggingEnabled}
-                            />
-                            <div className="right-button-panel">
-                            </div>
-                        </div>
+                        <PlayerHand
+                            tiles={handTiles}
+                            moveTile={moveTile}
+                            isDraggingEnabled={isDraggingEnabled}
+                            leftHanded={true}
+                        />
 
                         {/*<Button className="stop-button" onClick={handleStopClick}>Stop Game</Button>*/}
                         {/*<Button className="end-button" onClick={handleEndClick}>End Turn</Button>*/}

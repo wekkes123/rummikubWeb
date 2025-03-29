@@ -27,35 +27,6 @@ h1 {
     gap: 8px;
 }
 
-.toggle-button, .reset-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: none;
-    outline: none;
-}
-
-.toggle-button.enabled {
-    background-color: #4caf50;
-    color: white;
-}
-
-.toggle-button.disabled {
-    background-color: #f44336;
-    color: white;
-}
-
-.reset-button {
-    background-color: #2196f3;
-    color: white;
-}
-
-.reset-button:hover {
-    background-color: #0b7dda;
-}
-
 .board-row {
     display: flex;
     flex: 1;
@@ -139,67 +110,9 @@ h1 {
     transform: scale(1.05);
 }
 
-.swap-sort-button {
-    background-color: #4caf50;
-    color: white;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-    border: none;
-    outline: none;
-}
-
-.swap-sort-button:hover {
-    background-color: #45a049;
-}
-
-/* Start button styles */
-.start-button {
-    width: 50vw;
-    height: 50vh;
-    background-color: #4caf50;
-    color: white;
-    font-size: 2rem;
-    font-weight: bold;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.start-button:hover {
-    background-color: #45a049;
-}
-
-/* Stop button styles */
-.stop-button {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background-color: red;
-    color: white;
-    font-size: 1.5rem;
-    font-weight: bold;
-    padding: 15px 30px;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.stop-button:hover {
-    background-color: darkred;
-}
-
 .player-hand-layout-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
-}
-
-.left-button-panel, .right-button-panel {
-    flex: 1;
-    /* Add any additional styling you want */
 }
