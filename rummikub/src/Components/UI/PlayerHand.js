@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 const MAX_SLOTS = 20; // Increased to support two rows
 const SLOTS_PER_ROW = MAX_SLOTS/2; // 20 slots per row
 
-const PlayerHand = ({ tiles, moveTile, isDraggingEnabled, isHidden }) => {
+const PlayerHand = ({ tiles, moveTile, isDraggingEnabled }) => {
     const [displayTiles, setDisplayTiles] = useState([...tiles, ...Array(MAX_SLOTS - tiles.length).fill(null)]);
 
     const { t } = useTranslation();
@@ -50,7 +50,7 @@ const PlayerHand = ({ tiles, moveTile, isDraggingEnabled, isHidden }) => {
     const secondRowTiles = displayTiles.slice(SLOTS_PER_ROW);
 
     return (
-        <div className={`hand-section ${isHidden ? 'hidden' : ''}`}>
+        <div className="hand-section">
             <div className="sorting-buttons">
                 <Button
                     onClick={() => applySort('value')}

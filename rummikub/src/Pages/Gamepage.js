@@ -183,7 +183,6 @@ const GameComponent = () => {
                             boardState={boardState}
                             moveTile={moveTile}
                             isDraggingEnabled={isDraggingEnabled}
-                            ishidden={!playesTurn}
                         />
                         <div className="player-hand-layout-container">
                             <div className="left-button-panel">
@@ -197,6 +196,7 @@ const GameComponent = () => {
                                 tiles={handTiles}
                                 moveTile={moveTile}
                                 isDraggingEnabled={isDraggingEnabled}
+                                isHidden={!playesTurn}
                             />
                             <div className="right-button-panel">
                             </div>

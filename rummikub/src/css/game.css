@@ -192,6 +192,29 @@ h1 {
     background-color: darkred;
 }
 
+.end-turn-button {
+    background-color: #f57c00; /* Orange for visibility */
+    color: white;
+    padding: 12px 24px;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 15px;
+}
+
+.end-turn-button:hover {
+    background-color: #e65100; /* Slightly darker on hover */
+}
+
+.end-turn-container {
+    display: flex;
+    justify-content: center; /* Centering the button */
+    margin-top: 20px;
+}
+
 .player-hand-layout-container {
     display: flex;
     align-items: center;
