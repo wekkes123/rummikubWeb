@@ -1,17 +1,17 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useDrag } from 'react-dnd';
 import tileData from './TileData';
-import {Image} from 'antd'
+import { Image } from 'antd';
 
 const Tile = ({ id, value, color, location, position, moveTile, isDraggingEnabled }) => {
-    const [{ isDragging }, drag, dragPreview] = useDrag(() => ({
+    const [{ isDragging }, drag] = useDrag(() => ({
         type: 'tile',
-        item: { id, location, position },
+        item: { id, location, position, color, value },
         canDrag: isDraggingEnabled,
         collect: (monitor) => ({
             isDragging: !!monitor.isDragging(),
         }),
-    }), [id, location, position, isDraggingEnabled]); // Add dependencies here
+    }), [id, location, position, color, value, isDraggingEnabled]);
 
     const tileImage = tileData.find(tile => tile.value === String(value) && tile.color === color)?.image;
 
@@ -21,14 +21,14 @@ const Tile = ({ id, value, color, location, position, moveTile, isDraggingEnable
             className="tile"
             style={{
                 backgroundColor: color,
-                opacity: isDragging ? 0.5 : 1,
+                opacity: isDragging ? 0 : 1,
                 cursor: isDraggingEnabled ? 'move' : 'not-allowed',
                 width: '40px',
-                //height: '90px',
                 display: 'flex',
                 justifyContent: 'center',
                 borderRadius: '8px',
                 boxShadow: '2px 2px 5px rgba(0,0,0,0.3)',
+                touchAction: 'none',
             }}
         >
             {tileImage && (
@@ -39,7 +39,6 @@ const Tile = ({ id, value, color, location, position, moveTile, isDraggingEnable
                     preview={false}
                 />
             )}
-
         </div>
     );
 };

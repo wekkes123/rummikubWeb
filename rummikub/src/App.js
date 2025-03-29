@@ -25,7 +25,7 @@ function App() {
                     <Route path="/game" element={<GamePage />} />
                     <Route path="/dev" element={<DevPage />} />
                 </Routes>
-            {/*}</HorizontalLayout>*/}
+            {/*</HorizontalLayout>*/}
         </Router>
     );
 }

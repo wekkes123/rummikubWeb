@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import { TouchBackend } from 'react-dnd-touch-backend';
 import TileData from "../Components/TileData";
 import GameBoard from '../Components/GameBoard';
 import PlayerHand from '../Components/PlayerHand';
 import PileButton from '../Components/PileButton';
+import CustomDragLayer from '../Components/CustomDragLayer';
 import { createSeededRNG, shuffleArray } from '../Components/SeededRNG'; // Import seeded RNG
 import '../css/game.css';
 import {Button} from "antd";
@@ -151,7 +152,8 @@ const GameComponent = () => {
     }, []);
 
     return (
-        <DndProvider backend={HTML5Backend} key={dndKey}>
+        <DndProvider backend={TouchBackend} options={{ enableMouseEvents: true }} key={dndKey}>
+            <CustomDragLayer />
             <div className="app">
                 <Button
                     type="primary"
