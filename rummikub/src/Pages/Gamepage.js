@@ -7,11 +7,12 @@ import GameBoard from '../Components/UI/GameBoard';
 import PlayerHand from '../Components/UI/PlayerHand';
 import PileButton from '../Components/UI/PileButton';
 import CustomDragLayer from '../Components/UI/CustomDragLayer';
-import { createSeededRNG, shuffleArray } from '../Components/Logic/SeededRNG'; // Import seeded RNG
+import { createSeededRNG, shuffleArray } from '../Components/Logic/SeededRNG';
 import '../css/game.css';
 import {Button} from "antd";
 import { useNavigate } from 'react-router-dom';
-import {ArrowLeftOutlined} from "@ant-design/icons";
+import GameMenu from "../Components/UI/GameMenu";
+
 
 const GameComponent = () => {
     const { t } = useTranslation();
@@ -177,10 +178,12 @@ const GameComponent = () => {
 
                 {isGameStarted && (
                     <>
+                        <GameMenu/>
                         <GameBoard
                             boardState={boardState}
                             moveTile={moveTile}
                             isDraggingEnabled={isDraggingEnabled}
+                            ishidden={!playesTurn}
                         />
                         <div className="player-hand-layout-container">
                             <div className="left-button-panel">

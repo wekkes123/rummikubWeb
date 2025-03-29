@@ -93,6 +93,7 @@ h1 {
 .hand-section.hidden {
   transform: translateY(100%);
   visibility: hidden;
+  opacity: 0;
 }
 
 .player-hand {
