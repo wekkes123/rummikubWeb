@@ -84,9 +84,14 @@ const GameComponent = () => {
         navigate('/');
     };
 
+    const playTilePlaceSound = () => {
+        const audio = new Audio("/sounds/place.mp3"); // Adjust path if needed
+        audio.play();
+    };
+
     const moveTile = useCallback((id, sourceLocation, targetLocation, targetPosition, sourcePosition) => {
         if (!isDraggingEnabled) return;
-
+        playTilePlaceSound();
         if (sourceLocation === 'hand' && targetLocation === 'board') {
             const tile = handTiles.find(t => t.id === id);
             if (!tile) return;
@@ -145,11 +150,16 @@ const GameComponent = () => {
                 if (sourceIndex === -1) return prev;
 
                 const [movedTile] = updatedTiles.splice(sourceIndex, 1);
-                updatedTiles.splice(targetPosition, 0, movedTile);
+                let insertIndex = targetPosition;
+
+                // Ensure the insertIndex is within bounds
+                if (insertIndex < 0) insertIndex = 0;
+                if (insertIndex >= updatedTiles.length) insertIndex = updatedTiles.length;
+
+                updatedTiles.splice(insertIndex, 0, movedTile);
 
                 return updatedTiles;
             });
-
         }
     }, [boardState, handTiles, isDraggingEnabled]);
 
