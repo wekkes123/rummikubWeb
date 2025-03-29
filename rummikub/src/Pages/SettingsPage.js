@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Layout, Button, Typography, Space, ConfigProvider, Switch } from 'antd';
-import { SettingOutlined } from '@ant-design/icons';
+import {ReadOutlined, SettingOutlined} from '@ant-design/icons';
 import LanguageButtons from '../Components/UI/LanguageButtons';
+import '../css/button.css'
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -70,11 +71,25 @@ const SettingsPage = () => {
                         />
                     </div>
 
-                    <Button type="primary" onClick={() => navigate('/dev')} style={{ marginBottom: 10 }}>
-                        {t('Developer Settings')}
-                    </Button>
-                    <Button onClick={() => navigate('/')}>
-                        {t('Go Back')}
+                    <div style={{ position: 'absolute', top: 20, right: 20, zIndex: 1 }}>
+                        <Button className={'settings-button'} onClick={() => navigate('/dev')}>
+                            {t('Developer Settings')}
+                        </Button>
+                    </div>
+
+                    <Button     type="primary"
+                                size="large"
+                                style={{
+                                    height: 50,
+                                    width: 240,
+                                    fontSize: 18,
+                                    fontWeight: 'bold',
+                                    color: 'black',
+                                    marginBottom: 48,
+                                    padding: 10
+                                }}
+                                onClick={() => navigate('/')}>
+                        {t('back')}
                     </Button>
                 </Content>
             </Layout>

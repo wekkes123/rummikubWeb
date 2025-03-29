@@ -16,6 +16,17 @@
     object-fit: contain;
 }
 
+.settings-button {
+    min-width: 180px;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px black solid;
+    border-radius: 0px;
+    background: #FFB703;
+    z-index: 10;
+    text-align: center;
+}
+
 .take-tile {
     min-width: 180px;
     padding: 10px;

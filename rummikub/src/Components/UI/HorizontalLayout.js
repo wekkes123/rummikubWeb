@@ -1,64 +1,71 @@
-import React, { useState, useEffect } from 'react';
-import { Helmet } from 'react-helmet';
+import React, { useEffect, useState } from 'react';
 
-function HorizontalLayout({ children }) {
-    const [isPortrait, setIsPortrait] = useState(window.innerHeight > window.innerWidth);
+function LandscapeLayout({ children }) {
+    const [orientationSupported, setOrientationSupported] = useState(true);
 
     useEffect(() => {
-        const checkOrientation = () => {
-            setIsPortrait(window.innerHeight > window.innerWidth);
+        // Check if orientation API is available - use window.screen instead of screen
+        const isOrientationSupported =
+            typeof window !== 'undefined' &&
+            window.screen &&
+            window.screen.orientation &&
+            typeof window.screen.orientation.lock === 'function';
+
+        setOrientationSupported(isOrientationSupported);
+
+        const lockOrientation = async () => {
+            if (!isOrientationSupported) {
+                console.warn('Screen Orientation API not supported in this browser');
+                return;
+            }
+
+            // Try all landscape orientation options
+            const orientationOptions = [
+                'landscape',
+                'landscape-primary',
+                'landscape-secondary'
+            ];
+
+            for (const orientation of orientationOptions) {
+                try {
+                    await window.screen.orientation.lock(orientation);
+                    console.log(`Orientation locked to ${orientation}`);
+                    return; // Successfully locked orientation
+                } catch (error) {
+                    console.warn(`Failed to lock to ${orientation}:`, error.message);
+                    // Continue to next option
+                }
+            }
+
+            // If we get here, all orientation lock attempts failed
+            console.error('Failed to lock orientation in any landscape mode');
         };
 
-        // Check orientation on resize
-        window.addEventListener('resize', checkOrientation);
+        const unlockOrientation = () => {
+            if (isOrientationSupported) {
+                try {
+                    window.screen.orientation.unlock();
+                    console.log('Orientation unlocked');
+                } catch (error) {
+                    console.error('Error unlocking orientation:', error);
+                }
+            }
+        };
 
-        // Initial check
-        checkOrientation();
+        lockOrientation();
 
-        // Cleanup
         return () => {
-            window.removeEventListener('resize', checkOrientation);
+            unlockOrientation();
         };
     }, []);
 
-    // If in landscape mode, render normally
-    if (!isPortrait) {
-        return <div>{children}</div>;
+    // Optionally show a message if orientation locking is not supported
+    if (!orientationSupported) {
+        // You can handle this case as needed - maybe add a CSS-based fallback
+        console.warn('Screen Orientation API not supported, no orientation lock applied');
     }
 
-    // If in portrait mode, apply horizontal rotation
-    return (
-        <div
-            style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '100vh', // Full height of the viewport becomes width
-                height: '100vw', // Full width of the viewport becomes height
-                transformOrigin: 'top left',
-                transform: 'rotate(90deg) translate(0, -100%)',
-                overflow: 'hidden',
-                backgroundColor: 'white', // Optional: set background color
-            }}
-        >
-            <Helmet>
-                <meta
-                    name="viewport"
-                    content="width=device-height, initial-scale=1, maximum-scale=1, user-scalable=no"
-                />
-                <style>{`
-          body, html {
-            overflow: hidden;
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-          }
-        `}</style>
-            </Helmet>
-            {children}
-        </div>
-    );
+    return <div>{children}</div>;
 }
 
-export default HorizontalLayout;
+export default LandscapeLayout;
