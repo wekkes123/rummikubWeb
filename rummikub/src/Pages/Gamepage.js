@@ -38,21 +38,28 @@ const GameComponent = () => {
     const [dndKey, setDndKey] = useState(0);
     const [playesTurn, setPlayesTurn] = useState(true);
     const navigate = useNavigate();
+    const [remainingTiles, setRemainingTiles] = useState([]);
 
     // Timer states
     const [isGameStarted, setIsGameStarted] = useState(false);
     const [gameStartTime, setGameStartTime] = useState(null);
     const [gameEndTime, setGameEndTime] = useState(null);
 
+
+
     const generateHandTiles = (seed) => {
-        const shuffledTiles = shuffleArray(TileData, createSeededRNG(seed));
-        setHandTiles(shuffledTiles.slice(0, 14).map((tile, index) => ({
+        const duplicateTiles = TileData.concat(TileData);
+        const shuffledTiles = shuffleArray(duplicateTiles, createSeededRNG(seed));
+        const hand = shuffledTiles.slice(0, 14).map((tile, index) => ({
             id: index + 1,
             color: tile.color,
             value: tile.value,
             image: tile.image,
-        })));
+        }));
+        setHandTiles(hand);
+        setRemainingTiles(shuffledTiles.slice(14));
     };
+
 
     useEffect(() => {
         if (seed) {
@@ -64,6 +71,16 @@ const GameComponent = () => {
         setIsGameStarted(true);
         const startTime = Date.now();
         setGameStartTime(startTime);
+
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+        } else if (document.documentElement.mozRequestFullScreen) { // Firefox
+            document.documentElement.mozRequestFullScreen();
+        } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari, Opera
+            document.documentElement.webkitRequestFullscreen();
+        } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+            document.documentElement.msRequestFullscreen();
+        }
     };
 
     const handleStopClick = () => {

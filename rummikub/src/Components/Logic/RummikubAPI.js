@@ -19,7 +19,6 @@ export const getBestMove = async (rack, table, isFirstMove) => {
         }
     };
 
-    // Create URL with query parameters
     const url = new URL(API_URL);
     const params = { maximise: "tiles", initial_meld: isFirstMove };
     url.search = new URLSearchParams(params).toString();

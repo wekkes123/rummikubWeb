@@ -1,5 +1,4 @@
 export function createSeededRNG(seed) {
-    // Convert string seed to a number if needed
     let seedNum = typeof seed === 'string' ?
         seed.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) : seed;
 
@@ -11,7 +10,6 @@ export function createSeededRNG(seed) {
     };
 }
 
-// Example usage for shuffling an array with the RNG
 export function shuffleArray(array, rngFunction) {
     const result = [...array];
     for (let i = result.length - 1; i > 0; i--) {

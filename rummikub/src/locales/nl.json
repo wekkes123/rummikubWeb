@@ -21,5 +21,8 @@
   "pile": "Nieuwe Tegel Nemen",
   "yes": "ja",
   "no": "nee",
-  "Right-Handed": "Rechtshandig"
+  "Right-Handed": "Rechtshandig",
+  "username" : "Voornaam",
+  "age" : "Leeftijd",
+  "submit" : "spellen"
 }
