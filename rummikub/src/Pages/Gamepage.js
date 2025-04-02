@@ -60,6 +60,15 @@ const GameComponent = () => {
         setRemainingTiles(shuffledTiles.slice(14));
     };
 
+    const pickTile = () => {
+        if (remainingTiles.length === 0) return null;
+
+        const newTile = remainingTiles[0];
+        setHandTiles(prevHand => [...prevHand, newTile]);
+        setRemainingTiles(prevTiles => prevTiles.slice(1));
+        return newTile;
+    };
+
 
     useEffect(() => {
         if (seed) {
@@ -222,6 +231,7 @@ const GameComponent = () => {
                             moveTile={moveTile}
                             isDraggingEnabled={isDraggingEnabled}
                             leftHanded={leftHanded}
+                            pickTile={pickTile}
                         />
 
                         {/*<Button className="stop-button" onClick={handleStopClick}>Stop Game</Button>*/}

@@ -14,6 +14,7 @@
     width: 68%;
     height: auto;
     object-fit: contain;
+    pointer-events: none;
 }
 
 .settings-button {
