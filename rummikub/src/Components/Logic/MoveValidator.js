@@ -1,5 +1,3 @@
-import tileData from "./TileData";
-
 const isValidMove = (tiles) => {
     if (tiles.length < 3) return false;
 

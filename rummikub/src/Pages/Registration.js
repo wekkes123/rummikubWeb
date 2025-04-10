@@ -1,23 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Layout, Button, Typography, Space, ConfigProvider, Input, Form } from 'antd';
+import { Layout, Button, Space, ConfigProvider, Input, Form, Alert } from 'antd';
 import {
     ArrowLeftOutlined,
-    QuestionCircleOutlined,
+    RotateRightOutlined
 } from '@ant-design/icons';
-import nlFlag from "../images/Flag_of_Belgium.png";
-import ukFlag from "../images/Flag_of_the_United_Kingdom.png";
-import HelpModal from "../Components/UI/RulesModal";
+import LanguageButtons from "../Components/UI/LanguageButtons";
 
 const { Content } = Layout;
-const { Title } = Typography;
 
 const Registration = () => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [age, setAge] = useState('');
+    const [errors, setErrors] = useState([]);
+    const [isLandscape, setIsLandscape] = useState(false);
 
     const changeLanguage = (lang) => {
         i18n.changeLanguage(lang);
@@ -29,32 +28,52 @@ const Registration = () => {
         if (savedLang) {
             i18n.changeLanguage(savedLang);
         }
+
+        // Check initial orientation
+        checkOrientation();
+
+        // Add event listener for orientation changes
+        window.addEventListener('resize', checkOrientation);
+
+        return () => {
+            window.removeEventListener('resize', checkOrientation);
+        };
     }, [i18n]);
+
+    const checkOrientation = () => {
+        setIsLandscape(window.innerWidth > window.innerHeight);
+    };
 
     const handleBack = () => {
         navigate('/');
     };
 
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    const validateForm = () => {
+        const newErrors = [];
 
-    const showHelp = () => {
-        setIsModalVisible(true);
+        if (!username.trim()) {
+            newErrors.push(t('Please enter a username'));
+        }
+
+        if (!age.trim()) {
+            newErrors.push(t('Please enter your age'));
+        } else if (isNaN(age) || parseInt(age) <= 0) {
+            newErrors.push(t('Please enter a valid age'));
+        }
+
+        setErrors(newErrors);
+        return newErrors.length === 0;
     };
 
     const handleFormSubmit = () => {
-        // Check if the username or age is empty
-        if (!username.trim() || !age.trim()) {
-            alert(t('Please enter both username and age')); // You can replace this with a custom error message
-            return;
+        if (validateForm()) {
+            localStorage.setItem('username', username);
+            localStorage.setItem('age', age);
+            navigate('/game');
         }
-
-        // Store username and age in localStorage
-        localStorage.setItem('username', username);
-        localStorage.setItem('age', age);
-
-        // Navigate to another page after storing the data (optional)
-        navigate('/game'); // Change '/nextPage' to your desired route
     };
+
+    const isFormValid = username.trim() && age.trim() && !isNaN(age) && parseInt(age) > 0;
 
     return (
         <ConfigProvider
@@ -90,78 +109,7 @@ const Registration = () => {
                         zIndex: 1
                     }}
                 >
-                    <Button
-                        onClick={() => changeLanguage('nl')}
-                        style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            height: 'auto',
-                            padding: '8px',
-                            backgroundColor: i18n.language === 'nl' ? '#e6f7ff' : undefined,
-                            borderColor: i18n.language === 'nl' ? '#FFB703' : undefined,
-                            borderWidth: '2px',
-                            borderStyle: 'solid'
-                        }}
-                    >
-                        <img
-                            src={nlFlag}
-                            alt="Nederlands"
-                            style={{height: 40, marginBottom: 4}}
-                        />
-                        <span style={{fontSize: 16}}>Nederlands</span>
-                    </Button>
-
-                    <Button
-                        onClick={() => changeLanguage('en')}
-                        style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            height: 'auto',
-                            padding: '8px',
-                            backgroundColor: i18n.language === 'en' ? '#e6f7ff' : undefined,
-                            borderColor: i18n.language === 'en' ? '#FFB703' : undefined,
-                            borderWidth: '2px',
-                            borderStyle: 'solid'
-                        }}
-                    >
-                        <img
-                            src={ukFlag}
-                            alt="English"
-                            style={{height: 40, marginBottom: 4}}
-                        />
-                        <span style={{fontSize: 16}}>English</span>
-                    </Button>
-                </Space>
-                <Space
-                    style={{
-                        position: 'absolute',
-                        top: 100,
-                        right: 20,
-                        zIndex: 1
-                    }}
-                ><Button
-                    type="primary"
-                    shape="square"
-                    icon={<QuestionCircleOutlined style={{ fontSize: '70px', color: '#fff' }} />} // Icon style to fill button
-                    size="large"
-                    onClick={showHelp}
-                    style={{
-                        height: 90,
-                        width: 90,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        padding: '8px',
-                        backgroundColor: '#FFB703', // Set button color
-                        borderColor: '#e6f7ff', // Set button border color
-                    }}
-                />
-                    <HelpModal isVisible={isModalVisible} onClose={() => setIsModalVisible(false)} />
+                    <LanguageButtons />
                 </Space>
 
                 <Content style={{
@@ -172,29 +120,79 @@ const Registration = () => {
                     padding: '50px 16px',
                     marginBottom: '20vh',
                 }}>
+                    {!isLandscape && (
+                        <Alert
+                            message={
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    <RotateRightOutlined style={{ marginRight: 8 }} />
+                                    {t('Please rotate your device to landscape mode')}
+                                </div>
+                            }
+                            type="warning"
+                            showIcon={false}
+                            style={{ marginBottom: 20, width: '100%', maxWidth: 300 }}
+                        />
+                    )}
+
+                    {errors.length > 0 && (
+                        <Alert
+                            message={t('Please correct the following:')}
+                            description={
+                                <ul style={{ margin: 0, paddingLeft: 20 }}>
+                                    {errors.map((error, index) => (
+                                        <li key={index}>{error}</li>
+                                    ))}
+                                </ul>
+                            }
+                            type="error"
+                            showIcon
+                            style={{ marginBottom: 20, width: '100%', maxWidth: 300 }}
+                        />
+                    )}
 
                     <Form style={{ width: '100%', maxWidth: 300 }}>
                         <Space direction="vertical" size="large" style={{ width: '100%' }}>
+                            <div style={{ fontWeight: 'bold', color: 'black' }}>{t('username')}:</div>
                             <Input
-                                placeholder={t('username')}
                                 size="large"
-                                style={{ height: 50 }}
+                                style={{
+                                    height: 50,
+                                    color: 'black',
+                                    fontWeight: 'bold',
+                                    backgroundColor: 'rgba(255, 255, 255, 0.9)'
+                                }}
+                                value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                             />
 
+                            <div style={{ fontWeight: 'bold', color: 'black' }}>{t('age')}:</div>
                             <Input
-                                placeholder={t('age')}
                                 size="large"
-                                style={{ height: 50 }}
+                                style={{
+                                    height: 50,
+                                    color: 'black',
+                                    fontWeight: 'bold',
+                                    backgroundColor: 'rgba(255, 255, 255, 0.9)'
+                                }}
+                                value={age}
                                 onChange={(e) => setAge(e.target.value)}
+                                type="number"
+                                min="1"
                             />
                         </Space>
 
                         <Button
                             type="primary"
                             htmlType="submit"
-                            style={{ width: '100%', marginTop: 20, color: 'black' }}
+                            style={{
+                                width: '100%',
+                                marginTop: 20,
+                                color: 'black',
+                                backgroundColor: isFormValid && isLandscape ? '#FFB703' : '#A0A0A0',
+                                cursor: isFormValid && isLandscape ? 'pointer' : 'not-allowed'
+                            }}
                             onClick={handleFormSubmit}
+                            disabled={!isFormValid || !isLandscape}
                         >
                             {t('submit')}
                         </Button>

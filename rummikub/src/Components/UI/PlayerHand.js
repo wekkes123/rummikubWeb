@@ -10,7 +10,7 @@ import '../../css/button.css'
 const MAX_SLOTS = 20;
 const SLOTS_PER_ROW = MAX_SLOTS/2;
 
-const PlayerHand = ({ tiles, moveTile, isDraggingEnabled, isHidden, leftHanded = false }) => {
+const PlayerHand = ({ tiles, moveTile, isDraggingEnabled, isHidden, leftHanded = false, pickTile }) => {
     const [displayTiles, setDisplayTiles] = useState([...tiles, ...Array(MAX_SLOTS - tiles.length).fill(null)]);
 
     const { t } = useTranslation();
@@ -47,6 +47,28 @@ const PlayerHand = ({ tiles, moveTile, isDraggingEnabled, isHidden, leftHanded =
         setDisplayTiles(updatedTiles);
     };
 
+    const handlePickTile = () => {
+        console.log('Pick tile');
+        const newTile = pickTile();
+        console.log(newTile);
+        if (newTile) {
+            setDisplayTiles(prevTiles => {
+                const updatedTiles = [...prevTiles];
+                if (updatedTiles.length === MAX_SLOTS && !updatedTiles.includes(null)) {
+                    return prevTiles;
+                }
+
+                const emptySlotIndex = updatedTiles.findIndex(tile => tile === null);
+                if (emptySlotIndex !== -1 ) {
+                    updatedTiles[emptySlotIndex] = newTile;
+                }
+
+
+                return updatedTiles;
+            });
+        }
+    };
+
     const firstRowTiles = displayTiles.slice(0, SLOTS_PER_ROW);
     const secondRowTiles = displayTiles.slice(SLOTS_PER_ROW);
 
@@ -56,7 +78,7 @@ const PlayerHand = ({ tiles, moveTile, isDraggingEnabled, isHidden, leftHanded =
                 <div className="left-button-panel" >
                     <div style={{ display: leftHanded ? 'block' : 'none' }} >
                         <PileButton
-                            //onClick={handleButtonClick}
+                            onClick={handlePickTile}
                             disabled={false}
                         />
 
@@ -108,7 +130,7 @@ const PlayerHand = ({ tiles, moveTile, isDraggingEnabled, isHidden, leftHanded =
                 <div className="right-button-panel" >
                     <div style={{ display: leftHanded ? 'none' : 'block' }}>
                         <PileButton
-                            // onClick={handleButtonClick}
+                            onClick={handlePickTile}
                             disabled={false}
                         />
 

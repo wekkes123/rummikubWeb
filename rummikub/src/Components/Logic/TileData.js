@@ -1,5 +1,3 @@
-// src/tilesData.js
-
 const tileData = [
     // Orange Tiles (1-13)
     ...Array.from({ length: 13 }, (_, i) => ({

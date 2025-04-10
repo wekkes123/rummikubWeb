@@ -21,5 +21,8 @@
   "pile": "Take New Tile",
   "yes": "yes",
   "no": "no",
-  "Right-Handed": "Right-Handed"
+  "Right-Handed": "Right-Handed",
+  "username" : "first name",
+  "age" : "Age",
+  "submit": "Submit"
 }

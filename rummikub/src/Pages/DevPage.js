@@ -6,10 +6,9 @@ function DevPage() {
     const [username, setUsername] = useState('');
     const [age, setAge] = useState('');
     const [seed, setSeed] = useState('');
-    const [lastGameTime, setLastGameTime] = useState(null); // State for last game time
+    const [lastGameTime, setLastGameTime] = useState(null);
 
     useEffect(() => {
-        // Get username, age, and seed from localStorage
         const savedUsername = localStorage.getItem('username');
         const savedAge = localStorage.getItem('age');
         let savedSeed = localStorage.getItem('seed');
@@ -32,10 +31,9 @@ function DevPage() {
     };
 
     const handleEnterClick = () => {
-        localStorage.setItem('seed', seed); // Save seed to localStorage
+        localStorage.setItem('seed', seed);
     };
 
-    // Function to trigger download of data as JSON
     const handleDownload = () => {
         const data = {
             username,
@@ -44,16 +42,14 @@ function DevPage() {
             lastGameTime,
         };
 
-        const json = JSON.stringify(data, null, 2); // Convert data to JSON format
+        const json = JSON.stringify(data, null, 2);
 
-        // Create a Blob from the JSON data
         const blob = new Blob([json], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
 
-        // Create a temporary anchor element to trigger download
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'devpage_data.json'; // Filename for the download
+        a.download = 'devpage_data.json';
         a.click();
 
         URL.revokeObjectURL(url);

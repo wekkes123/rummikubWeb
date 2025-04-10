@@ -28,7 +28,6 @@ const GameMenu = () => {
 
     return (
         <>
-            {/* Small button to open menu */}
             <Button
                 type="primary"
                 icon={<MenuOutlined />}
@@ -40,16 +39,14 @@ const GameMenu = () => {
                     zIndex: 1000,
                 }}
             />
-
-            {/* Drawer (same dark theme) */}
             <Drawer
                 placement="right"
                 closable={true}
                 onClose={toggleMenu}
                 open={menuVisible}
                 width={200}
-                bodyStyle={{ background: '#001529', padding: 0 }} // Match dark theme
-                drawerStyle={{ background: '#001529' }} // Match dark theme
+                bodyStyle={{ background: '#001529', padding: 0 }}
+                drawerStyle={{ background: '#001529' }}
             >
                 <Menu
                     mode="vertical"
