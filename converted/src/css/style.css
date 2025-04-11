@@ -123,6 +123,11 @@
 
 }
 
+.red {
+    background-color: lightcoral !important;
+    background-blend-mode: multiply;
+}
+
 .highlight, .computer {
     opacity: 1;
     

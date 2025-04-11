@@ -48,9 +48,7 @@ const PlayerHand = ({ tiles, moveTile, isDraggingEnabled, isHidden, leftHanded =
     };
 
     const handlePickTile = () => {
-        console.log('Pick tile');
         const newTile = pickTile();
-        console.log(newTile);
         if (newTile) {
             setDisplayTiles(prevTiles => {
                 const updatedTiles = [...prevTiles];

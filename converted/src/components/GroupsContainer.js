@@ -5,7 +5,7 @@ import DraggableTile from '../dragDrop/DraggableTile';
 import { removeOriginalTile, isTileMoveValid } from './Functions/gamePlayFunctions'
 import '../css/style.css'
 
-function GroupsContainer({ groups, sectionIndex, updateBoardTile, tilesAreDraggable = true, getBoardValue, removeFromHand, firstTurn}) {
+function GroupsContainer({ groups, sectionIndex, updateBoardTile, tilesAreDraggable = true, getBoardValue, removeFromHand, firstTurn, flash}) {
     const handleTileDrop = (draggedTileData, dropData) => {
         console.log('Tile dropped in run:', draggedTileData, dropData);
 
@@ -60,7 +60,8 @@ function GroupsContainer({ groups, sectionIndex, updateBoardTile, tilesAreDragga
                             isHighlighted: isHighlighted,
                             isGreyedOut: isGreyedOut,
                             location: `group-${sectionIndex}-${groupIndex}-${tileIndex}`,
-                            curlo: tileIndex
+                            curlo: tileIndex,
+                            flash: tileValue !== 0 && tileValue !== '0' ? flash : false,
                         };
 
                         const shouldBeDraggable = tilesAreDraggable &&

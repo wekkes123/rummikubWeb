@@ -2,7 +2,7 @@ import React from 'react';
 import Tile from './Tile';
 
 function ComputerRack({ tileCount }) {
-    // In a real implementation, we would have the actual tiles here
+
     const dummyTiles = Array(tileCount).fill(null);
 
     return (
