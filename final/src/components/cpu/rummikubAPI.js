@@ -8,12 +8,11 @@ const colorMap = {
 };
 
 const reverseMap = {
-    k: '1', // black
-    b: '2', // blue
-    o: '3', // orange
-    r: '4'  // red
+    k: '1',
+    b: '2',
+    o: '3',
+    r: '4'
 };
-
 
 /**
  * Calls the Rummikub solver API to determine the best move for a given player.
@@ -21,16 +20,21 @@ const reverseMap = {
  * @param {string[][]} board - The current sets on the table.
  * @param {boolean} isFirstMove - Whether this is the player's first move.
  * @returns {Promise<object|null>} - Returns an object containing the move details or null if no move is possible.
+ * any problems with the api call will result in the cpu to pick up a tile
  */
+
 export const getBestMove = async (cpuHand, board, isFirstMove) => {
     const rack = convertTiles(cpuHand)
     const [groups, runs] = convertBoard(board);
     const convertedGroups = convertTiles(groups);
     const table = [...convertedGroups, ...runs]
 
+    console.log("rack:", rack)
+    console.log(table);
+
     const payload = {
         rack,
-        table: table.length ? table.reduce((acc, set) => acc.concat(set), []) : [], // Flatten table
+        table: table.length ? table.reduce((acc, set) => acc.concat(set), []) : [],
         config: {
             numbers: 13,
             colours: 4,
@@ -38,7 +42,6 @@ export const getBestMove = async (cpuHand, board, isFirstMove) => {
             min_len: 3
         }
     };
-    console.log(payload);
 
     const url = new URL(API_URL);
     const params = { maximise: "tiles", initial_meld: isFirstMove };
@@ -66,7 +69,8 @@ export const getBestMove = async (cpuHand, board, isFirstMove) => {
             console.log(result);
             return {
                 tilesToPlay: reverseConvertTiles(result.tiles_to_play),
-                setsToMake: reverseConvertSets(result.sets_to_make)
+                setsToMake: reverseConvertSets(result.sets_to_make),
+                jokerValue: result.joker_value
             };
         } else {
             console.warn("API Response indicates no valid move.", result);
@@ -116,7 +120,7 @@ const convertBoard = (board) => {
         runGroup.forEach((tile, i) => {
             if (tile === 1) {
                 runTiles.push(`${colorLetter}${i + 1}`); // i+1 is the number of the tile
-            } else if (tile === 'j') {
+            } else if (tile === '1-j' || tile === '4-j') {
                 runTiles.push('j');
             }
         });

@@ -166,7 +166,7 @@ function App() {
       const bestMove = await getBestMove(board[4], board, cpuFirstTurn);
       if (bestMove) {
         console.log("CPU will play:", bestMove);
-        playCpuMove(bestMove.setsToMake, bestMove.tilesToPlay);
+        playCpuMove(bestMove.setsToMake, bestMove.tilesToPlay, bestMove.jokerValue);
         setCpuFirstTurn(false);
         setPlayersTurn(true);
       } else {
@@ -178,7 +178,7 @@ function App() {
     }
   };
 
-  const playCpuMove = (moves, tilesFromHand) => {
+  const playCpuMove = (moves, tilesFromHand, jokerValue) => {
     let newBoard;
     if(cpuFirstTurn){
       newBoard = [...board];
@@ -230,14 +230,10 @@ function App() {
           }
         }
       } else {
-        // Process run move
         const color = parseInt(moveData[0].split('-')[0]);
-        // Determine which arrays correspond to this color
-        // Each color has 2 arrays in newBoard[2]
         const startIndex = (color - 1) * 2;
         const colorArrays = [newBoard[2][startIndex], newBoard[2][startIndex + 1]];
         console.log(color);
-        // Check which of the two arrays has space for all tiles
         let targetArrayIndex = -1;
 
         // Check both arrays for the color to see which one can fit all the tiles
@@ -247,12 +243,23 @@ function App() {
 
           for (const tile of moveData) {
             const [, tileNumber] = tile.split('-');
-            const index = parseInt(tileNumber) - 1;
 
-            // If the tile is already used, this array can't fit the run
-            if (currentArray[index] === '1') {
-              canFit = false;
-              break;
+            // Handle regular tiles
+            if (tileNumber !== 'j') {
+              const index = parseInt(tileNumber) - 1;
+              // If the tile is already used, this array can't fit the run
+              if (currentArray[index] === 1) {
+                canFit = false;
+                break;
+              }
+            }
+            // For joker, we need to check if the jokerValue position is available
+            else {
+              const index = jokerValue - 1;  // Use jokerValue to determine position
+              if (currentArray[index] === 1) {
+                canFit = false;
+                break;
+              }
             }
           }
 
@@ -262,25 +269,23 @@ function App() {
           }
         }
 
-        // If we found an array that can fit the run
         if (targetArrayIndex !== -1) {
-          const targetArray = colorArrays[targetArrayIndex];
-
-          // Place each tile in the run
           for (const tile of moveData) {
             const [, tileNumber] = tile.split('-');
-            const index = parseInt(tileNumber) - 1;
-            targetArray[index] = 1;
-          }
 
-          // Update the array in newBoard
-          newBoard[2][startIndex + targetArrayIndex] = targetArray;
+            if (tileNumber !== 'j') {
+              const index = parseInt(tileNumber) - 1;
+              colorArrays[targetArrayIndex][index] = 1;
+            } else {
+              const index = jokerValue - 1;
+              colorArrays[targetArrayIndex][index] = tile;
+            }
+          }
         }
       }
     }
-
     setBoard(newBoard);
-  };
+  }
 
   const onDone = () => {
     //step 1 is the board correct?
