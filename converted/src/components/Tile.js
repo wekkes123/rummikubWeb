@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-function Tile({ id, color, number, isHighlighted, isGreyedOut, location, curlo, flash }) {
+function Tile({ id, color, number, isHighlighted, isGreyedOut, location, curlo, flash, style, ...rest }) {
     const [isRed, setIsRed] = useState(false);
+
     useEffect(() => {
-        if(flash) {
+        if (flash) {
             setIsRed(true);
             setTimeout(() => setIsRed(false), 500);
             setTimeout(() => setIsRed(true), 500);
@@ -13,6 +14,7 @@ function Tile({ id, color, number, isHighlighted, isGreyedOut, location, curlo, 
     }, [flash]);
 
     let backgroundImage;
+
     switch (id) {
         case '0':
             backgroundImage = 'url(./images/tileBack.png)';
@@ -24,7 +26,8 @@ function Tile({ id, color, number, isHighlighted, isGreyedOut, location, curlo, 
             backgroundImage = `url('./images/${color}-0${number}.svg')`;
             break;
     }
-    if (number === 'j') {
+
+    if (number === 'j' && id !== '0') {
         backgroundImage = `url('./images/${color}-${number}.png')`;
     }
 
@@ -39,11 +42,12 @@ function Tile({ id, color, number, isHighlighted, isGreyedOut, location, curlo, 
         <div
             id={id}
             className={tileClasses}
-            style={{ backgroundImage }}
+            style={{ backgroundImage, ...style }}
             data-location={location || ''}
             data-color={color || ''}
             data-number={number || ''}
             data-curlo={curlo || ''}
+            {...rest}
         />
     );
 }

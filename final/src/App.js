@@ -11,10 +11,11 @@ import StartScreen from './components/StartScreen';
 import CustomDragLayer from './dragDrop/CustomDragLayer';
 import { isValidGroup,isValidRun, validateBoard, playedTiles, findJokerValue} from "./components/Functions/gamePlayFunctions";
 import { getBestMove } from "./components/cpu/rummikubAPI"
+import Notification from './components/Notification'
+import {flyTileBetweenContainers} from "./components/Functions/TileMover";
 import './App.css';
 import './css/style.css'
 
-//sommige functies die doorgepast wrden naar andere components worden insta geexecute, fix dit
 
 const backendForDND = TouchBackend;
 const backendOptions = { enableMouseEvents: true };
@@ -26,6 +27,8 @@ function App() {
   const [cpuFirstTurn, setCpuFirstTurn] = useState(true);
   const [boardSnapshot, setBoardSnapshot] = useState(null);
   const [playersTurn, setPlayersTurn] = useState(true);
+  const [showNotif, setShowNotif] = useState(false);
+  const [msgNotif, setMsgNotif] = useState("hello");
   const seed = 'ihvj';
 
   const initializeBoard = () => {
@@ -93,9 +96,6 @@ function App() {
       const newBoard = [...board];
       newBoard[3] = newPlayerHand;
       newBoard[4] = newCpuHand
-      newBoard[0][0][0] = '4-10' //todo remove this line
-      newBoard[0][1][0] = '1-10'
-      newBoard[0][1][1] = '2-10'
       setBoard(newBoard);
       setPile(newPile);
       setBoardSnapshot(JSON.parse(JSON.stringify(newBoard))) //snapshot was taken before the game is done being initialized so for the beginning. json is a way to take a deep copy
@@ -178,9 +178,9 @@ function App() {
     }
   };
 
-  const playCpuMove = (moves, tilesFromHand, jokerValue) => {
+  const playCpuMove = async (moves, tilesFromHand, jokerValue) => {
     let newBoard;
-    if(cpuFirstTurn){
+    if (cpuFirstTurn) {
       newBoard = [...board];
     } else {
       newBoard = initializeBoard();
@@ -188,43 +188,50 @@ function App() {
       newBoard[4] = board[4];
     }
 
-    // Remove tiles from hand of the cpu
-    const updatedTilesInHand = [...newBoard[4]];
-    for (const tile of tilesFromHand) {
-      if (tile === 'j') {
-        const indexToRemove = updatedTilesInHand.findIndex(
-            boardTile => boardTile === '1-j' || boardTile === '4-j'
-        );
-        if (indexToRemove !== -1) {
-          updatedTilesInHand.splice(indexToRemove, 1);
-        }
-      } else {
-        const indexToRemove = updatedTilesInHand.indexOf(tile);
-        if (indexToRemove !== -1) {
-          updatedTilesInHand.splice(indexToRemove, 1);
-        }
-      }
-    }
-    newBoard[4] = updatedTilesInHand;
-
-
-
     for (let i = 0; i < moves.length; i++) {
       const move = moves[i];
       const type = move[0];
-
-      //api returns "j" as joker so we rist have to replace it here with our joker
       const moveData = [...move.slice(1)].map(item => item === 'j' ? joker : item);
 
-      if (type === 'g') { // group
-        if (moveData.length === 3) {
-          moveData.push('0');
-        }
+      if (type === 'g') {
+        if (moveData.length === 3) moveData.push('0');
+
         outerLoop: for (let j = 0; j < newBoard.length; j++) {
           for (let k = 0; k < newBoard[j].length; k++) {
-            if (Array.isArray(newBoard[j][k]) &&
-                newBoard[j][k].every(item => item === '0')) {
-              newBoard[j][k] = moveData;
+            if (Array.isArray(newBoard[j][k]) && newBoard[j][k].every(item => item === '0')) {
+              for (let m = 0; m < moveData.length; m++) {
+                const tile = moveData[m];
+                if (tile === '0') continue;
+
+                const fromElem = document.querySelector(`.computer-rack `);
+                const toElem = document.querySelector(`[data-location="group-${j}-${k}-${m}"]`);
+
+                if (fromElem && toElem) {
+                  await new Promise(resolve =>
+                      flyTileBetweenContainers({
+                        tile,
+                        fromElem,
+                        toElem,
+                        onComplete: resolve
+                      })
+                  );
+                }
+
+                // Only update the board AFTER the animation
+                const boardCopy = JSON.parse(JSON.stringify(newBoard));
+                boardCopy[j][k][m] = tile;
+
+                const indexToRemove = tile === 'j'
+                    ? boardCopy[4].findIndex(t => t === '1-j' || t === '4-j')
+                    : boardCopy[4].indexOf(tile);
+
+                if (indexToRemove !== -1) {
+                  boardCopy[4].splice(indexToRemove, 1);
+                }
+
+                newBoard = boardCopy;
+                setBoard(boardCopy);
+              }
               break outerLoop;
             }
           }
@@ -233,16 +240,18 @@ function App() {
         const color = parseInt(moveData[0].split('-')[0]);
         const startIndex = (color - 1) * 2;
         const colorArrays = [newBoard[2][startIndex], newBoard[2][startIndex + 1]];
-        console.log(color);
         let targetArrayIndex = -1;
 
-        // Check both arrays for the color to see which one can fit all the tiles
         for (let arrayIndex = 0; arrayIndex < 2; arrayIndex++) {
           const currentArray = colorArrays[arrayIndex];
           let canFit = true;
 
           for (const tile of moveData) {
             const [, tileNumber] = tile.split('-');
+            const index = parseInt(tileNumber) - 1;
+            if (currentArray[index] === '1') {
+              canFit = false;
+              break;
 
             // Handle regular tiles
             if (tileNumber !== 'j') {
@@ -270,17 +279,45 @@ function App() {
         }
 
         if (targetArrayIndex !== -1) {
+          const targetArray = colorArrays[targetArrayIndex];
+
           for (const tile of moveData) {
             const [, tileNumber] = tile.split('-');
+            const index = parseInt(tileNumber) - 1;
 
-            if (tileNumber !== 'j') {
-              const index = parseInt(tileNumber) - 1;
-              colorArrays[targetArrayIndex][index] = 1;
-            } else {
-              const index = jokerValue - 1;
-              colorArrays[targetArrayIndex][index] = tile;
+            const fromElem = document.querySelector(`.computer-rack`);
+            const toElem = document.querySelector(`[data-location="run-${startIndex + targetArrayIndex}-${index}"]`);
+
+            if (fromElem && toElem) {
+              await new Promise(resolve =>
+                  flyTileBetweenContainers({
+                    tile,
+                    fromElem,
+                    toElem,
+                    onComplete: resolve
+                  })
+              );
             }
+            targetArray[index] = 1;
+            // Only update the board AFTER the animation
+            const boardCopy = JSON.parse(JSON.stringify(newBoard));
+            boardCopy[2][startIndex + targetArrayIndex][index] = 1;
+
+            const indexToRemove = tile === 'j'
+                ? boardCopy[4].findIndex(t => t === '1-j' || t === '4-j')
+                : boardCopy[4].indexOf(tile);
+
+            if (indexToRemove !== -1) {
+              boardCopy[4].splice(indexToRemove, 1);
+            }
+
+            newBoard = boardCopy;
+            setBoard(boardCopy);
           }
+
+          newBoard[2][startIndex + targetArrayIndex] = targetArray;
+
+
         }
       }
     }
@@ -310,6 +347,8 @@ function App() {
       }
       console.log(count);
       if (count < 30){
+        setMsgNotif("You played less than 30 on your first turn")
+        setShowNotif(true);
         console.log("less than 30 on first turn")
         return;
         //todo notify player of less then 30 also logic is not checking if tiles are using cpu's tiles
@@ -382,8 +421,10 @@ function App() {
         <div className="app">
           <CustomDragLayer />
 
+          <Notification message={msgNotif} isVisible={showNotif} onClose={() => setShowNotif(false)}/>
+          <div id="tile-overlay-root"></div>
           <div className={`game-container ${!gameStarted || playerWon ? 'blurred' : ''}`}>
-            {/*<ComputerRack tileCount={computerTileCount} />*/}
+            <ComputerRack cpuhand={board[4]} />
             <GameBoard
                 board={board}
                 updateBoardTile={updateBoardTile}
@@ -395,7 +436,7 @@ function App() {
             <GameControls
                 onDraw = {drawTile}
                 onDone = {onDone}
-                onReverse = {printB}
+                onReverse = {saveToSnapshot}
                 pressable = {playersTurn}
             />
             <PlayerRack

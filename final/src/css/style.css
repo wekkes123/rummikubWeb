@@ -15,15 +15,12 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
-    margin-bottom: 10px;
-    margin-top: 30px;
 }
 
 .container2 {
     justify-content: center;
     display: flex;
     flex-direction: row;
-    margin: 10px;
 }
 .container3 {
     display: flex;
@@ -31,8 +28,16 @@
     justify-content: center;
     align-self: flex-end;
     width: 100%;
-    margin-top: 10px;
-    margin-bottom: 30px;
+}
+
+#tile-overlay-root {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none; /* allows clicks to go through */
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000; /* make sure it's above everything else */
 }
 
 .computer-info, .player-info {
@@ -65,7 +70,7 @@
     padding: 10px 15px;
 }
 
-.done, .reverse {
+.done, .reverse .draw {
     margin: 0 10px;
 }
 
@@ -100,10 +105,6 @@
     flex-direction: row;
     height: 8.5vh;
     margin-bottom: 1px;
-}
-.draw {
-    height: 10vh;
-    
 }
 .pouch {
     align-self: flex-end;
@@ -167,4 +168,41 @@
 
 .filter {
 filter: blur(4px);
+}
+
+
+.notificationModal .ant-modal-content {
+    background-color: burlywood; /* Set background color for the content area */
+    border-radius: 15px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Optional: Add shadow for better visibility */
+}
+
+.notificationModal .modalClose {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.notificationModal .modalClose:hover {
+    background-color: #45a049;
+}
+
+.notificationModal .text-lg {
+    font-size: 1.5rem;
+    font-weight: bold;
 }
