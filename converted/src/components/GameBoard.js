@@ -2,7 +2,15 @@ import React from 'react';
 import GroupsContainer from './GroupsContainer';
 import RunsContainer from './RunsContainer';
 
-function GameBoard({ board, updateBoardTile, getBoardValue, tilesAreDraggable, removeFromHand, firstTurn }) {
+function GameBoard({
+                       board,
+                       updateBoardTile,
+                       getBoardValue,
+                       tilesAreDraggable,
+                       removeFromHand,
+                       firstTurn,
+                       flashAllTiles
+                   }) {
     const [groups1, groups2, runs, playerhand, cpuhand] = board;
 
     return (
@@ -13,9 +21,10 @@ function GameBoard({ board, updateBoardTile, getBoardValue, tilesAreDraggable, r
                     sectionIndex={0}
                     updateBoardTile={updateBoardTile}
                     getBoardValue={getBoardValue}
-                    tilesAreDraggable = {tilesAreDraggable}
-                    removeFromHand = {removeFromHand}
-                    firstTurn = {firstTurn}
+                    tilesAreDraggable={tilesAreDraggable}
+                    removeFromHand={removeFromHand}
+                    firstTurn={firstTurn}
+                    flash={flashAllTiles}
                 />
             </div>
 
@@ -25,10 +34,10 @@ function GameBoard({ board, updateBoardTile, getBoardValue, tilesAreDraggable, r
                     sectionIndex={1}
                     updateBoardTile={updateBoardTile}
                     getBoardValue={getBoardValue}
-                    tilesAreDraggable = {tilesAreDraggable}
-                    removeFromHand = {removeFromHand}
-                    firstTurn = {firstTurn}
-
+                    tilesAreDraggable={tilesAreDraggable}
+                    removeFromHand={removeFromHand}
+                    firstTurn={firstTurn}
+                    flash={flashAllTiles}
                 />
             </div>
 
@@ -38,9 +47,10 @@ function GameBoard({ board, updateBoardTile, getBoardValue, tilesAreDraggable, r
                     sectionIndex={2}
                     updateBoardTile={updateBoardTile}
                     getBoardValue={getBoardValue}
-                    tilesAreDraggable = {tilesAreDraggable}
-                    removeFromHand = {removeFromHand}
-                    firstTurn = {firstTurn}
+                    tilesAreDraggable={tilesAreDraggable}
+                    removeFromHand={removeFromHand}
+                    firstTurn={firstTurn}
+                    flash={flashAllTiles}
                 />
             </div>
         </div>

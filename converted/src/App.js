@@ -24,6 +24,8 @@ function App() {
   const [firstTurn, setFirstTurn] = useState(true);
   const [boardSnapshot, setBoardSnapshot] = useState(null);
   const [playersTurn, setPlayersTurn] = useState(true);
+  const [flashAllTiles, setFlashAllTiles] = useState(false);
+
   const seed = 'ihvj';
 
   const initializeBoard = () => {
@@ -81,9 +83,6 @@ function App() {
       const newBoard = [...board];
       newBoard[3] = newPlayerHand;
       newBoard[4] = newCpuHand
-      newBoard[0][0][0] = '4-10'
-      newBoard[0][1][0] = '1-10'
-      newBoard[0][1][1] = '2-10'
       setBoard(newBoard);
       setPile(newPile);
       setBoardSnapshot(JSON.parse(JSON.stringify(newBoard))) //snapshot was taken before the game is done being initialized so for the beginning. json is a way to take a deep copy
@@ -163,6 +162,8 @@ function App() {
       console.log(count);
       if (count < 30){
         console.log("less than 30 on first turn")
+        setFlashAllTiles(true);
+        setTimeout(() => setFlashAllTiles(false), 1500);
         return;
         //todo notify player of less then 30 also logic is not checking if tiles are using cpu's tiles
       } else {
@@ -238,6 +239,7 @@ function App() {
                 getBoardValue={getBoardValue}
                 tilesAreDraggable={playersTurn}
                 firstTurn = {firstTurn}
+                flashAllTiles={flashAllTiles}
             />
             <GameControls
                 onDraw = {drawTile}

@@ -4,7 +4,7 @@ import Tile from './Tile';
 import DraggableTile from '../dragDrop/DraggableTile';
 import {isTileMoveValid, removeOriginalTile} from './Functions/gamePlayFunctions'
 
-function RunsContainer({ runs, sectionIndex, updateBoardTile, tilesAreDraggable = true, getBoardValue, removeFromHand, firstTurn }) {
+function RunsContainer({ runs, sectionIndex, updateBoardTile, tilesAreDraggable = true, getBoardValue, removeFromHand, firstTurn, flash }) {
 
     const colors = ['1', '2', '3', '4'];
 
@@ -63,7 +63,8 @@ function RunsContainer({ runs, sectionIndex, updateBoardTile, tilesAreDraggable 
                                     isHighlighted: isHighlighted,
                                     isGreyedOut: 0,
                                     location: `run-${runIndex}-${tileIndex}`,
-                                    curlo: tileIndex
+                                    curlo: tileIndex,
+                                    flash: flash
                                 };
                             } else {
                                 number = tileIndex + 1;
@@ -76,7 +77,8 @@ function RunsContainer({ runs, sectionIndex, updateBoardTile, tilesAreDraggable 
                                     isHighlighted: isHighlighted,
                                     isGreyedOut: isGreyedOut,
                                     location: `run-${runIndex}-${tileIndex}`,
-                                    curlo: tileIndex
+                                    curlo: tileIndex,
+                                    flash: isHighlighted  ? flash : false,
                                 };
                             }
 
