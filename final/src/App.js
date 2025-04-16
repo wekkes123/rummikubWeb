@@ -11,8 +11,10 @@ import StartScreen from './components/StartScreen';
 import CustomDragLayer from './dragDrop/CustomDragLayer';
 import { isValidGroup,isValidRun, validateBoard, playedTiles, findJokerValue} from "./components/Functions/gamePlayFunctions";
 import { getBestMove } from "./components/cpu/rummikubAPI"
+import Notification from './components/Notification'
 import './App.css';
 import './css/style.css'
+
 
 //sommige functies die doorgepast wrden naar andere components worden insta geexecute, fix dit
 
@@ -26,6 +28,8 @@ function App() {
   const [cpuFirstTurn, setCpuFirstTurn] = useState(true);
   const [boardSnapshot, setBoardSnapshot] = useState(null);
   const [playersTurn, setPlayersTurn] = useState(true);
+  const [showNotif, setShowNotif] = useState(false);
+  const [msgNotif, setMsgNotif] = useState("hello");
   const seed = 'ihvj';
 
   const initializeBoard = () => {
@@ -93,9 +97,6 @@ function App() {
       const newBoard = [...board];
       newBoard[3] = newPlayerHand;
       newBoard[4] = newCpuHand
-      newBoard[0][0][0] = '4-10' //todo remove this line
-      newBoard[0][1][0] = '1-10'
-      newBoard[0][1][1] = '2-10'
       setBoard(newBoard);
       setPile(newPile);
       setBoardSnapshot(JSON.parse(JSON.stringify(newBoard))) //snapshot was taken before the game is done being initialized so for the beginning. json is a way to take a deep copy
@@ -305,6 +306,8 @@ function App() {
       }
       console.log(count);
       if (count < 30){
+        setMsgNotif("You played less than 30 on your first turn")
+        setShowNotif(true);
         console.log("less than 30 on first turn")
         return;
         //todo notify player of less then 30 also logic is not checking if tiles are using cpu's tiles
@@ -376,7 +379,7 @@ function App() {
       <DndProvider backend={backendForDND} options={backendOptions}>
         <div className="app">
           <CustomDragLayer />
-
+          <Notification message={msgNotif} isVisible={showNotif} onClose={() => setShowNotif(false)}/>
           <div className={`game-container ${!gameStarted || playerWon ? 'blurred' : ''}`}>
             {/*<ComputerRack tileCount={computerTileCount} />*/}
             <GameBoard
