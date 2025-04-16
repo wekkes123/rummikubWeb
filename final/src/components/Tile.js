@@ -11,7 +11,7 @@ function Tile({ id, color, number, isHighlighted, isGreyedOut, location, curlo }
             backgroundImage = `url('./images/${color}-0${number}.svg')`;
             break;
     }
-    if(number === 'j'){
+    if(number === 'j' && id !== '0'){
         backgroundImage = `url('./images/${color}-${number}.png')`;
     }
 

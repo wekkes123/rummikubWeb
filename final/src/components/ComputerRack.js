@@ -1,9 +1,7 @@
 import React from 'react';
 import Tile from './Tile';
 
-function ComputerRack({ tileCount }) {
-    // In a real implementation, we would have the actual tiles here
-    const dummyTiles = Array(tileCount).fill(null);
+function ComputerRack({ cpuhand }) {
 
     return (
         <div className="container1">
@@ -11,13 +9,25 @@ function ComputerRack({ tileCount }) {
                 <p>Computer</p>
                 <div>
                     <img src="images/tileBack.png" alt="Tile back" />
-                    <span id="c-tile-count">x{tileCount}</span>
+                    <span id="c-tile-count">x{cpuhand.length}</span>
                 </div>
             </div>
             <div className="computer-rack">
-                {dummyTiles.map((_, index) => (
-                    <Tile key={`computer-tile-${index}`} isGreyedOut={true} />
-                ))}
+                {cpuhand.map((tile, index) => {
+                    const [color, number] = tile.split('-');
+
+                    const tileProps = {
+                        key: `${tile}-${index}`,
+                        id: '0',
+                        color: color,
+                        number: number,
+                        isGreyedOut: false,
+                        isHighlighted: true,
+                        location: `cpuhand-${index}`
+                    };
+
+                    return <Tile {...tileProps} />;
+                })}
             </div>
         </div>
     );

@@ -12,11 +12,10 @@ import CustomDragLayer from './dragDrop/CustomDragLayer';
 import { isValidGroup,isValidRun, validateBoard, playedTiles, findJokerValue} from "./components/Functions/gamePlayFunctions";
 import { getBestMove } from "./components/cpu/rummikubAPI"
 import Notification from './components/Notification'
+import {flyTileBetweenContainers} from "./components/Functions/TileMover";
 import './App.css';
 import './css/style.css'
 
-
-//sommige functies die doorgepast wrden naar andere components worden insta geexecute, fix dit
 
 const backendForDND = TouchBackend;
 const backendOptions = { enableMouseEvents: true };
@@ -179,9 +178,9 @@ function App() {
     }
   };
 
-  const playCpuMove = (moves, tilesFromHand) => {
+  const playCpuMove = async (moves, tilesFromHand) => {
     let newBoard;
-    if(cpuFirstTurn){
+    if (cpuFirstTurn) {
       newBoard = [...board];
     } else {
       newBoard = initializeBoard();
@@ -189,59 +188,60 @@ function App() {
       newBoard[4] = board[4];
     }
 
-    // Remove tiles from hand of the cpu
-    const updatedTilesInHand = [...newBoard[4]];
-    for (const tile of tilesFromHand) {
-      if (tile === 'j') {
-        const indexToRemove = updatedTilesInHand.findIndex(
-            boardTile => boardTile === '1-j' || boardTile === '4-j'
-        );
-        if (indexToRemove !== -1) {
-          updatedTilesInHand.splice(indexToRemove, 1);
-        }
-      } else {
-        const indexToRemove = updatedTilesInHand.indexOf(tile);
-        if (indexToRemove !== -1) {
-          updatedTilesInHand.splice(indexToRemove, 1);
-        }
-      }
-    }
-    newBoard[4] = updatedTilesInHand;
-
-
-
     for (let i = 0; i < moves.length; i++) {
       const move = moves[i];
       const type = move[0];
-
-      //api returns "j" as joker so we rist have to replace it here with our joker
       const moveData = [...move.slice(1)].map(item => item === 'j' ? joker : item);
 
-      if (type === 'g') { // group
-        if (moveData.length === 3) {
-          moveData.push('0');
-        }
+      if (type === 'g') {
+        if (moveData.length === 3) moveData.push('0');
+
         outerLoop: for (let j = 0; j < newBoard.length; j++) {
           for (let k = 0; k < newBoard[j].length; k++) {
-            if (Array.isArray(newBoard[j][k]) &&
-                newBoard[j][k].every(item => item === '0')) {
-              newBoard[j][k] = moveData;
+            if (Array.isArray(newBoard[j][k]) && newBoard[j][k].every(item => item === '0')) {
+              for (let m = 0; m < moveData.length; m++) {
+                const tile = moveData[m];
+                if (tile === '0') continue;
+
+                const fromElem = document.querySelector(`.computer-rack `);
+                const toElem = document.querySelector(`[data-location="group-${j}-${k}-${m}"]`);
+
+                if (fromElem && toElem) {
+                  await new Promise(resolve =>
+                      flyTileBetweenContainers({
+                        tile,
+                        fromElem,
+                        toElem,
+                        onComplete: resolve
+                      })
+                  );
+                }
+
+                // Only update the board AFTER the animation
+                const boardCopy = JSON.parse(JSON.stringify(newBoard));
+                boardCopy[j][k][m] = tile;
+
+                const indexToRemove = tile === 'j'
+                    ? boardCopy[4].findIndex(t => t === '1-j' || t === '4-j')
+                    : boardCopy[4].indexOf(tile);
+
+                if (indexToRemove !== -1) {
+                  boardCopy[4].splice(indexToRemove, 1);
+                }
+
+                newBoard = boardCopy;
+                setBoard(boardCopy);
+              }
               break outerLoop;
             }
           }
         }
       } else {
-        // Process run move
         const color = parseInt(moveData[0].split('-')[0]);
-        // Determine which arrays correspond to this color
-        // Each color has 2 arrays in newBoard[2]
         const startIndex = (color - 1) * 2;
         const colorArrays = [newBoard[2][startIndex], newBoard[2][startIndex + 1]];
-        console.log(color);
-        // Check which of the two arrays has space for all tiles
         let targetArrayIndex = -1;
 
-        // Check both arrays for the color to see which one can fit all the tiles
         for (let arrayIndex = 0; arrayIndex < 2; arrayIndex++) {
           const currentArray = colorArrays[arrayIndex];
           let canFit = true;
@@ -249,8 +249,6 @@ function App() {
           for (const tile of moveData) {
             const [, tileNumber] = tile.split('-');
             const index = parseInt(tileNumber) - 1;
-
-            // If the tile is already used, this array can't fit the run
             if (currentArray[index] === '1') {
               canFit = false;
               break;
@@ -263,25 +261,53 @@ function App() {
           }
         }
 
-        // If we found an array that can fit the run
         if (targetArrayIndex !== -1) {
           const targetArray = colorArrays[targetArrayIndex];
 
-          // Place each tile in the run
           for (const tile of moveData) {
             const [, tileNumber] = tile.split('-');
             const index = parseInt(tileNumber) - 1;
+
+            const fromElem = document.querySelector(`.computer-rack`);
+            const toElem = document.querySelector(`[data-location="run-${startIndex + targetArrayIndex}-${index}"]`);
+
+            if (fromElem && toElem) {
+              await new Promise(resolve =>
+                  flyTileBetweenContainers({
+                    tile,
+                    fromElem,
+                    toElem,
+                    onComplete: resolve
+                  })
+              );
+            }
             targetArray[index] = 1;
+            // Only update the board AFTER the animation
+            const boardCopy = JSON.parse(JSON.stringify(newBoard));
+            boardCopy[2][startIndex + targetArrayIndex][index] = 1;
+
+            const indexToRemove = tile === 'j'
+                ? boardCopy[4].findIndex(t => t === '1-j' || t === '4-j')
+                : boardCopy[4].indexOf(tile);
+
+            if (indexToRemove !== -1) {
+              boardCopy[4].splice(indexToRemove, 1);
+            }
+
+            newBoard = boardCopy;
+            setBoard(boardCopy);
           }
 
-          // Update the array in newBoard
           newBoard[2][startIndex + targetArrayIndex] = targetArray;
+
+
         }
       }
     }
 
     setBoard(newBoard);
   };
+
 
   const onDone = () => {
     //step 1 is the board correct?
@@ -375,13 +401,44 @@ function App() {
     console.log("Drag ended without successful drop for item:", item);
   };
 
+  const handleTestMoveTile = () => {
+    const cpuHand = board[4];
+    if (cpuHand.length === 0) return;
+
+    const tileToMove = cpuHand[0];
+    const newBoard = [...board];
+
+    const targetGroup = newBoard[0][0];
+    const emptyIndex = targetGroup.findIndex(val => val === '0');
+
+    if (emptyIndex === -1) {
+      console.log("No space in group 0-0");
+      return;
+    }
+
+    const fromElem = document.querySelector('.computer-rack');
+    const toElem = document.querySelector(`[data-location="group-0-0-${emptyIndex}"]`);
+
+    flyTileBetweenContainers({
+      tile: tileToMove,
+      fromElem,
+      toElem,
+      onComplete: () => updateBoardTile(0, 0, emptyIndex, tileToMove)
+    });
+
+    removeFromHand(4, 0);
+  };
+
   return (
       <DndProvider backend={backendForDND} options={backendOptions}>
         <div className="app">
+
           <CustomDragLayer />
+
           <Notification message={msgNotif} isVisible={showNotif} onClose={() => setShowNotif(false)}/>
+          <div id="tile-overlay-root"></div>
           <div className={`game-container ${!gameStarted || playerWon ? 'blurred' : ''}`}>
-            {/*<ComputerRack tileCount={computerTileCount} />*/}
+            <ComputerRack cpuhand={board[4]} />
             <GameBoard
                 board={board}
                 updateBoardTile={updateBoardTile}
@@ -393,7 +450,7 @@ function App() {
             <GameControls
                 onDraw = {drawTile}
                 onDone = {onDone}
-                onReverse = {printB}
+                onReverse = {saveToSnapshot}
                 pressable = {playersTurn}
             />
             <PlayerRack
