@@ -10,8 +10,10 @@ import WinScreen from './components/WinScreen';
 import StartScreen from './components/StartScreen';
 import CustomDragLayer from './dragDrop/CustomDragLayer';
 import {isValidGroup,isValidRun, validateBoard, playedTiles, findJokerValue} from "./components/Functions/gamePlayFunctions";
+import {flyTileBetweenContainers} from './components/Functions/TileMover';
 import './App.css';
 import './css/style.css'
+import NotificationBanner from './components/Notification'
 
 //sommige functies die doorgepast wrden naar andere components worden insta geexecute, fix dit
 
@@ -25,6 +27,8 @@ function App() {
   const [boardSnapshot, setBoardSnapshot] = useState(null);
   const [playersTurn, setPlayersTurn] = useState(true);
   const [flashAllTiles, setFlashAllTiles] = useState(false);
+  const [showNotif, setShowNotif] = useState(false);
+  const [msgNotif, setMsgNotif] = useState("hello");
 
   const seed = 'ihvj';
 
@@ -101,6 +105,8 @@ function App() {
   useEffect(() => {
     if (playersTurn === false) {
       //todo Add logic for when it's not the player's turn
+      setMsgNotif("Not your Turn")
+      setShowNotif(true);
       console.log("It's NOT the player's turn");
     }
   }, [playersTurn]);
@@ -146,6 +152,8 @@ function App() {
     }
     const playedtiles = playedTiles(boardSnapshot[3],board[3]);
     if(playedtiles.length === 0){
+      setMsgNotif("Computers Turn")
+      setShowNotif(true);
       return;
       //todo notify the player that they have to play a tile or draw a tile
     } else if(firstTurn){
@@ -161,6 +169,8 @@ function App() {
       }
       console.log(count);
       if (count < 30){
+        setMsgNotif("You played less than 30 on your first turn")
+        setShowNotif(true);
         console.log("less than 30 on first turn")
         setFlashAllTiles(true);
         setTimeout(() => setFlashAllTiles(false), 1500);
@@ -171,6 +181,8 @@ function App() {
           console.log("used other players' tile to get to 30")
           //todo notify the player that they used the other players' tiles to get 30
         }
+        setMsgNotif("Computers Turn")
+        setShowNotif(true);
         //if the code gets here, the user passed all first turn rules
         setFirstTurn(false);
       }
@@ -208,6 +220,8 @@ function App() {
     newBoard[index] = newHand;
     setBoard(newBoard);
     setPile(newPile);
+    setMsgNotif("computers Turn")
+    setShowNotif(true);
     //end the turn of the cpu or the player
     //setPlayersTurn(!playersTurn)
   }
@@ -225,34 +239,66 @@ function App() {
     console.log("Drag ended without successful drop for item:", item);
   };
 
+  const handleTestMoveTile = () => {
+    const cpuHand = board[4];
+    if (cpuHand.length === 0) return;
+
+    const tileToMove = cpuHand[0];
+    const newBoard = [...board];
+
+    const targetGroup = newBoard[0][0];
+    const emptyIndex = targetGroup.findIndex(val => val === '0');
+
+    if (emptyIndex === -1) {
+      console.log("No space in group 0-0");
+      return;
+    }
+
+    const fromElem = document.querySelector('.computer-rack');
+    const toElem = document.querySelector(`[data-location="group-0-0-${emptyIndex}"]`);
+
+    flyTileBetweenContainers({
+      tile: tileToMove,
+      fromElem,
+      toElem,
+      onComplete: () => updateBoardTile(0, 0, emptyIndex, tileToMove)
+    });
+
+    removeFromHand(4, 0);
+  };
+
+
   return (
       <DndProvider backend={backendForDND} options={backendOptions}>
         <div className="app">
+
           <CustomDragLayer />
 
-          <div className={`game-container ${!gameStarted || playerWon ? 'blurred' : ''}`}>
-            {/*<ComputerRack tileCount={computerTileCount} />*/}
-            <GameBoard
-                board={board}
-                updateBoardTile={updateBoardTile}
-                removeFromHand = {removeFromHand}
-                getBoardValue={getBoardValue}
-                tilesAreDraggable={playersTurn}
-                firstTurn = {firstTurn}
-                flashAllTiles={flashAllTiles}
-            />
-            <GameControls
-                onDraw = {drawTile}
-                onDone = {onDone}
-                onReverse = {saveToSnapshot}
-                pressable = {playersTurn}
-            />
-            <PlayerRack
-                playerhand={board[3]}
-                onDragEnd={handleDragEnd}
-                tilesAreDraggable={playersTurn}
-            />
-          </div>
+          <NotificationBanner message={msgNotif} isVisible={showNotif} onClose={() => setShowNotif(false)}/>
+          <div id="tile-overlay-root"></div>
+            <div className={`game-container ${!gameStarted || playerWon ? 'blurred' : ''}`}>
+              <ComputerRack cpuhand={board[4]} />
+              <GameBoard
+                  board={board}
+                  updateBoardTile={updateBoardTile}
+                  removeFromHand = {removeFromHand}
+                  getBoardValue={getBoardValue}
+                  tilesAreDraggable={playersTurn}
+                  firstTurn = {firstTurn}
+                  flashAllTiles={flashAllTiles}
+              />
+              <GameControls
+                  onDraw = {drawTile}
+                  onDone = {onDone}
+                  onReverse = {saveToSnapshot}
+                  pressable = {playersTurn}
+              />
+              <PlayerRack
+                  playerhand={board[3]}
+                  onDragEnd={handleDragEnd}
+                  tilesAreDraggable={playersTurn}
+              />
+            </div>
 
           {!gameStarted && <StartScreen onStart={handleStartGame} />}
         </div>

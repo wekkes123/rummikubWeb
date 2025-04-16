@@ -33,6 +33,42 @@
   align-items: center;
 }
 
+.notificationModal .ant-modal-content {
+  background-color: burlywood; /* Set background color for the content area */
+  border-radius: 15px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Optional: Add shadow for better visibility */
+}
+
+.notificationModal .modalClose {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 10px 0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.notificationModal .modalClose:hover {
+  background-color: #45a049;
+}
+
+.notificationModal .text-lg {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
 .header h1 {
   text-align: center;
 }
