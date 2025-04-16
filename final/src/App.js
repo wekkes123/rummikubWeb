@@ -248,16 +248,12 @@ function App() {
 
           for (const tile of moveData) {
             const [, tileNumber] = tile.split('-');
-            const index = parseInt(tileNumber) - 1;
-            if (currentArray[index] === '1') {
-              canFit = false;
-              break;
 
             // Handle regular tiles
             if (tileNumber !== 'j') {
               const index = parseInt(tileNumber) - 1;
               // If the tile is already used, this array can't fit the run
-              if (currentArray[index] === 1) {
+              if (currentArray[index] === '1' || currentArray[index] === 1) {
                 canFit = false;
                 break;
               }
@@ -265,7 +261,7 @@ function App() {
             // For joker, we need to check if the jokerValue position is available
             else {
               const index = jokerValue - 1;  // Use jokerValue to determine position
-              if (currentArray[index] === 1) {
+              if (currentArray[index] === '1' || currentArray[index] === 1) {
                 canFit = false;
                 break;
               }
@@ -283,7 +279,14 @@ function App() {
 
           for (const tile of moveData) {
             const [, tileNumber] = tile.split('-');
-            const index = parseInt(tileNumber) - 1;
+
+            // Determine the correct index based on whether it's a joker or not
+            let index;
+            if (tileNumber !== 'j') {
+              index = parseInt(tileNumber) - 1;
+            } else {
+              index = jokerValue - 1;
+            }
 
             const fromElem = document.querySelector(`.computer-rack`);
             const toElem = document.querySelector(`[data-location="run-${startIndex + targetArrayIndex}-${index}"]`);
@@ -298,12 +301,26 @@ function App() {
                   })
               );
             }
-            targetArray[index] = 1;
+
+            // Store the appropriate value based on tile type
+            if (tileNumber !== 'j') {
+              targetArray[index] = 1;
+            } else {
+              targetArray[index] = tile; // Store joker value
+            }
+
             // Only update the board AFTER the animation
             const boardCopy = JSON.parse(JSON.stringify(newBoard));
-            boardCopy[2][startIndex + targetArrayIndex][index] = 1;
 
-            const indexToRemove = tile === 'j'
+            // Update the copy with the appropriate value
+            if (tileNumber !== 'j') {
+              boardCopy[2][startIndex + targetArrayIndex][index] = 1;
+            } else {
+              boardCopy[2][startIndex + targetArrayIndex][index] = tile;
+            }
+
+            // Handle tile removal from computer rack
+            const indexToRemove = tileNumber === 'j'
                 ? boardCopy[4].findIndex(t => t === '1-j' || t === '4-j')
                 : boardCopy[4].indexOf(tile);
 
@@ -315,9 +332,8 @@ function App() {
             setBoard(boardCopy);
           }
 
-          newBoard[2][startIndex + targetArrayIndex] = targetArray;
-
-
+          // This line is redundant since we're already updating the board in the loop above
+          // newBoard[2][startIndex + targetArrayIndex] = targetArray;
         }
       }
     }
