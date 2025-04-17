@@ -5,13 +5,17 @@ import DraggableTile from '../dragDrop/DraggableTile';
 import {addToFirstTurnBoard, isTileMoveValid, removeOriginalTile} from './Functions/gamePlayFunctions'
 
 function RunsContainer({ runs, sectionIndex, updateBoardTile, tilesAreDraggable = true, getBoardValue, removeFromHand, firstTurn }) {
-
     const colors = ['1', '2', '3', '4'];
 
+    const colorMapping = {
+        '1': '#000000',
+        '2': '#29abe2',
+        '3': '#fbb03b',
+        '4': '#ed1c24'
+    };
+
     const handleTileDrop = (draggedTileData, dropData) => {
-
         console.log('Tile dropped in run:', draggedTileData, dropData);
-
 
         if(isTileMoveValid(draggedTileData, dropData, getBoardValue) === '0'){
             return;
@@ -41,9 +45,7 @@ function RunsContainer({ runs, sectionIndex, updateBoardTile, tilesAreDraggable 
                 add
             );
         }
-
     };
-
 
     const handleTileDragEnd = (item) => {
         console.log("Tile drag ended without successful drop:", item);
@@ -54,9 +56,25 @@ function RunsContainer({ runs, sectionIndex, updateBoardTile, tilesAreDraggable 
             {runs.map((run, runIndex) => {
                 const colorIndex = Math.floor(runIndex / 2);
                 const color = colors[colorIndex];
+                const stripeColor = colorMapping[color];
 
                 return (
-                    <div key={`run-${runIndex}`} className="run">
+                    <div key={`run-${runIndex}`} className="run" style={{ position: 'relative' }}>
+                        {/* Left color stripe
+                        <div
+                            className="run-stripe run-stripe-left"
+                            style={{
+                                position: 'absolute',
+                                left: 0,
+                                top: 0,
+                                bottom: 0,
+                                width: '8px',
+                                backgroundColor: stripeColor,
+                                borderTopLeftRadius: '5px',
+                                borderBottomLeftRadius: '5px'
+                            }}
+                        />*/}
+
                         {run.map((tileValue, tileIndex) => {
                             let number, isHighlighted, isGreyedOut,tileProps;
                             if (tileValue === '1-j' || tileValue === '4-j') {
@@ -84,8 +102,6 @@ function RunsContainer({ runs, sectionIndex, updateBoardTile, tilesAreDraggable 
                                     curlo: tileIndex
                                 };
                             }
-
-                            // Whether to render tile as draggable or not
                             const shouldBeDraggable = tilesAreDraggable && isHighlighted;
 
                             return (
@@ -111,6 +127,18 @@ function RunsContainer({ runs, sectionIndex, updateBoardTile, tilesAreDraggable 
                                 </DropZone>
                             );
                         })}
+                        <div
+                            className="run-stripe run-stripe-right"
+                            style={{
+                                position: 'absolute',
+                                right: 0,
+                                top: 0,
+                                bottom: 0,
+                                width: '8px',
+                                height: '110%',
+                                backgroundColor: stripeColor
+                            }}
+                        />
                     </div>
                 );
             })}

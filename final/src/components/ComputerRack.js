@@ -5,13 +5,6 @@ function ComputerRack({ cpuhand }) {
 
     return (
         <div className="container1">
-            <div className="computer-info">
-                <p>Computer</p>
-                <div>
-                    <img src="images/tileBack.png" alt="Tile back" />
-                    <span id="c-tile-count">x{cpuhand.length}</span>
-                </div>
-            </div>
             <div className="computer-rack">
                 {cpuhand.map((tile, index) => {
                     const [color, number] = tile.split('-');

@@ -1,12 +1,16 @@
 import React from 'react';
 import GroupsContainer from './GroupsContainer';
 import RunsContainer from './RunsContainer';
+import wood from '../images/wood.jpg';
 
 function GameBoard({ board, updateBoardTile, getBoardValue, tilesAreDraggable, removeFromHand, firstTurn }) {
     const [groups1, groups2, runs, playerhand, cpuhand] = board;
 
     return (
-        <div className="container2">
+        <div className="container2"
+             style={{
+                     backgroundColor: `burlywood`
+            }}>
             <div className="board-section">
                 <GroupsContainer
                     groups={groups1}

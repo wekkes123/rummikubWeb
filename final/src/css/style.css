@@ -10,8 +10,7 @@
 }
 
 .container1 {
-    background-color: #9f764e;
-
+    background-color: burlywood;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -54,7 +53,6 @@
 
 .computer-info div, .player-info div, .pouch div {
     text-align: center;
-    margin-top: 3px;
 }
 .computer-info img, .player-info img, .pouch img {
     height: 25px;
@@ -63,15 +61,11 @@
     /*
     min-height: 60px;
     height: 8.5vh;*/
-    background-color: burlywood;
+    background-color: #9f764e;
     border-radius: 7px;
     display: flex;
     flex-direction: row;
     padding: 10px 15px;
-}
-
-.done, .reverse .draw {
-    margin: 0 10px;
 }
 
 .groups {
@@ -105,9 +99,9 @@
     flex-direction: row;
     height: 8.5vh;
     margin-bottom: 1px;
-}
-.pouch {
-    align-self: flex-end;
+    position: relative;
+    border-radius: 5px;
+    padding: 0 10px;
 }
 
 .tile {
@@ -206,3 +200,84 @@ filter: blur(4px);
     font-size: 1.5rem;
     font-weight: bold;
 }
+
+.pile-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.pile-button-img {
+    width: 80%;
+    height: auto;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+.pile-button.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.draw, .done, .reverse {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px black solid;
+    background: #FFB703;
+    z-index: 10;
+    text-align: center;
+}
+
+.game-container {
+    background-color: burlywood;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.board-with-controls {
+    background-color: burlywood;
+    display: flex;
+    flex-direction: row;
+    height: 100px;
+}
+
+.game-controls {
+    display: flex;
+    flex-direction: column;
+    width: 120px;
+    padding: 10px;
+    justify-content: center;
+}
+
+.controls-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.left-handed {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+
+.right-handed {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+
+.restore {
+    width: 15px;
+    height: 15px
+}
+
+
+

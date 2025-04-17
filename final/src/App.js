@@ -28,6 +28,7 @@ function App() {
   const [boardSnapshot, setBoardSnapshot] = useState(null);
   const [playersTurn, setPlayersTurn] = useState(true);
   const [showNotif, setShowNotif] = useState(false);
+  const [lefthanded, setLefthanded] = useState(false);
   const [msgNotif, setMsgNotif] = useState("hello");
   const seed = 'ihvj';
 
@@ -428,31 +429,41 @@ function App() {
           <CustomDragLayer />
 
           <Notification message={msgNotif} isVisible={showNotif} onClose={() => setShowNotif(false)}/>
-          <div id="tile-overlay-root"></div>
           <div className={`game-container ${!gameStarted || playerWon ? 'blurred' : ''}`}>
-            <ComputerRack cpuhand={board[4]} />
-            <GameBoard
-                board={board}
-                updateBoardTile={updateBoardTile}
-                removeFromHand = {removeFromHand}
-                getBoardValue={getBoardValue}
-                tilesAreDraggable={playersTurn}
-                firstTurn = {firstTurn}
-            />
-            <GameControls
-                onDraw = {drawTile}
-                onDone = {onDone}
-                onReverse = {saveToSnapshot}
-                pressable = {playersTurn}
-            />
-            <PlayerRack
-                playerhand={board[3]}
-                onDragEnd={handleDragEnd}
-                tilesAreDraggable={playersTurn}
-            />
+              <ComputerRack cpuhand={board[4]}/>
+              <GameBoard
+                  board={board}
+                  updateBoardTile={updateBoardTile}
+                  removeFromHand={removeFromHand}
+                  getBoardValue={getBoardValue}
+                  tilesAreDraggable={playersTurn}
+                  firstTurn={firstTurn}
+              />
+                {lefthanded && (
+                    <GameControls
+                        onDraw={drawTile}
+                        onDone={onDone}
+                        onReverse={restoreFromSnapshot}
+                        pressable={playersTurn}
+                        lefthanded={lefthanded}
+                    />
+                )}
+                <PlayerRack
+                    playerhand={board[3]}
+                    onDragEnd={handleDragEnd}
+                    tilesAreDraggable={playersTurn}
+                />
+                {!lefthanded && (
+                    <GameControls
+                        onDraw={drawTile}
+                        onDone={onDone}
+                        onReverse={restoreFromSnapshot}
+                        pressable={playersTurn}
+                        lefthanded={lefthanded}
+                    />
+                )}
           </div>
-
-          {!gameStarted && <StartScreen onStart={handleStartGame} />}
+          {!gameStarted && <StartScreen onStart={handleStartGame}/>}
         </div>
       </DndProvider>
   );

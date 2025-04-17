@@ -17,87 +17,8 @@
   filter: blur(2px);
 }
 
-.win, .start {
-  position: fixed;
-  z-index: 2;
-  height: 60vh;
-  width: 60vw;
-  top: 20vh;
-  left: 20vw;
-  background-color: burlywood;
-  border-radius: 15px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
 .header h1 {
   text-align: center;
 }
 
-/*
-.greyout {
-  opacity: 0.5;
-}
 
-.computer-rack, .player-rack {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  padding: 10px;
-  background-color: #f0f0f0;
-  border-radius: 10px;
-  margin: 10px 0;
-}
-
-
-
-.group, .run {
-  display: flex;
-  background-color: #d0d0d0;
-  border-radius: 5px;
-  margin: 5px;
-  padding: 5px;
-}
-
-.container1, .container2, .container3 {
-  margin: 10px;
-  padding: 10px;
-}
-*/
-.game-controls {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-}
-
-button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  background-color: #4CAF50;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  margin: 5px;
-}
-
-button:hover {
-  background-color: #45a049;
-}
-
-.player-info, .computer-info, .pouch {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 5px 0;
-}
-
-.player-info img, .computer-info img, .pouch img {
-  width: 30px;
-  height: 45px;
-  margin-right: 5px;
-}
