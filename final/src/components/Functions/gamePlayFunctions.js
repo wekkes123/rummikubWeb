@@ -82,8 +82,8 @@ export function isTileMoveValid(draggedTileData, dropData, getBoardValue) {
                 return '1';
             }
         }
+    } else if (dropData.sectionIndex === 3) { //if its in the players hand
     }
-
     return '0';
 }
 

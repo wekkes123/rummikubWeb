@@ -6,7 +6,7 @@ import {addToFirstTurnBoard, isTileMoveValid, removeOriginalTile} from './Functi
 
 function RunsContainer({ runs, sectionIndex, updateBoardTile, tilesAreDraggable = true, getBoardValue, removeFromHand, firstTurn }) {
     const colors = ['1', '2', '3', '4'];
-
+    const placeTileAudio = new Audio("/sounds/place.mp3"); // Adjust path if needed
     const colorMapping = {
         '1': '#000000',
         '2': '#29abe2',
@@ -27,6 +27,8 @@ function RunsContainer({ runs, sectionIndex, updateBoardTile, tilesAreDraggable 
         if(firstTurn){
             add = addToFirstTurnBoard(draggedTileData, getBoardValue)
         }
+
+        placeTileAudio.play();
 
         if(draggedTileData.number === 'j'){
             updateBoardTile(

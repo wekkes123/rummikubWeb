@@ -6,6 +6,8 @@ import { removeOriginalTile, isTileMoveValid, addToFirstTurnBoard } from './Func
 import '../css/style.css'
 
 function GroupsContainer({ groups, sectionIndex, updateBoardTile, tilesAreDraggable = true, getBoardValue, removeFromHand, firstTurn}) {
+    const placeTileAudio = new Audio("/sounds/place.mp3"); // Adjust path if needed
+
     const handleTileDrop = (draggedTileData, dropData) => {
         console.log('Tile dropped in run:', draggedTileData, dropData);
 
@@ -24,6 +26,7 @@ function GroupsContainer({ groups, sectionIndex, updateBoardTile, tilesAreDragga
         if(firstTurn){
             add = addToFirstTurnBoard(draggedTileData, getBoardValue)
         }
+        placeTileAudio.play();
 
         updateBoardTile(
             sectionIndex,

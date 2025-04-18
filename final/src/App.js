@@ -30,6 +30,7 @@ function App() {
   const [showNotif, setShowNotif] = useState(false);
   const [hasPlayed, setHasPlayed] = useState(false);
   const [msgNotif, setMsgNotif] = useState("hello");
+  const placeTileAudio = new Audio("/sounds/place.mp3"); // Adjust path if needed
   const seed = 'ihvj';
 
   const initializeBoard = () => {
@@ -93,7 +94,6 @@ function App() {
         newCpuHand.push(newPile.pop());
       }
 
-      //newPlayerHand.push('1-j'); //todo remove this line
       const newBoard = [...board];
       newBoard[3] = newPlayerHand;
       newBoard[4] = newCpuHand
@@ -123,19 +123,29 @@ function App() {
 
   const updateBoardTile = (section, groupIndex, tileIndex, value, add = null) => {
     setHasPlayed(true);
+
     const updateBoardState = (prevBoard) => {
       const newBoard = [...prevBoard];
-      newBoard[section] = [...newBoard[section]];
-      newBoard[section][groupIndex] = [...newBoard[section][groupIndex]];
-      newBoard[section][groupIndex][tileIndex] = value;
+
+      if (section === 3) {
+        newBoard[section] = [...newBoard[section]];
+        newBoard[section][groupIndex] = value;
+      } else {
+        newBoard[section] = [...newBoard[section]];
+        newBoard[section][groupIndex] = [...newBoard[section][groupIndex]];
+        newBoard[section][groupIndex][tileIndex] = value;
+      }
+
       return newBoard;
     };
 
     if (add) {
       setFirstTurnBoard(updateBoardState);
     }
+
     setBoard(updateBoardState);
   };
+
 
   const printB = () => {
     console.log(firstTurnBoard);
@@ -144,8 +154,17 @@ function App() {
 
   const removeFromHand = (sectionIndex, handIndex) => {
     const newBoard = [...board];
-    const hand = newBoard[sectionIndex];
-    hand.splice(handIndex, 1);
+    const hand = [...newBoard[sectionIndex]];
+    if (sectionIndex === 3) {// if we remove element from the players hand, we add an empty space instead of just removing
+      if (hand.length <= 14) {
+        hand[handIndex] = 'empty';
+      } else {
+        hand.splice(handIndex, 1);
+      }
+    } else {
+      hand.splice(handIndex, 1);
+    }
+    newBoard[sectionIndex] = hand;
     setBoard(newBoard);
   };
 
@@ -166,8 +185,7 @@ function App() {
     try {
       const bestMove = await getBestMove(board[4], board, cpuFirstTurn);
       if (bestMove) {
-        console.log("CPU will play:", bestMove);
-        playCpuMove(bestMove.setsToMake, bestMove.tilesToPlay, bestMove.jokerValue);
+        await playCpuMove(bestMove.setsToMake, bestMove.tilesToPlay, bestMove.jokerValue);
         setCpuFirstTurn(false);
         setPlayersTurn(true);
       } else {
@@ -175,6 +193,7 @@ function App() {
         console.log("CPU has no valid move");
       }
     } catch (error) {
+      drawTile(4);
       console.error("Error during CPU move:", error);
     }
   };
@@ -390,6 +409,7 @@ function App() {
             Array.isArray(group) ? [...group] : group
         )
     );
+    setFirstTurnBoard(initializeBoard())
     setBoard(restoredBoard);
   };
 
@@ -425,31 +445,34 @@ function App() {
   return (
       <DndProvider backend={backendForDND} options={backendOptions}>
         <div className="app">
-          <CustomDragLayer />
-
+          <CustomDragLayer/>
+          <div id="tile-overlay-root"></div>
           <Notification message={msgNotif} isVisible={showNotif} onClose={() => setShowNotif(false)}/>
           <div className={`game-container ${!gameStarted || playerWon ? 'blurred' : ''}`}>
-              <ComputerRack cpuhand={board[4]}/>
-              <GameBoard
-                  board={board}
-                  updateBoardTile={updateBoardTile}
-                  removeFromHand={removeFromHand}
-                  getBoardValue={getBoardValue}
-                  tilesAreDraggable={playersTurn}
-                  firstTurn={firstTurn}
-              />
-                <PlayerRack
-                    playerhand={board[3]}
-                    onDragEnd={handleDragEnd}
-                    tilesAreDraggable={playersTurn}
-                />
-                    <GameControls
-                        onDraw={drawTile}
-                        onDone={onDone}
-                        onReverse={restoreFromSnapshot}
-                        pressable={playersTurn}
-                        hasPlayed={hasPlayed}
-                    />
+            <ComputerRack cpuhand={board[4]}/>
+            <GameBoard
+                board={board}
+                updateBoardTile={updateBoardTile}
+                removeFromHand={removeFromHand}
+                getBoardValue={getBoardValue}
+                tilesAreDraggable={playersTurn}
+                firstTurn={firstTurn}
+            />
+            <PlayerRack
+                playerhand={board[3]}
+                onDragEnd={handleDragEnd}
+                updateBoardTile={updateBoardTile}
+                getBoardValue={getBoardValue}
+                tilesAreDraggable={playersTurn}
+            />
+            <GameControls
+                onDraw={drawTile}
+                onDone={onDone}
+                //onReverse={restoreFromSnapshot}
+                onReverse={printB}
+                pressable={playersTurn}
+                hasPlayed={hasPlayed}
+            />
           </div>
           {!gameStarted && <StartScreen onStart={handleStartGame}/>}
         </div>

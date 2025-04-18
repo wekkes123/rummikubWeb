@@ -206,6 +206,11 @@ filter: blur(4px);
     font-weight: bold;
 }
 
+button:disabled {
+    color: #000000;
+    background-color: #D3D3D3;
+}
+
 .pile-button {
     display: flex;
     flex-direction: column;
@@ -222,11 +227,6 @@ filter: blur(4px);
     height: auto;
     object-fit: contain;
     pointer-events: none;
-}
-
-.pile-button.disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
 }
 
 .draw, .done, .reverse {

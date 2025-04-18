@@ -5,7 +5,7 @@ function Tile({ id, color, number, isHighlighted, isGreyedOut, location, curlo }
             backgroundImage = 'url(./images/tileBack.png)';
             break;
         case 'empty':
-            backgroundImage = 'url(./images/tileEmpty.png)';
+            backgroundImage = 'url(./images/emptyTile.png)';
             break;
         default:
             backgroundImage = `url('./images/${color}-0${number}.svg')`;
