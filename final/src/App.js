@@ -146,6 +146,19 @@ function App() {
     setBoard(updateBoardState);
   };
 
+  const updateBoardTileWithAnimation = async (tile, fromElem, toElem) => {
+    if (fromElem && toElem) {
+      await new Promise(resolve =>
+          flyTileBetweenContainers({
+            tile,
+            fromElem,
+            toElem,
+            onComplete: resolve
+          })
+      );
+    }
+  };
+
 
   const printB = () => {
     console.log(firstTurnBoard);
@@ -197,21 +210,25 @@ function App() {
       console.error("Error during CPU move:", error);
     }
   };
+  const isJoker = (tile) => tile && tile.endsWith('-j');
 
   const playCpuMove = async (moves, tilesFromHand, jokerValue) => {
-    let newBoard;
-    if (cpuFirstTurn) {
-      newBoard = [...board];
-    } else {
-      newBoard = initializeBoard();
-      newBoard[3] = board[3];
-      newBoard[4] = board[4];
-    }
+    let newBoard = [...board];
+    const startLocations = getTileLocationsFromBoard(board);
 
     for (let i = 0; i < moves.length; i++) {
       const move = moves[i];
       const type = move[0];
-      const moveData = [...move.slice(1)].map(item => item === 'j' ? joker : item);
+
+      const jokerTilesInHand = board[4].filter(isJoker);
+      let usedJokers = 0;
+      const moveData = move.slice(1).map(item => {
+        if (item === 'j') {
+          const jokerTile = jokerTilesInHand[usedJokers++];
+          return jokerTile;
+        }
+        return item;
+      });
 
       if (type === 'g') {
         if (moveData.length === 3) moveData.push('0');
@@ -219,38 +236,20 @@ function App() {
         outerLoop: for (let j = 0; j < newBoard.length; j++) {
           for (let k = 0; k < newBoard[j].length; k++) {
             if (Array.isArray(newBoard[j][k]) && newBoard[j][k].every(item => item === '0')) {
-              for (let m = 0; m < moveData.length; m++) {
-                const tile = moveData[m];
-                if (tile === '0') continue;
+              const boardCopy = structuredClone(newBoard);
 
-                const fromElem = document.querySelector(`.computer-rack `);
-                const toElem = document.querySelector(`[data-location="group-${j}-${k}-${m}"]`);
+              moveData.forEach((tile, m) => {
+                if (tile !== '0') {
+                  boardCopy[j][k][m] = tile;
 
-                if (fromElem && toElem) {
-                  await new Promise(resolve =>
-                      flyTileBetweenContainers({
-                        tile,
-                        fromElem,
-                        toElem,
-                        onComplete: resolve
-                      })
-                  );
+                  const indexToRemove = boardCopy[4].indexOf(tile);
+                  if (indexToRemove !== -1) {
+                    boardCopy[4].splice(indexToRemove, 1);
+                  }
                 }
+              });
 
-                const boardCopy = JSON.parse(JSON.stringify(newBoard));
-                boardCopy[j][k][m] = tile;
-
-                const indexToRemove = tile === 'j'
-                    ? boardCopy[4].findIndex(t => t === '1-j' || t === '4-j')
-                    : boardCopy[4].indexOf(tile);
-
-                if (indexToRemove !== -1) {
-                  boardCopy[4].splice(indexToRemove, 1);
-                }
-
-                newBoard = boardCopy;
-                setBoard(boardCopy);
-              }
+              newBoard = boardCopy;
               break outerLoop;
             }
           }
@@ -261,28 +260,17 @@ function App() {
         const colorArrays = [newBoard[2][startIndex], newBoard[2][startIndex + 1]];
         let targetArrayIndex = -1;
 
-        for (let arrayIndex = 0; arrayIndex < 2; arrayIndex++) {
+        for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
           const currentArray = colorArrays[arrayIndex];
           let canFit = true;
 
           for (const tile of moveData) {
-            const [, tileNumber] = tile.split('-');
+            const [, tileNumber] = tile?.split('-') || [];
+            const index = isJoker(tile) ? jokerValue - 1 : parseInt(tileNumber) - 1;
 
-            // Handle regular tiles
-            if (tileNumber !== 'j') {
-              const index = parseInt(tileNumber) - 1;
-              // If the tile is already used, this array can't fit the run
-              if (currentArray[index] === '1' || currentArray[index] === 1) {
-                canFit = false;
-                break;
-              }
-            }
-            else {
-              const index = jokerValue - 1;  // Use jokerValue to determine position
-              if (currentArray[index] === '1' || currentArray[index] === 1) {
-                canFit = false;
-                break;
-              }
+            if (!currentArray || currentArray[index] === '1' || currentArray[index] === 1) {
+              canFit = false;
+              break;
             }
           }
 
@@ -293,67 +281,160 @@ function App() {
         }
 
         if (targetArrayIndex !== -1) {
-          const targetArray = colorArrays[targetArrayIndex];
+          const boardCopy = structuredClone(newBoard);
 
           for (const tile of moveData) {
-            const [, tileNumber] = tile.split('-');
+            const [, tileNumber] = tile?.split('-') || [];
+            const index = isJoker(tile) ? jokerValue - 1 : parseInt(tileNumber) - 1;
 
-            let index;
-            if (tileNumber !== 'j') {
-              index = parseInt(tileNumber) - 1;
-            } else {
-              index = jokerValue - 1;
-            }
+            boardCopy[2][startIndex + targetArrayIndex][index] = tile;
 
-            const fromElem = document.querySelector(`.computer-rack`);
-            const toElem = document.querySelector(`[data-location="run-${startIndex + targetArrayIndex}-${index}"]`);
-
-            if (fromElem && toElem) {
-              await new Promise(resolve =>
-                  flyTileBetweenContainers({
-                    tile,
-                    fromElem,
-                    toElem,
-                    onComplete: resolve
-                  })
-              );
-            }
-
-            if (tileNumber !== 'j') {
-              targetArray[index] = 1;
-            } else {
-              targetArray[index] = tile;
-            }
-
-            const boardCopy = JSON.parse(JSON.stringify(newBoard));
-
-            if (tileNumber !== 'j') {
-              boardCopy[2][startIndex + targetArrayIndex][index] = 1;
-            } else {
-              boardCopy[2][startIndex + targetArrayIndex][index] = tile;
-            }
-
-            const indexToRemove = tileNumber === 'j'
-                ? boardCopy[4].findIndex(t => t === '1-j' || t === '4-j')
-                : boardCopy[4].indexOf(tile);
-
+            const indexToRemove = boardCopy[4].indexOf(tile);
             if (indexToRemove !== -1) {
               boardCopy[4].splice(indexToRemove, 1);
             }
-
-            newBoard = boardCopy;
-            setBoard(boardCopy);
           }
+
+          newBoard = boardCopy;
         }
       }
     }
-    setBoard(newBoard);
+
+    const endLocations = getTileLocationsFromBoard(newBoard);
+    const tileMovements = getTileMovements(startLocations, endLocations);
+
+    let currentBoard = structuredClone(board);
+
+    for (const move of tileMovements) {
+      const { tile, from, to } = move;
+
+      if (!tile || !from || !to) {
+        console.warn("Skipping invalid tile movement", move);
+        continue;
+      }
+
+      const fromElem = document.querySelector(`[data-location="${from}"]`)
+          || document.querySelector('.computer-rack');
+      const toElem = document.querySelector(`[data-location="${to}"]`);
+
+      if (fromElem && toElem) {
+        await updateBoardTileWithAnimation(tile, fromElem, toElem);
+      } else {
+        console.warn("Missing element for tile animation", { tile, from, to });
+      }
+
+      const fromLoc = getTileLocationParts(from);
+      const toLoc = getTileLocationParts(to);
+
+      // Safely update the board
+      if (fromLoc.type === 'group') {
+        const { sectionIndex, groupIndex, tileIndex } = fromLoc;
+        currentBoard[sectionIndex][groupIndex][tileIndex] = '0';
+      } else if (fromLoc.type === 'run') {
+        currentBoard[2][fromLoc.runIndex][fromLoc.tileIndex] = '0';
+      } else if (fromLoc.type === 'cpuhand') {
+        const cpuHand = currentBoard[4];
+        const tileIndex = cpuHand.indexOf(tile);
+        if (tileIndex !== -1) {
+          cpuHand.splice(tileIndex, 1);
+        }
+      }
+
+      if (toLoc.type === 'group') {
+        const { sectionIndex, groupIndex, tileIndex } = toLoc;
+        while (currentBoard.length <= sectionIndex) currentBoard.push([]);
+        while (currentBoard[sectionIndex].length <= groupIndex) currentBoard[sectionIndex].push([]);
+        while (currentBoard[sectionIndex][groupIndex].length <= tileIndex) currentBoard[sectionIndex][groupIndex].push('0');
+        currentBoard[sectionIndex][groupIndex][tileIndex] = tile;
+      } else if (toLoc.type === 'run') {
+        const { runIndex, tileIndex } = toLoc;
+        if (!currentBoard[2][runIndex]) {
+          currentBoard[2][runIndex] = [];
+        }
+        if (isJoker(tile)) {
+          currentBoard[2][runIndex][tileIndex] = tile;
+        } else {
+          currentBoard[2][runIndex][tileIndex] = 1;
+        }
+      }
+
+      setBoard(structuredClone(currentBoard));
+      console.log('Updated board:', currentBoard);
+    }
+  };
+
+
+
+  const getTileLocationsFromBoard = (board) => {
+    const tileLocations = [];
+
+    // Runs (board[2])
+    board[2].forEach((runArray, runIndex) => {
+      runArray.forEach((tile, tileIndex) => {
+        if (tile && tile !== 0 && tile !== '0' && tile !== 1) {
+          tileLocations.push([tile, `run-${runIndex}-${tileIndex}`]);
+        }
+      });
+    });
+
+    // Groups (board[0] and board[1])
+    for (let sectionIndex = 0; sectionIndex <= 1; sectionIndex++) {
+      board[sectionIndex].forEach((group, groupIndex) => {
+        group.forEach((tile, tileIndex) => {
+          if (tile && tile !== '0') {
+            tileLocations.push([tile, `group-${sectionIndex}-${groupIndex}-${tileIndex}`]);
+          }
+        });
+      });
+    }
+
+    // CPU hand (board[4])
+    board[4].forEach((tile, index) => {
+      if (tile && tile !== '0') {
+        tileLocations.push([tile, `cpuhand-${index}`]);
+      }
+    });
+
+    return tileLocations;
+  };
+
+  function getTileLocationParts(location) {
+    if (location.startsWith('group-')) {
+      const [, sectionIndex, groupIndex, tileIndex] = location.split('-').map((val, i) => i === 0 ? val : Number(val));
+      return { type: 'group', sectionIndex, groupIndex, tileIndex };
+    } else if (location.startsWith('run-')) {
+      const [, runIndex, tileIndex] = location.split('-').map((val, i) => i === 0 ? val : Number(val));
+      return { type: 'run', runIndex, tileIndex };
+    } else if (location.startsWith('cpuhand-')) {
+      const [, index] = location.split('-').map((val, i) => i === 0 ? val : Number(val));
+      return { type: 'cpuhand', index };
+    }
+    return { type: 'unknown' };
   }
+
+  const getTileMovements = (start, end) => {
+    const movements = [];
+    const startMap = new Map(start.map(([tile, loc]) => [tile, loc]));
+    const endMap = new Map(end.map(([tile, loc]) => [tile, loc]));
+
+    endMap.forEach((endLoc, tile) => {
+      const startLoc = startMap.get(tile);
+      if (startLoc && endLoc && startLoc !== endLoc && !(startLoc.startsWith('cpuhand-') && endLoc.startsWith('cpuhand-'))) {
+        movements.push({ tile, from: startLoc, to: endLoc });
+      }
+    });
+
+    return movements;
+  };
+
+
 
   const onDone = () => {
     //step 1 is the board correct?
     if(!validateBoard(board)){
       console.log("board isnt correct")
+      setMsgNotif("The board is not correct")
+      setShowNotif(true);
       return;
     }
     const playedtiles = playedTiles(boardSnapshot[3],board[3]);//step 2 did the player put down a tile?
@@ -380,6 +461,8 @@ function App() {
       } else {
         if(!validateBoard(firstTurnBoard)){
           console.log("used other players' tile to get to 30")
+          setMsgNotif("You used other players' tile to get to 30")
+          setShowNotif(true);
           //todo notify the player that they used the other players' tiles to get 30
         }
         //if the code gets here, the user passed all first turn rules
@@ -445,9 +528,10 @@ function App() {
   return (
       <DndProvider backend={backendForDND} options={backendOptions}>
         <div className="app">
-          <CustomDragLayer/>
-          <div id="tile-overlay-root"></div>
+          <CustomDragLayer />
+
           <Notification message={msgNotif} isVisible={showNotif} onClose={() => setShowNotif(false)}/>
+          <div id="tile-overlay-root"></div>
           <div className={`game-container ${!gameStarted || playerWon ? 'blurred' : ''}`}>
             <ComputerRack cpuhand={board[4]}/>
             <GameBoard

@@ -82,7 +82,7 @@ function RunsContainer({ runs, sectionIndex, updateBoardTile, tilesAreDraggable 
                             if (tileValue === '1-j' || tileValue === '4-j') {
                                 isHighlighted = 1;
                                 tileProps = {
-                                    id: `run-${runIndex}-${tileIndex}`,
+                                    id: tileValue !== '0' ? tileValue : `run-${runIndex}-${tileIndex}`,
                                     color: tileValue.charAt(0),
                                     number: 'j',
                                     isHighlighted: isHighlighted,
@@ -95,7 +95,7 @@ function RunsContainer({ runs, sectionIndex, updateBoardTile, tilesAreDraggable 
                                 isHighlighted = tileValue === 1;
                                 isGreyedOut = tileValue === 0;
                                 tileProps = {
-                                    id: `run-${runIndex}-${tileIndex}`,
+                                    id: tileValue !== '0' ? tileValue : `run-${runIndex}-${tileIndex}`,
                                     color: color,
                                     number: number,
                                     isHighlighted: isHighlighted,

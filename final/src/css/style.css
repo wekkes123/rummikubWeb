@@ -163,6 +163,25 @@
     margin-top:50px;
 }
 
+.startbtn {
+    background-color: #f4a261; /* soft orange tone to fit burlywood background */
+    color: white;
+    font-size: 1.5rem;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 30px;
+}
+
+.startbtn:hover {
+    background-color: #e76f51;
+    transform: scale(1.05);
+}
+
+
 
 
 .filter {
