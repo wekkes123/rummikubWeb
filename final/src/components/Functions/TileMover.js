@@ -5,7 +5,6 @@ import Tile from '../Tile';
 
 export function flyTileBetweenContainers({ tile, fromElem, toElem, onComplete = () => {} }) {
     const overlayContainer = document.getElementById('tile-overlay-root');
-    console.log(tile, " animation");
     if (!fromElem || !toElem || !overlayContainer) {
         console.warn('Could not find elements for animation');
         return;
@@ -23,7 +22,7 @@ export function flyTileBetweenContainers({ tile, fromElem, toElem, onComplete = 
     const [color, number] = tile.split('-');
 
     const tileProps = {
-        id: '0',
+        id: tile,
         color: color,
         number: number,
         isHighlighted: true,
@@ -39,7 +38,7 @@ export function flyTileBetweenContainers({ tile, fromElem, toElem, onComplete = 
         <motion.div
             initial={{ x: fromX, y: fromY }}
             animate={{ x: toX, y: toY }}
-            transition={{ duration: 1, ease: 'easeInOut' }}
+            transition={{ duration: 0.5, ease: 'easeInOut' }}
             onAnimationComplete={() => {
                 root.unmount();
                 overlayContainer.removeChild(flyingTileDiv);
