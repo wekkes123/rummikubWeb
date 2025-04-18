@@ -28,7 +28,7 @@ function App() {
   const [boardSnapshot, setBoardSnapshot] = useState(null);
   const [playersTurn, setPlayersTurn] = useState(true);
   const [showNotif, setShowNotif] = useState(false);
-  const [lefthanded, setLefthanded] = useState(false);
+  const [hasPlayed, setHasPlayed] = useState(false);
   const [msgNotif, setMsgNotif] = useState("hello");
   const seed = 'ihvj';
 
@@ -107,6 +107,7 @@ function App() {
   useEffect(() => {
     if (playersTurn === true) {//this is needed because otherwise the snapshot is taken before everything is properly initialised
       if(!firstTurn){
+        setHasPlayed(false);
         saveToSnapshot()
       }
     }
@@ -114,8 +115,6 @@ function App() {
 
   useEffect(() => {
     if (playersTurn === false) {
-      //todo Add logic for when it's not the player's turn
-      console.log("It's NOT the player's turn");
       cpuMove();
     }
   }, [playersTurn]);
@@ -123,6 +122,7 @@ function App() {
 
 
   const updateBoardTile = (section, groupIndex, tileIndex, value, add = null) => {
+    setHasPlayed(true);
     const updateBoardState = (prevBoard) => {
       const newBoard = [...prevBoard];
       newBoard[section] = [...newBoard[section]];
@@ -346,7 +346,6 @@ function App() {
       for(const tile of playedtiles){
         const [, number] = tile.split('-').map(Number)
         if (Number.isNaN(number)) {// .map tries to convert the number of the tile to a number, if its a joker -> convers to NaN
-          console.log(findJokerValue(board,tile));
           count += findJokerValue(board,tile);
           continue;
         }
@@ -439,29 +438,18 @@ function App() {
                   tilesAreDraggable={playersTurn}
                   firstTurn={firstTurn}
               />
-                {lefthanded && (
-                    <GameControls
-                        onDraw={drawTile}
-                        onDone={onDone}
-                        onReverse={restoreFromSnapshot}
-                        pressable={playersTurn}
-                        lefthanded={lefthanded}
-                    />
-                )}
                 <PlayerRack
                     playerhand={board[3]}
                     onDragEnd={handleDragEnd}
                     tilesAreDraggable={playersTurn}
                 />
-                {!lefthanded && (
                     <GameControls
                         onDraw={drawTile}
                         onDone={onDone}
                         onReverse={restoreFromSnapshot}
                         pressable={playersTurn}
-                        lefthanded={lefthanded}
+                        hasPlayed={hasPlayed}
                     />
-                )}
           </div>
           {!gameStarted && <StartScreen onStart={handleStartGame}/>}
         </div>

@@ -68,6 +68,11 @@
     padding: 10px 15px;
 }
 
+.player-rack {
+    flex-wrap: wrap;
+    max-width: 68vw;
+}
+
 .groups {
     height: 70vh;
 
@@ -225,7 +230,7 @@ filter: blur(4px);
 }
 
 .draw, .done, .reverse {
-    width: 100%;
+    width: 100px;
     padding: 10px;
     font-size: 16px;
     border: 2px black solid;
@@ -248,6 +253,7 @@ filter: blur(4px);
     height: 100px;
 }
 
+
 .game-controls {
     display: flex;
     flex-direction: column;
@@ -256,22 +262,22 @@ filter: blur(4px);
     justify-content: center;
 }
 
-.controls-container {
+.left {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    position: absolute;
+    left: 3.5vw;
+    bottom: 2.5vh;
 }
 
-.left-handed {
-    position: absolute;
-    left: 0;
-    bottom: 0;
+.left * {
+    margin-bottom: 2vh;
 }
 
-.right-handed {
+.right {
     position: absolute;
-    left: 0;
-    bottom: 0;
+    right: 3.5vw;
+    bottom: 7vh;
 }
 
 .restore {

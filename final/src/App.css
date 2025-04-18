@@ -7,12 +7,6 @@
   overflow: hidden;
 }
 
-.game-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
 .blurred {
   filter: blur(2px);
 }
