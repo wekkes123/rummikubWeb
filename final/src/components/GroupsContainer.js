@@ -4,9 +4,9 @@ import Tile from './Tile';
 import DraggableTile from '../dragDrop/DraggableTile';
 import { removeOriginalTile, isTileMoveValid, addToFirstTurnBoard } from './Functions/gamePlayFunctions'
 import '../css/style.css'
+const placeTileAudio = new Audio("/sounds/place.mp3");
 
 function GroupsContainer({ groups, sectionIndex, updateBoardTile, tilesAreDraggable = true, getBoardValue, removeFromHand, firstTurn}) {
-    const placeTileAudio = new Audio("/sounds/place.mp3"); // Adjust path if needed
 
     const handleTileDrop = (draggedTileData, dropData) => {
         console.log('Tile dropped in run:', draggedTileData, dropData);

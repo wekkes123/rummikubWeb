@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import ComputerRack from './components/ComputerRack';
 import { TouchBackend } from 'react-dnd-touch-backend';
-import { DndProvider, Preview } from "react-dnd";
+import { DndProvider} from "react-dnd";
 import { createSeededRNG, shuffleArray } from './components/Functions/SeededRNG'
 import GameBoard from './components/GameBoard';
 import PlayerRack from './components/PlayerRack';
 import GameControls from './components/GameControls';
-import WinScreen from './components/WinScreen';
 import StartScreen from './components/StartScreen';
 import CustomDragLayer from './dragDrop/CustomDragLayer';
-import { isValidGroup,isValidRun, validateBoard, playedTiles, findJokerValue} from "./components/Functions/gamePlayFunctions";
+import {validateBoard, playedTiles, findJokerValue} from "./components/Functions/gamePlayFunctions";
 import { getBestMove } from "./components/cpu/rummikubAPI"
 import Notification from './components/Notification'
 import {flyTileBetweenContainers, reorderTileMovements, findOpenSpot, getTileMovements, getTileLocationParts, getTileLocationsFromBoard} from "./components/Functions/TileMover";
@@ -29,8 +28,8 @@ function App() {
   const [showNotif, setShowNotif] = useState(false);
   const [hasPlayed, setHasPlayed] = useState(false);
   const [msgNotif, setMsgNotif] = useState("hello");
-  const placeTileAudio = new Audio("/sounds/place.mp3"); // Adjust path if needed
-  const seed = 'ihvj';
+  const place = new Audio("/sounds/place.mp3"); // Adjust path if needed
+  const seed = '415541';
 
   const initializeBoard = () => {
     const groups1 = Array(8).fill().map(() => Array(4).fill('0'));
@@ -198,9 +197,13 @@ function App() {
 
   const playCpuMove = async (moves, tilesFromHand, jokerValue) => {
     const startLocations = getTileLocationsFromBoard(board);
-    let newBoard = initializeBoard();
-    newBoard[4] = JSON.parse(JSON.stringify(board[4]));
-
+    let newBoard;
+    if(cpuFirstTurn){
+      newBoard = [...board];
+    } else {
+      newBoard = initializeBoard();
+      newBoard[4] = JSON.parse(JSON.stringify(board[4]));
+    }
 
     for (let i = 0; i < moves.length; i++) {
       const move = moves[i];
@@ -302,6 +305,7 @@ function App() {
               onComplete: resolve
             })
         );
+        place.play(); //this place audio is 0.41 seconds so the animation needs to be longer for the audio to not bug out
       }
       const fromLoc = getTileLocationParts(from);
       const toLoc = getTileLocationParts(to);

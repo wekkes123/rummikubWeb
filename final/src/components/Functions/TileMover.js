@@ -38,7 +38,7 @@ export function flyTileBetweenContainers({ tile, fromElem, toElem, onComplete = 
         <motion.div
             initial={{ x: fromX, y: fromY }}
             animate={{ x: toX, y: toY }}
-            transition={{ duration: 0.2, ease: 'easeInOut' }}
+            transition={{ duration: 0.5, ease: 'easeInOut' }} //if you change the duration here, make sure to fix potential sound bugs
             onAnimationComplete={() => {
                 root.unmount();
                 overlayContainer.removeChild(flyingTileDiv);
