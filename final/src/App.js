@@ -29,7 +29,7 @@ function App() {
   const [hasPlayed, setHasPlayed] = useState(false);
   const [msgNotif, setMsgNotif] = useState("hello");
   const place = new Audio("/sounds/place.mp3"); // Adjust path if needed
-  const seed = '415541';
+  const seed = 'ihvj';
 
   const initializeBoard = () => {
     const groups1 = Array(8).fill().map(() => Array(4).fill('0'));
@@ -352,7 +352,7 @@ function App() {
       setShowNotif(true);
       return;
     }
-    const playedtiles = playedTiles(boardSnapshot[3],board[3]);//step 2 did the player put down a tile?
+    const playedtiles = playedTiles(boardSnapshot[3],board[3]);//step 2 did the player put down a tile? //todo something goes wrong here and the played tiles are not representative
     if(playedtiles.length === 0){
       return;
       //todo notify the player that they have to play a tile or draw a tile
