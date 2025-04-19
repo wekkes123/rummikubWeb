@@ -51,7 +51,6 @@ function PlayerRack({ playerhand, onDragEnd, tilesAreDraggable = true, updatePla
                             location: `hand-${index}`
                         };
                     } else {
-                        console.log(tile);
                         const [color, number] = tile.split('-');
 
                         tileProps = {

@@ -12,10 +12,9 @@ import CustomDragLayer from './dragDrop/CustomDragLayer';
 import { isValidGroup,isValidRun, validateBoard, playedTiles, findJokerValue} from "./components/Functions/gamePlayFunctions";
 import { getBestMove } from "./components/cpu/rummikubAPI"
 import Notification from './components/Notification'
-import {flyTileBetweenContainers} from "./components/Functions/TileMover";
+import {flyTileBetweenContainers, reorderTileMovements, findOpenSpot, getTileMovements, getTileLocationParts, getTileLocationsFromBoard} from "./components/Functions/TileMover";
 import './App.css';
 import './css/style.css'
-
 
 const backendForDND = TouchBackend;
 const backendOptions = { enableMouseEvents: true };
@@ -37,8 +36,8 @@ function App() {
     const groups1 = Array(8).fill().map(() => Array(4).fill('0'));
     const groups2 = Array(8).fill().map(() => Array(4).fill('0'));
     const runs = Array(8).fill().map(() => Array(13).fill('0'));
-    const playerhand = Array(14).fill('1-1');
-    const cpuhand = Array(14).fill('1-1');
+    const playerhand = Array(14)
+    const cpuhand = Array(14)
 
     return [groups1, groups2, runs, playerhand, cpuhand];
   };
@@ -119,8 +118,6 @@ function App() {
     }
   }, [playersTurn]);
 
-
-
   const updateBoardTile = (section, groupIndex, tileIndex, value, add = null) => {
     setHasPlayed(true);
 
@@ -145,20 +142,6 @@ function App() {
 
     setBoard(updateBoardState);
   };
-
-  const updateBoardTileWithAnimation = async (tile, fromElem, toElem) => {
-    if (fromElem && toElem) {
-      await new Promise(resolve =>
-          flyTileBetweenContainers({
-            tile,
-            fromElem,
-            toElem,
-            onComplete: resolve
-          })
-      );
-    }
-  };
-
 
   const printB = () => {
     console.log(firstTurnBoard);
@@ -210,22 +193,22 @@ function App() {
       console.error("Error during CPU move:", error);
     }
   };
+
   const isJoker = (tile) => tile && tile.endsWith('-j');
 
   const playCpuMove = async (moves, tilesFromHand, jokerValue) => {
-    let newBoard = [...board];
     const startLocations = getTileLocationsFromBoard(board);
+    let newBoard = initializeBoard();
+    newBoard[4] = JSON.parse(JSON.stringify(board[4]));
+
 
     for (let i = 0; i < moves.length; i++) {
       const move = moves[i];
       const type = move[0];
 
-      const jokerTilesInHand = board[4].filter(isJoker);
-      let usedJokers = 0;
       const moveData = move.slice(1).map(item => {
         if (item === 'j') {
-          const jokerTile = jokerTilesInHand[usedJokers++];
-          return jokerTile;
+          return joker;
         }
         return item;
       });
@@ -248,13 +231,13 @@ function App() {
                   }
                 }
               });
-
               newBoard = boardCopy;
               break outerLoop;
             }
           }
         }
-      } else {
+      }
+      else {
         const color = parseInt(moveData[0].split('-')[0]);
         const startIndex = (color - 1) * 2;
         const colorArrays = [newBoard[2][startIndex], newBoard[2][startIndex + 1]];
@@ -273,13 +256,11 @@ function App() {
               break;
             }
           }
-
           if (canFit) {
             targetArrayIndex = arrayIndex;
             break;
           }
         }
-
         if (targetArrayIndex !== -1) {
           const boardCopy = structuredClone(newBoard);
 
@@ -301,32 +282,30 @@ function App() {
     }
 
     const endLocations = getTileLocationsFromBoard(newBoard);
-    const tileMovements = getTileMovements(startLocations, endLocations);
-
+    const unorderedTileMovements = getTileMovements(startLocations, endLocations);
+    const openTile = findOpenSpot(board,newBoard);
+    const tileMovements = reorderTileMovements(unorderedTileMovements,openTile);
     let currentBoard = structuredClone(board);
-
     for (const move of tileMovements) {
       const { tile, from, to } = move;
-
-      if (!tile || !from || !to) {
-        console.warn("Skipping invalid tile movement", move);
-        continue;
-      }
 
       const fromElem = document.querySelector(`[data-location="${from}"]`)
           || document.querySelector('.computer-rack');
       const toElem = document.querySelector(`[data-location="${to}"]`);
 
       if (fromElem && toElem) {
-        await updateBoardTileWithAnimation(tile, fromElem, toElem);
-      } else {
-        console.warn("Missing element for tile animation", { tile, from, to });
+        await new Promise(resolve =>
+            flyTileBetweenContainers({
+              tile,
+              fromElem,
+              toElem,
+              onComplete: resolve
+            })
+        );
       }
-
       const fromLoc = getTileLocationParts(from);
       const toLoc = getTileLocationParts(to);
 
-      // Safely update the board
       if (fromLoc.type === 'group') {
         const { sectionIndex, groupIndex, tileIndex } = fromLoc;
         currentBoard[sectionIndex][groupIndex][tileIndex] = '0';
@@ -339,7 +318,6 @@ function App() {
           cpuHand.splice(tileIndex, 1);
         }
       }
-
       if (toLoc.type === 'group') {
         const { sectionIndex, groupIndex, tileIndex } = toLoc;
         while (currentBoard.length <= sectionIndex) currentBoard.push([]);
@@ -359,75 +337,8 @@ function App() {
       }
 
       setBoard(structuredClone(currentBoard));
-      console.log('Updated board:', currentBoard);
     }
   };
-
-
-
-  const getTileLocationsFromBoard = (board) => {
-    const tileLocations = [];
-
-    // Runs (board[2])
-    board[2].forEach((runArray, runIndex) => {
-      runArray.forEach((tile, tileIndex) => {
-        if (tile && tile !== 0 && tile !== '0' && tile !== 1) {
-          tileLocations.push([tile, `run-${runIndex}-${tileIndex}`]);
-        }
-      });
-    });
-
-    // Groups (board[0] and board[1])
-    for (let sectionIndex = 0; sectionIndex <= 1; sectionIndex++) {
-      board[sectionIndex].forEach((group, groupIndex) => {
-        group.forEach((tile, tileIndex) => {
-          if (tile && tile !== '0') {
-            tileLocations.push([tile, `group-${sectionIndex}-${groupIndex}-${tileIndex}`]);
-          }
-        });
-      });
-    }
-
-    // CPU hand (board[4])
-    board[4].forEach((tile, index) => {
-      if (tile && tile !== '0') {
-        tileLocations.push([tile, `cpuhand-${index}`]);
-      }
-    });
-
-    return tileLocations;
-  };
-
-  function getTileLocationParts(location) {
-    if (location.startsWith('group-')) {
-      const [, sectionIndex, groupIndex, tileIndex] = location.split('-').map((val, i) => i === 0 ? val : Number(val));
-      return { type: 'group', sectionIndex, groupIndex, tileIndex };
-    } else if (location.startsWith('run-')) {
-      const [, runIndex, tileIndex] = location.split('-').map((val, i) => i === 0 ? val : Number(val));
-      return { type: 'run', runIndex, tileIndex };
-    } else if (location.startsWith('cpuhand-')) {
-      const [, index] = location.split('-').map((val, i) => i === 0 ? val : Number(val));
-      return { type: 'cpuhand', index };
-    }
-    return { type: 'unknown' };
-  }
-
-  const getTileMovements = (start, end) => {
-    const movements = [];
-    const startMap = new Map(start.map(([tile, loc]) => [tile, loc]));
-    const endMap = new Map(end.map(([tile, loc]) => [tile, loc]));
-
-    endMap.forEach((endLoc, tile) => {
-      const startLoc = startMap.get(tile);
-      if (startLoc && endLoc && startLoc !== endLoc && !(startLoc.startsWith('cpuhand-') && endLoc.startsWith('cpuhand-'))) {
-        movements.push({ tile, from: startLoc, to: endLoc });
-      }
-    });
-
-    return movements;
-  };
-
-
 
   const onDone = () => {
     //step 1 is the board correct?
@@ -498,18 +409,24 @@ function App() {
 
   //index is used so you can use this function to add to the cpus hand index = 4 or the players hand index = 3
   const drawTile = (index) => {
-    restoreFromSnapshot();// drawing a tile means they should nt have played any tiles or changed to board
+    restoreFromSnapshot(); // drawing a tile means they should not have played any tiles or changed the board
     const newPile = [...pile];
     const newHand = [...board[index]];
+    const drawnTile = newPile.pop();
 
-    newHand.push(newPile.pop());
+    if (newHand.includes('empty')) {
+      const zeroIndex = newHand.indexOf('empty');
+      newHand[zeroIndex] = drawnTile;
+    } else {
+      newHand.push(drawnTile);
+    }
 
     const newBoard = [...board];
     newBoard[index] = newHand;
     setBoard(newBoard);
     setPile(newPile);
     //end the turn of the cpu or the player
-    setPlayersTurn(!playersTurn)
+    setPlayersTurn(!playersTurn);
   }
 
   const handleStartGame = () => {
