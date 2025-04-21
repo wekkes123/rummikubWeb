@@ -292,21 +292,6 @@ function App() {
     for (const move of tileMovements) {
       const { tile, from, to } = move;
 
-      const fromElem = document.querySelector(`[data-location="${from}"]`)
-          || document.querySelector('.computer-rack');
-      const toElem = document.querySelector(`[data-location="${to}"]`);
-
-      if (fromElem && toElem) {
-        await new Promise(resolve =>
-            flyTileBetweenContainers({
-              tile,
-              fromElem,
-              toElem,
-              onComplete: resolve
-            })
-        );
-        place.play(); //this place audio is 0.41 seconds so the animation needs to be longer for the audio to not bug out
-      }
       const fromLoc = getTileLocationParts(from);
       const toLoc = getTileLocationParts(to);
 
@@ -321,6 +306,23 @@ function App() {
         if (tileIndex !== -1) {
           cpuHand.splice(tileIndex, 1);
         }
+      }
+      setBoard(structuredClone(currentBoard));
+
+      const fromElem = document.querySelector(`[data-location="${from}"]`)
+          || document.querySelector('.computer-rack');
+      const toElem = document.querySelector(`[data-location="${to}"]`);
+
+      if (fromElem && toElem) {
+        await new Promise(resolve =>
+            flyTileBetweenContainers({
+              tile,
+              fromElem,
+              toElem,
+              onComplete: resolve
+            })
+        );
+        place.play(); //this place audio is 0.41 seconds so the animation needs to be longer for the audio to not bug out
       }
       if (toLoc.type === 'group') {
         const { sectionIndex, groupIndex, tileIndex } = toLoc;
