@@ -24,5 +24,12 @@
   "Right-Handed": "Right-Handed",
   "username" : "first name",
   "age" : "Age",
-  "submit": "Submit"
+  "submit": "Submit",
+  "draw": "Draw",
+  "done": "Done",
+  "reverse": "Reverse",
+  ">30notify" : "You played less than 30 on your first turn",
+  "30other-notify" : "You used other players' tile to get to 30",
+  "The board is not correct": "The board is not correct",
+  "You have to place or draw a tile!" : "You have to place or draw a tile!"
 }
