@@ -1,10 +1,9 @@
 import React from 'react';
 import GroupsContainer from './GroupsContainer';
 import RunsContainer from './RunsContainer';
-import wood from '../images/wood.jpg';
 
 function GameBoard({ board, updateBoardTile, getBoardValue, tilesAreDraggable, removeFromHand, firstTurn }) {
-    const [groups1, groups2, runs, playerhand, cpuhand] = board;
+    const [groups1, groups2, runs] = board;
 
     return (
         <div className="container2"
