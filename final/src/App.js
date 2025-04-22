@@ -29,7 +29,7 @@ function App() {
   const [hasPlayed, setHasPlayed] = useState(false);
   const [msgNotif, setMsgNotif] = useState("hello");
   const place = new Audio("/sounds/place.mp3"); // Adjust path if needed
-  const seed = 'ihvj';
+  const seed = 'i1265';
 
   const initializeBoard = () => {
     const groups1 = Array(8).fill().map(() => Array(4).fill('0'));
@@ -346,12 +346,13 @@ function App() {
 
   const onDone = () => {
     //step 1 is the board correct?
+    /*
     if(!validateBoard(board)){
       console.log("board isnt correct")
       setMsgNotif("The board is not correct")
       setShowNotif(true);
       return;
-    }
+    }*/
     const playedtiles = playedTiles(boardSnapshot[3],board[3]);//step 2 did the player put down a tile? //todo something goes wrong here and the played tiles are not representative
     if(playedtiles.length === 0){
       return;

@@ -177,6 +177,7 @@ export function validateBoard(board) {
 }
 
 export function playedTiles(beforeHand, afterHand) {
+    console.log(beforeHand,afterHand)
     const afterHandMap = new Map();
 
     for (const tile of afterHand) {
