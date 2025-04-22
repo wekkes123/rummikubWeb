@@ -112,6 +112,7 @@ function Game() {
 
     useEffect(() => {
         if (playersTurn === false) {
+            setFirstTurnBoard(initializeBoard())
             cpuMove();
         }
     }, [playersTurn]);
@@ -137,7 +138,6 @@ function Game() {
         if (add) {
             setFirstTurnBoard(updateBoardState);
         }
-
         setBoard(updateBoardState);
     };
 
@@ -493,8 +493,13 @@ function Game() {
                     />
                     <PlayerRack
                         playerhand={board[3]}
+                        board={board}
+                        firstTurnBoard={firstTurnBoard}
+                        removeFromHand={removeFromHand}
+                        updateBoardTile = {updateBoardTile}
                         onDragEnd={handleDragEnd}
-                        updateBoardTile={updateBoardTile}
+                        setBoard={setBoard}
+                        setFirstTurnBoard={setFirstTurnBoard}
                         getBoardValue={getBoardValue}
                         tilesAreDraggable={playersTurn}
                     />

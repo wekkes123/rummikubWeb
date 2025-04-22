@@ -2,11 +2,10 @@ import React from 'react';
 import Tile from './Tile';
 
 function ComputerRack({ cpuhand }) {
-
     return (
         <div className="container1">
             <div className="computer-rack">
-                {cpuhand.map((tile, index) => {
+                {cpuhand.slice(0, 14).map((tile, index) => {
                     const [color, number] = tile.split('-');
 
                     const tileProps = {
@@ -27,3 +26,4 @@ function ComputerRack({ cpuhand }) {
 }
 
 export default ComputerRack;
+

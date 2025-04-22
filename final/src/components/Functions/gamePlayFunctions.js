@@ -1,43 +1,24 @@
-export function removeOriginalTile(draggedTileData, updateBoardTile, removeFromHand, firstTurn = false) {
+export function removeOriginalTile(draggedTileData, updateBoardTile, removeFromHand) {
     if (draggedTileData.location) {
         if (draggedTileData.location.startsWith('group-')) {
             const [, sourceSectionIndex, sourceGroupIndex, sourceTileIndex] = draggedTileData.location.split('-').map(Number);
-            if(firstTurn) {
                 updateBoardTile(
                     sourceSectionIndex,
                     sourceGroupIndex,
                     sourceTileIndex,
                     '0',
-                    firstTurn
+                    true
                 );
-                return;
-            }
-            updateBoardTile(
-                sourceSectionIndex,
-                sourceGroupIndex,
-                sourceTileIndex,
-                '0'
-            );
         } else if (draggedTileData.location.startsWith('run-')) {
             const sourceRunIndex = parseInt(draggedTileData.location.split('-')[1]);
             const sourceTileIndex = parseInt(draggedTileData.curlo);
-            if(firstTurn) {
                 updateBoardTile(
                     2,
                     sourceRunIndex,
                     sourceTileIndex,
                     '0',
-                    firstTurn
+                    true
                 );
-                return;
-            }
-
-            updateBoardTile(
-                2,
-                sourceRunIndex,
-                sourceTileIndex,
-                '0'
-            );
         } else if (draggedTileData.location.startsWith('hand-')) {
             const [, handIndex] = draggedTileData.location.split('-').map(Number);
             removeFromHand(3, handIndex);
@@ -45,7 +26,7 @@ export function removeOriginalTile(draggedTileData, updateBoardTile, removeFromH
     }
 }
 
-export function isTileMoveValid(draggedTileData, dropData, getBoardValue) {
+export function isTileMoveValid(draggedTileData, dropData, getBoardValue, firstTurnBoard) {
     //if its in a group
     if (dropData.sectionIndex === 1 || dropData.sectionIndex === 0) {
         const [, sourceSectionIndex, sourceGroupIndex, sourceTileIndex] = draggedTileData.location.split('-').map(Number);
@@ -82,7 +63,22 @@ export function isTileMoveValid(draggedTileData, dropData, getBoardValue) {
                 return '1';
             }
         }
-    } else if (dropData.sectionIndex === 3) { //if its in the players hand
+    } else if (dropData.sectionIndex === 3) {//if its in the players hand
+        if(draggedTileData.location.startsWith("group")){
+            const [, sourceSectionIndex, sourceGroupIndex, sourceTileIndex] = draggedTileData.location.split('-').map(Number);
+            if(firstTurnBoard[sourceSectionIndex][sourceGroupIndex][sourceTileIndex] === '0') {
+                return '0';
+            } else {
+                return '1';
+            }
+        } else if(draggedTileData.location.startsWith("run")){
+            const [,sourceRunIndex, sourceTileIndex] = draggedTileData.location.split('-').map(Number);
+            if(firstTurnBoard[2][sourceRunIndex][sourceTileIndex] === '0') {
+                return '0';
+            } else {
+                return '1';
+            }
+        }
     }
     return '0';
 }
