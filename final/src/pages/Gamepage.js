@@ -1,22 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import ComputerRack from '../components/ComputerRack';
 import { TouchBackend } from 'react-dnd-touch-backend';
 import { DndProvider} from "react-dnd";
-import { createSeededRNG, shuffleArray } from '../components/Functions/SeededRNG'
+
+import ComputerRack from '../components/ComputerRack';
 import GameBoard from '../components/GameBoard';
 import PlayerRack from '../components/PlayerRack';
 import GameControls from '../components/GameControls';
 import StartScreen from '../components/StartScreen';
 import CustomDragLayer from '../dragDrop/CustomDragLayer';
+import Notification from '../components/Notification'
+
+import { createSeededRNG, shuffleArray } from '../components/Functions/SeededRNG'
 import {validateBoard, playedTiles, findJokerValue} from "../components/Functions/gamePlayFunctions";
 import { getBestMove } from "../components/cpu/rummikubAPI"
-import Notification from '../components/Notification'
-import {flyTileBetweenContainers, reorderTileMovements, findOpenSpot, getTileMovements, getTileLocationParts, getTileLocationsFromBoard} from "../components/Functions/TileMover";
+import {
+    flyTileBetweenContainers,
+    reorderTileMovements,
+    findOpenSpot,
+    getTileMovements,
+    getTileLocationParts,
+    getTileLocationsFromBoard
+} from "../components/Functions/TileMover";
+
 import '../App.css';
 import '../css/style.css'
 
 const backendForDND = TouchBackend;
 const backendOptions = { enableMouseEvents: true };
+const placeAudio = new Audio("/sounds/place.mp3");
 
 function Game() {
     const [gameStarted, setGameStarted] = useState(false);
@@ -28,7 +39,6 @@ function Game() {
     const [showNotif, setShowNotif] = useState(false);
     const [hasPlayed, setHasPlayed] = useState(false);
     const [msgNotif, setMsgNotif] = useState("hello");
-    const place = new Audio("/sounds/place.mp3");
     const seed = 'ihvj';
 
     const initializeBoard = () => {
@@ -43,7 +53,7 @@ function Game() {
 
     const initializePile = () => {
         let pile = [];
-        let joker = null;
+        let joker;
 
         if (Math.random() < 0.5) {
             pile.push('1-j');
@@ -149,15 +159,13 @@ function Game() {
     const removeFromHand = (sectionIndex, handIndex) => {
         const newBoard = [...board];
         const hand = [...newBoard[sectionIndex]];
-        if (sectionIndex === 3) {// if we remove element from the players hand, we add an empty space instead of just removing
-            if (hand.length <= 14) {
-                hand[handIndex] = 'empty';
-            } else {
-                hand.splice(handIndex, 1);
-            }
+
+        if (sectionIndex === 3 && hand.length <= 14) {
+            hand[handIndex] = 'empty';
         } else {
             hand.splice(handIndex, 1);
         }
+
         newBoard[sectionIndex] = hand;
         setBoard(newBoard);
     };
@@ -196,12 +204,12 @@ function Game() {
 
     const playCpuMove = async (moves, tilesFromHand, jokerValue) => {
         const startLocations = getTileLocationsFromBoard(board);
-        let newBoard;
+        let simulatedBoard;
         if(cpuFirstTurn){
-            newBoard = [...board];
+            simulatedBoard = [...board];
         } else {
-            newBoard = initializeBoard();
-            newBoard[4] = JSON.parse(JSON.stringify(board[4]));
+            simulatedBoard = initializeBoard();
+            simulatedBoard[4] = JSON.parse(JSON.stringify(board[4]));
         }
 
         for (let i = 0; i < moves.length; i++) {
@@ -218,10 +226,10 @@ function Game() {
             if (type === 'g') {
                 if (moveData.length === 3) moveData.push('0');
 
-                outerLoop: for (let j = 0; j < newBoard.length; j++) {
-                    for (let k = 0; k < newBoard[j].length; k++) {
-                        if (Array.isArray(newBoard[j][k]) && newBoard[j][k].every(item => item === '0')) {
-                            const boardCopy = structuredClone(newBoard);
+                outerLoop: for (let j = 0; j < simulatedBoard.length; j++) {
+                    for (let k = 0; k < simulatedBoard[j].length; k++) {
+                        if (Array.isArray(simulatedBoard[j][k]) && simulatedBoard[j][k].every(item => item === '0')) {
+                            const boardCopy = structuredClone(simulatedBoard);
 
                             moveData.forEach((tile, m) => {
                                 if (tile !== '0') {
@@ -233,7 +241,7 @@ function Game() {
                                     }
                                 }
                             });
-                            newBoard = boardCopy;
+                            simulatedBoard = boardCopy;
                             break outerLoop;
                         }
                     }
@@ -242,7 +250,7 @@ function Game() {
             else {
                 const color = parseInt(moveData[0].split('-')[0]);
                 const startIndex = (color - 1) * 2;
-                const colorArrays = [newBoard[2][startIndex], newBoard[2][startIndex + 1]];
+                const colorArrays = [simulatedBoard[2][startIndex], simulatedBoard[2][startIndex + 1]];
                 let targetArrayIndex = -1;
 
                 for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
@@ -264,7 +272,7 @@ function Game() {
                     }
                 }
                 if (targetArrayIndex !== -1) {
-                    const boardCopy = structuredClone(newBoard);
+                    const boardCopy = structuredClone(simulatedBoard);
 
                     for (const tile of moveData) {
                         const [, tileNumber] = tile?.split('-') || [];
@@ -278,35 +286,20 @@ function Game() {
                         }
                     }
 
-                    newBoard = boardCopy;
+                    simulatedBoard = boardCopy;
                 }
             }
         }
 
-        const endLocations = getTileLocationsFromBoard(newBoard);
+        const endLocations = getTileLocationsFromBoard(simulatedBoard);
         const unorderedTileMovements = getTileMovements(startLocations, endLocations);
-        const openTile = findOpenSpot(board,newBoard);
+        const openTile = findOpenSpot(board,simulatedBoard);
         const tileMovements = reorderTileMovements(unorderedTileMovements,openTile);
         console.log(tileMovements);
         let currentBoard = structuredClone(board);
         for (const move of tileMovements) {
             const { tile, from, to } = move;
 
-            const fromElem = document.querySelector(`[data-location="${from}"]`)
-                || document.querySelector('.computer-rack');
-            const toElem = document.querySelector(`[data-location="${to}"]`);
-
-            if (fromElem && toElem) {
-                await new Promise(resolve =>
-                    flyTileBetweenContainers({
-                        tile,
-                        fromElem,
-                        toElem,
-                        onComplete: resolve
-                    })
-                );
-                place.play(); //this place audio is 0.41 seconds so the animation needs to be longer for the audio to not bug out
-            }
             const fromLoc = getTileLocationParts(from);
             const toLoc = getTileLocationParts(to);
 
@@ -322,6 +315,25 @@ function Game() {
                     cpuHand.splice(tileIndex, 1);
                 }
             }
+
+            setBoard(structuredClone(currentBoard));
+
+            const fromElem = document.querySelector(`[data-location="${from}"]`)
+                || document.querySelector('.computer-rack');
+            const toElem = document.querySelector(`[data-location="${to}"]`);
+
+            if (fromElem && toElem) {
+                await new Promise(resolve =>
+                    flyTileBetweenContainers({
+                        tile,
+                        fromElem,
+                        toElem,
+                        onComplete: resolve
+                    })
+                );
+                placeAudio.play(); //this place audio is 0.41 seconds so the animation needs to be longer for the audio to not bug out
+            }
+
             if (toLoc.type === 'group') {
                 const { sectionIndex, groupIndex, tileIndex } = toLoc;
                 while (currentBoard.length <= sectionIndex) currentBoard.push([]);
@@ -358,8 +370,9 @@ function Game() {
         const playedtiles = playedTiles(boardSnapshot[3],board[3]);//step 2 did the player put down a tile? //todo something goes wrong here and the played tiles are not representative
         console.log("tiles:",playedtiles);
         if(playedtiles.length === 0){
+            setMsgNotif("You Have to place or draw a tile!")
+            setShowNotif(true);
             return;
-            //todo notify the player that they have to play a tile or draw a tile
         } else if(firstTurn){ //if they did and its their first turn -> check if they played 30 points and if they didnt use another players's tiles
             let count = 0;
             for(const tile of playedtiles){
@@ -376,13 +389,11 @@ function Game() {
                 setShowNotif(true);
                 console.log("less than 30 on first turn")
                 return;
-                //todo notify player of less then 30 also logic is not checking if tiles are using cpu's tiles
             } else {
                 if(!validateBoard(firstTurnBoard)){
                     console.log("used other players' tile to get to 30")
                     setMsgNotif("You used other players' tile to get to 30")
                     setShowNotif(true);
-                    //todo notify the player that they used the other players' tiles to get 30
                 }
                 //if the code gets here, the user passed all first turn rules
                 setFirstTurn(false);

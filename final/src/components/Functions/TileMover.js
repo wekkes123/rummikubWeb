@@ -170,7 +170,7 @@ export function getTileLocationsFromBoard(board) {
         }
     });
     return tileLocations;
-};
+}
 
 export function getTileLocationParts(location) {
     if (location.startsWith('group-')) {
@@ -203,7 +203,6 @@ export function getTileMovements(start, end) {
         processedInEnd.add(key);
 
         const startLocs = startTiles.get(tile) || [];
-        let matchFound = false;
 
         for (let i = 0; i < startLocs.length; i++) {
             const startLoc = startLocs[i];
@@ -213,8 +212,6 @@ export function getTileMovements(start, end) {
 
             movements.push({ tile, from: startLoc, to: loc });
             startLocs.splice(i, 1);
-
-            matchFound = true;
             break;
         }
     });
