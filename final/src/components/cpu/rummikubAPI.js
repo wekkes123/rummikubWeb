@@ -29,9 +29,6 @@ export const getBestMove = async (cpuHand, board, isFirstMove) => {
     const convertedGroups = convertTiles(groups);
     const table = [...convertedGroups, ...runs]
 
-    console.log("rack:", rack)
-    console.log(table);
-
     const payload = {
         rack,
         table: table.length ? table.reduce((acc, set) => acc.concat(set), []) : [],

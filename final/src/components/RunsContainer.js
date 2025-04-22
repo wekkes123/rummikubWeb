@@ -22,11 +22,7 @@ function RunsContainer({ runs, sectionIndex, updateBoardTile, tilesAreDraggable 
         }
 
         removeOriginalTile(draggedTileData, updateBoardTile, removeFromHand, firstTurn)
-        let add = null;
-
-        if(firstTurn){
-            add = addToFirstTurnBoard(draggedTileData, getBoardValue)
-        }
+        const add = addToFirstTurnBoard(draggedTileData, getBoardValue)
 
         placeTileAudio.play();
 

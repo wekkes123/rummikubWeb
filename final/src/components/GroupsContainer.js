@@ -19,13 +19,8 @@ function GroupsContainer({ groups, sectionIndex, updateBoardTile, tilesAreDragga
         } else if(moveValidation.charAt(0) === 'm'){ //there is a tile where the user wants to drop the tile, but there is a free space in the group, we get the index from the function so we dont get duplicate calculations
             dropIndex = moveValidation.charAt(1);
         }
-
         removeOriginalTile(draggedTileData, updateBoardTile, removeFromHand, firstTurn);
-        let add = null;
-
-        if(firstTurn){
-            add = addToFirstTurnBoard(draggedTileData, getBoardValue)
-        }
+        const add = addToFirstTurnBoard(draggedTileData, getBoardValue)
         placeTileAudio.play();
 
         updateBoardTile(

@@ -74,7 +74,6 @@ function Game() {
             }
         }
 
-
         pile = shuffleArray(pile,createSeededRNG(seed));
         return [pile,joker];
     }
@@ -125,6 +124,7 @@ function Game() {
 
     useEffect(() => {
         if (playersTurn === false) {
+            setFirstTurnBoard(initializeBoard())
             cpuMove();
         }
     }, [playersTurn]);
@@ -150,7 +150,6 @@ function Game() {
         if (add) {
             setFirstTurnBoard(updateBoardState);
         }
-
         setBoard(updateBoardState);
     };
 
@@ -371,6 +370,7 @@ function Game() {
             return;
         }
         const playedtiles = playedTiles(boardSnapshot[3],board[3]);//step 2 did the player put down a tile? //todo something goes wrong here and the played tiles are not representative
+        console.log("tiles:",playedtiles);
         if(playedtiles.length === 0){
             setMsgNotif(t("You Have to place or draw a tile!"))
             setShowNotif(true);
@@ -409,15 +409,39 @@ function Game() {
     }
 
     const saveToSnapshot = () => {
-        console.log("snapshot taken")
-        // takes a deep copy
         const snapshot = board.map(section =>
             section.map(group =>
                 Array.isArray(group) ? [...group] : group
             )
         );
+        localStorage.setItem("firstTurn", JSON.stringify(firstTurn));
+        localStorage.setItem('snapshot', JSON.stringify(snapshot));
+        localStorage.setItem('cpuFirstTurn', JSON.stringify(cpuFirstTurn));
+        localStorage.setItem('pile', JSON.stringify(pile));
         setBoardSnapshot(snapshot);
     };
+
+    const loadFromStorage = () => {
+        const snapshot = JSON.parse(localStorage.getItem("snapshot"));
+        const firstTurn = JSON.parse(localStorage.getItem("firstTurn"));
+        const cpuFirstTurn = JSON.parse(localStorage.getItem("cpuFirstTurn"));
+        const pile = JSON.parse(localStorage.getItem("pile"));
+
+        if (snapshot && pile !== null && firstTurn !== null && cpuFirstTurn !== null) {
+            setBoard(snapshot);
+            setBoardSnapshot(snapshot);
+            setFirstTurn(firstTurn);
+            setCpuFirstTurn(cpuFirstTurn);
+            setPile(pile);
+        } else {
+            handleStartGame()
+            setMsgNotif("Something went wrong while loading the previous game, we have started a new one")
+            setShowNotif(true);
+            return;
+        }
+        handleStartGame();
+    };
+
 
     const restoreFromSnapshot = () => {
         const restoredBoard = boardSnapshot.map(section =>
@@ -483,8 +507,13 @@ function Game() {
                     />
                     <PlayerRack
                         playerhand={board[3]}
+                        board={board}
+                        firstTurnBoard={firstTurnBoard}
+                        removeFromHand={removeFromHand}
+                        updateBoardTile = {updateBoardTile}
                         onDragEnd={handleDragEnd}
-                        updateBoardTile={updateBoardTile}
+                        setBoard={setBoard}
+                        setFirstTurnBoard={setFirstTurnBoard}
                         getBoardValue={getBoardValue}
                         tilesAreDraggable={playersTurn}
                     />
@@ -497,7 +526,7 @@ function Game() {
                         hasPlayed={hasPlayed}
                     />
                 </div>
-                {!gameStarted && <StartScreen onStart={handleStartGame}/>}
+                {!gameStarted && <StartScreen onStart={handleStartGame} loadFromStorage={loadFromStorage}/>}
             </div>
         </DndProvider>
     );
