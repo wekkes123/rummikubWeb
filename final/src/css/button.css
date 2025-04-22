@@ -22,7 +22,7 @@
     padding: 10px;
     font-size: 16px;
     border: 2px black solid;
-    border-radius: 0px;
+    border-radius: 0;
     background: #FFB703;
     z-index: 10;
     text-align: center;
@@ -41,7 +41,7 @@
 .swap-sort-button {
     width: 204px;
     border: 2px black solid;
-    border-radius: 0px;
+    border-radius: 0;
     background: #FFB703;
     padding: 10px;
     font-size: 16px;
@@ -93,8 +93,8 @@
 }
 
 .start-button {
-    width: 50vw;
-    height: 50vh;
+    width: 25vw;
+    height: 25vh;
     background-color: #4caf50;
     color: white;
     font-size: 2rem;

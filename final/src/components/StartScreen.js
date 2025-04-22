@@ -16,7 +16,7 @@ const StartScreen = ({ onStart, loadFromStorage }) => {
             {hasSavedGame && (
                 <div>A Previous game was detected, would you like to continue or start a new game?</div>
             )}
-            <button onClick={() => onStart()}>Start New Game</button>
+            <button className= "start-button" onClick={() => onStart()}>Start New Game</button>
             {hasSavedGame && (
                 <button onClick={() => loadFromStorage()}>Load Previous Game</button>
             )}
