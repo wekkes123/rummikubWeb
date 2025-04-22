@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Layout, Button, Typography, Space, ConfigProvider } from 'antd';
 import { PlayCircleOutlined, QuestionCircleOutlined, ReadOutlined, SettingOutlined } from '@ant-design/icons';
-import LanguageButtons from '../Components/UI/LanguageButtons';
-import HelpModal from '../Components/UI/RulesModal';
+import LanguageButtons from '../components/LanguageButtons';
+import HelpModal from '../components/RulesModal';
 
 const { Content } = Layout;
 const { Title } = Typography;

@@ -56,20 +56,22 @@ export function reorderTileMovements(movements, tempLocation) {
     const orderedMoves = [];
 
     const occupiedLocations = new Map();
+    const originalLocations = new Map();
 
     remainingMoves.forEach(move => {
         occupiedLocations.set(move.from, move.tile);
+        originalLocations.set(move.tile, move.from);
     });
 
     while (remainingMoves.length > 0) {
         let moveFound = false;
-
         for (let i = 0; i < remainingMoves.length; i++) {
             const move = remainingMoves[i];
-
             if (!occupiedLocations.has(move.to) ||
                 !remainingMoves.some(m => m.from === move.to)) {
+
                 orderedMoves.push(move);
+
                 occupiedLocations.delete(move.from);
                 occupiedLocations.set(move.to, move.tile);
 
@@ -78,16 +80,14 @@ export function reorderTileMovements(movements, tempLocation) {
                 break;
             }
         }
+
         if (!moveFound && remainingMoves.length > 0) {
-
             const tempMove = remainingMoves[0];
-
             const placeholderMove = {
                 tile: tempMove.tile,
                 from: tempMove.from,
                 to: tempLocation
             };
-
             orderedMoves.push(placeholderMove);
 
             occupiedLocations.delete(tempMove.from);
@@ -96,8 +96,29 @@ export function reorderTileMovements(movements, tempLocation) {
             tempMove.from = tempLocation;
         }
     }
-    return orderedMoves;
+
+    const movesToCpuHand = new Map();
+    orderedMoves.forEach(move => {
+        if (move.to.startsWith('cpuhand-')) {
+            movesToCpuHand.set(move.tile, move);
+        }
+    });
+
+    const movesToRemove = new Set();
+    orderedMoves.forEach(move => {
+        if (move.from.startsWith('cpuhand-')) {
+            const cpuHandMove = movesToCpuHand.get(move.tile);
+            if (cpuHandMove && move.to === cpuHandMove.from) {
+                movesToRemove.add(cpuHandMove);
+                movesToRemove.add(move);
+            }
+        }
+    });
+    return orderedMoves.filter(move => !movesToRemove.has(move));
 }
+
+// Example usage:
+// const orderedMovements = reorderTileMovements(tileMovements, "group-0-0-2");
 
 export function findOpenSpot(board, newBoard) {
     for (let sectionIndex = 1; sectionIndex >= 0; sectionIndex--) {

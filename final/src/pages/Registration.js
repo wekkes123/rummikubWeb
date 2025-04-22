@@ -2,11 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Layout, Button, Space, ConfigProvider, Input, Form, Alert } from 'antd';
-import {
-    ArrowLeftOutlined,
-    RotateRightOutlined
-} from '@ant-design/icons';
-import LanguageButtons from "../Components/UI/LanguageButtons";
+import { ArrowLeftOutlined, RotateRightOutlined} from '@ant-design/icons';
+import LanguageButtons from "../components/LanguageButtons";
 
 const { Content } = Layout;
 

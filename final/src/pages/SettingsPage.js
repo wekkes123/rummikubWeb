@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Layout, Button, Typography, Space, ConfigProvider, Switch } from 'antd';
 import {ReadOutlined, SettingOutlined} from '@ant-design/icons';
-import LanguageButtons from '../Components/UI/LanguageButtons';
+import LanguageButtons from '../components/LanguageButtons';
 import '../css/button.css'
 
 const { Content } = Layout;
