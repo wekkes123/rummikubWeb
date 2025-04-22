@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TouchBackend } from 'react-dnd-touch-backend';
 import { DndProvider} from "react-dnd";
-import {useTranslation} from "react-i18next";
+import {t} from "i18next";
 
 import ComputerRack from '../components/ComputerRack';
 import GameBoard from '../components/GameBoard';
@@ -25,13 +25,13 @@ import {
 
 import '../App.css';
 import '../css/style.css'
+import WinScreen from "../components/WinScreen";
 
 const backendForDND = TouchBackend;
 const backendOptions = { enableMouseEvents: true };
 const placeAudio = new Audio("/sounds/place.mp3");
 
 function Game() {
-    const { t } = useTranslation();
     const [gameStarted, setGameStarted] = useState(false);
     const [playerWon, setPlayerWon] = useState(false);
     const [firstTurn, setFirstTurn] = useState(true);
@@ -56,14 +56,9 @@ function Game() {
     const initializePile = () => {
         let pile = [];
         let joker;
-
-        if (Math.random() < 0.5) {
-            pile.push('1-j');
-            joker = '1-j';
-        } else {
-            pile.push('4-j');
-            joker = '4-j';
-        }
+        const rng = createSeededRNG(seed);
+        joker = rng() < 0.5 ? '1-j' : '4-j';
+        pile.push(joker);
 
         //fill pouch with all tiles
         for (let k = 0; k < 2; k++) {
@@ -476,7 +471,8 @@ function Game() {
     }
 
     const handleStartGame = () => {
-        setGameStarted(true);
+        setPlayerWon(false)
+        setGameStarted(true)
     };
 
     const handleWin = () => {
@@ -525,6 +521,7 @@ function Game() {
                         pressable={playersTurn}
                         hasPlayed={hasPlayed}
                     />
+                    {playerWon && <WinScreen onRestart={handleStartGame}/> }
                 </div>
                 {!gameStarted && <StartScreen onStart={handleStartGame} loadFromStorage={loadFromStorage}/>}
             </div>

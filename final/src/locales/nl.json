@@ -31,5 +31,6 @@
   ">30notify" : "Je hebt minder dan 30 gespeeld in je eerste beurt",
   "30other-notify" : "Je hebt de tegels van andere spelers gebruikt om 30 te bereiken",
   "The board is not correct": "het bord is niet correct",
-  "You Have to place or draw a tile!" : "Je moet een tegel plaatsen of een nieuwe pakken!"
+  "You Have to place or draw a tile!" : "Je moet een tegel plaatsen of een nieuwe pakken!",
+  "win" : "jij WINT!"
 }
