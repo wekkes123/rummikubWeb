@@ -46,11 +46,9 @@ function PlayerRack({ playerhand, onDragEnd, tilesAreDraggable = true, setBoard,
                 if (emptyIndex === -1) {
                     emptyIndex = playerHand.length;
                 }
-
                 for (let i = emptyIndex; i > dropData.handIndex; i--) {
                     playerHand[i] = playerHand[i - 1];
                 }
-
                 playerHand[dropData.handIndex] = tileId;
             }
             newBoard[3] = playerHand;
