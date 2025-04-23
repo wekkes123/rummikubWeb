@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {Space, Button }from "antd";
 import '../css/dev.css';
-import {getPileMovePercentage} from "../components/Functions/gameplayMetrics";
+import {getGamesCompletedByUser, getPileMovePercentage} from "../components/Functions/gameplayMetrics";
 
 function DevPage() {
     const [username, setUsername] = useState('');
@@ -9,6 +9,7 @@ function DevPage() {
     const [seed, setSeed] = useState('');
     const [lastGameTime, setLastGameTime] = useState(null);
     const [pileMoveAVG, setPileMoveAVG] = useState(0);
+    const [gameCompleted, setGameCompleted] = useState(0);
 
     useEffect(() => {
         const savedUsername = localStorage.getItem('username');
@@ -19,7 +20,8 @@ function DevPage() {
             localStorage.setItem('seed', savedSeed);
         }
         const savedGameTime = localStorage.getItem('lastGameTime');
-        setPileMoveAVG( getPileMovePercentage())
+        setPileMoveAVG(getPileMovePercentage)
+        setGameCompleted(getGamesCompletedByUser)
 
         if (savedUsername) setUsername(savedUsername);
         if (savedAge) setAge(savedAge);
@@ -44,6 +46,7 @@ function DevPage() {
             seed,
             lastGameTime,
             pileMoveAVG,
+            gameCompleted,
         };
 
         const json = JSON.stringify(data, null, 2);
@@ -68,6 +71,7 @@ function DevPage() {
 
             <p><strong>Last Game Time:</strong> {lastGameTime ? `${lastGameTime} seconds` : 'No game played yet'}</p>
             <p><strong>PileMoveAverage:</strong> {pileMoveAVG}%</p>
+            <p><strong>GameCompleted:</strong> {gameCompleted} games completed</p>
 
             <div className="seed-input-container">
                 <label htmlFor="seed">Change Seed:</label>

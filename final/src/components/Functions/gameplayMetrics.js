@@ -67,3 +67,36 @@ export function getPileMovePercentage() {
 
     return (stats.pileMoves / stats.totalTurns) * 100;
 }
+
+/**
+ * Increments the count of completed games for the current user
+ */
+export function incrementGamesCompleted() {
+    const username = localStorage.getItem('username');
+    if (!username) return;
+
+    const key = 'gamesCompletedByUser';
+    const allUserData = JSON.parse(localStorage.getItem(key)) || {};
+
+    if (!allUserData[username]) {
+        allUserData[username] = 0;
+    }
+
+    allUserData[username] += 1;
+
+    localStorage.setItem(key, JSON.stringify(allUserData));
+}
+
+/**
+ * Gets the number of completed games for the current user
+ * @returns {number} - Games completed by the current user
+ */
+export function getGamesCompletedByUser() {
+    const username = localStorage.getItem('username');
+    if (!username) return 0;
+
+    const key = 'gamesCompletedByUser';
+    const allUserData = JSON.parse(localStorage.getItem(key)) || {};
+
+    return allUserData[username] || 0;
+}

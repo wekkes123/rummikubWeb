@@ -23,7 +23,7 @@ import {
     getTileLocationParts,
     getTileLocationsFromBoard
 } from "../components/Functions/TileMover";
-import {recordMove} from "../components/Functions/gameplayMetrics";
+import {incrementGamesCompleted, recordMove} from "../components/Functions/gameplayMetrics";
 
 import '../App.css';
 import '../css/style.css'
@@ -491,7 +491,12 @@ function Game() {
 
     const handleWin = () => {
         setPlayerWon(true);
-    };
+        incrementGamesCompleted()
+    }
+
+    const handleLose = () => {
+
+    }
 
     // Handle failed drag operations
     const handleDragEnd = (item) => {
