@@ -13,7 +13,7 @@ import Notification from '../components/Notification'
 import WinScreen from "../components/WinScreen";
 
 import { createSeededRNG, shuffleArray } from '../components/Functions/SeededRNG'
-import {validateBoard, playedTiles, findJokerValue} from "../components/Functions/gamePlayFunctions";
+import { validateBoard, playedTiles, findJokerValue } from "../components/Functions/gamePlayFunctions";
 import { getBestMove } from "../components/cpu/rummikubAPI"
 import {
     flyTileBetweenContainers,
@@ -23,6 +23,8 @@ import {
     getTileLocationParts,
     getTileLocationsFromBoard
 } from "../components/Functions/TileMover";
+import { thinkTimer } from "../components/Functions/gameplayMetrics"
+import {recordMove} from "../components/Functions/gameplayMetrics";
 import {incrementGamesCompleted, recordMove} from "../components/Functions/gameplayMetrics";
 
 import '../App.css';
@@ -110,9 +112,9 @@ function Game() {
         }
     }, [pile, board]);
 
-    //step 3 main gameplay loop
     useEffect(() => {
         if (playersTurn === true) {//this is needed because otherwise the snapshot is taken before everything is properly initialised
+            setStartTurnTime(performance.now());
             if(!firstTurn){
                 setHasPlayed(false);
                 saveToSnapshot()
@@ -122,10 +124,26 @@ function Game() {
 
     useEffect(() => {
         if (playersTurn === false) {
+            setHasPlayed(false);
+            recordMove(true)
             setFirstTurnBoard(initializeBoard())
             cpuMove();
         }
     }, [playersTurn]);
+
+    useEffect(() => {
+        if (playersTurn === true && gameStarted === true) {
+            setHasPlayed(true);
+        }
+    }, [firstTurnBoard]);
+
+    useEffect(() => {
+        console.log(hasPlayed);
+    }, [hasPlayed]);
+
+    useEffect(() => {
+        console.log("started timer", startTurnTime)
+    }, [startTurnTime]);
 
     const updateBoardTile = (section, groupIndex, tileIndex, value, add = null) => {
         setHasPlayed(true);
@@ -374,8 +392,8 @@ function Game() {
             setShowNotif(true);
             return;
         }
+        printB();
         const playedtiles = playedTiles(boardSnapshot[3],board[3]);//step 2 did the player put down a tile? //todo something goes wrong here and the played tiles are not representative
-        console.log("tiles:",playedtiles);
         if(playedtiles.length === 0){
             setMsgNotif(t("You Have to place or draw a tile!"))
             setShowNotif(true);
@@ -411,7 +429,6 @@ function Game() {
         }
         console.log("ending turn")
         setPlayersTurn(false)
-        recordMove(false)
     }
 
     const saveToSnapshot = () => {
@@ -461,7 +478,9 @@ function Game() {
 
     //index is used so you can use this function to add to the cpus hand index = 4 or the players hand index = 3
     const drawTile = (index) => {
-        restoreFromSnapshot(); // drawing a tile means they should not have played any tiles or changed the board
+        if(index === 3){
+            restoreFromSnapshot(); // drawing a tile means they should not have played any tiles or changed the board
+        }
         const newPile = [...pile];
         const newHand = [...board[index]];
         const drawnTile = newPile.pop();
@@ -479,14 +498,19 @@ function Game() {
         setPile(newPile);
         //end the turn of the cpu or the player
         setPlayersTurn(!playersTurn);
-        if(playersTurn) recordMove(true)
+    }
+
+    const onDragStart = (endTime = null) => {
+        if(!hasPlayed){
+            thinkTimer(startTurnTime,endTime);
+        }
     }
 
     const handleStartGame = () => {
+        localStorage.removeItem("thinkTime");
         setPlayerWon(false)
         setGameStarted(true)
-        const startTime = performance.now()
-        setStartTurnTime(startTime)
+        setStartTurnTime(performance.now())
     };
 
     const handleWin = () => {
@@ -519,6 +543,7 @@ function Game() {
                         getBoardValue={getBoardValue}
                         tilesAreDraggable={playersTurn}
                         firstTurn={firstTurn}
+                        onDragStart={onDragStart}
                     />
                     <PlayerRack
                         playerhand={board[3]}

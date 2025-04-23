@@ -2,12 +2,19 @@ import { useState, useEffect } from 'react';
 
 /**
  * Records timing data in local storage
- * @param {number} time - The time in milliseconds to record
- * @param {Object} [metadata={}] - Optional metadata to store with the timing (wha move or more)
+ * @param {number} startTime - The start time in milliseconds
+ * @param endTime - The end time in milliseconds
+ * @param {Object} [metadata={}] - Optional metadata to store with the timing (what move or more)
  * @returns {Array} - The complete array of timing records after adding the new one
  */
-export function thinkTimer(time, metadata = {}){
-    const thinkTime = performance.now() - time;
+export function thinkTimer(startTime, endTime = null, metadata = {}){
+    let thinkTime;
+    if(!endTime){
+        thinkTime = performance.now() - startTime;
+    } else {
+        thinkTime = endTime - startTime;
+    }
+    console.log("thought for: ", thinkTime);
     const key = "thinkTime";
     const moveTimes = localStorage.getItem(key);
     let timings = [];

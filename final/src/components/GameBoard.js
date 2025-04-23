@@ -2,7 +2,7 @@ import React from 'react';
 import GroupsContainer from './GroupsContainer';
 import RunsContainer from './RunsContainer';
 
-function GameBoard({ board, updateBoardTile, getBoardValue, tilesAreDraggable, removeFromHand, firstTurn }) {
+function GameBoard({ board, updateBoardTile, getBoardValue, tilesAreDraggable, removeFromHand, firstTurn, onDragStart }) {
     const [groups1, groups2, runs] = board;
 
     return (
@@ -19,6 +19,7 @@ function GameBoard({ board, updateBoardTile, getBoardValue, tilesAreDraggable, r
                     tilesAreDraggable = {tilesAreDraggable}
                     removeFromHand = {removeFromHand}
                     firstTurn = {firstTurn}
+                    onDragStart={onDragStart}
                 />
             </div>
 
@@ -31,6 +32,7 @@ function GameBoard({ board, updateBoardTile, getBoardValue, tilesAreDraggable, r
                     tilesAreDraggable = {tilesAreDraggable}
                     removeFromHand = {removeFromHand}
                     firstTurn = {firstTurn}
+                    onDragStart={onDragStart}
 
                 />
             </div>
@@ -44,6 +46,7 @@ function GameBoard({ board, updateBoardTile, getBoardValue, tilesAreDraggable, r
                     tilesAreDraggable = {tilesAreDraggable}
                     removeFromHand = {removeFromHand}
                     firstTurn = {firstTurn}
+                    onDragStart={onDragStart}
                 />
             </div>
         </div>
