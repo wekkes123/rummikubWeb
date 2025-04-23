@@ -24,7 +24,6 @@ import {
     getTileLocationsFromBoard
 } from "../components/Functions/TileMover";
 import { thinkTimer } from "../components/Functions/gameplayMetrics"
-import {recordMove} from "../components/Functions/gameplayMetrics";
 import {incrementGamesCompleted, recordMove} from "../components/Functions/gameplayMetrics";
 
 import '../App.css';
@@ -125,7 +124,6 @@ function Game() {
     useEffect(() => {
         if (playersTurn === false) {
             setHasPlayed(false);
-            recordMove(true)
             setFirstTurnBoard(initializeBoard())
             cpuMove();
         }
@@ -390,6 +388,7 @@ function Game() {
             console.log("board isnt correct")
             setMsgNotif(t("The board is not correct"))
             setShowNotif(true);
+            recordMove({successfulMove: false, drewFromPile: false});
             return;
         }
         printB();
@@ -397,6 +396,7 @@ function Game() {
         if(playedtiles.length === 0){
             setMsgNotif(t("You Have to place or draw a tile!"))
             setShowNotif(true);
+            recordMove({successfulMove: false, drewFromPile: false});
             return;
         } else if(firstTurn){ //if they did and its their first turn -> check if they played 30 points and if they didnt use another players's tiles
             let count = 0;
@@ -413,12 +413,14 @@ function Game() {
                 setMsgNotif(t(">30notify"))
                 setShowNotif(true);
                 console.log("less than 30 on first turn")
+                recordMove({successfulMove: false, drewFromPile: false});
                 return;
             } else {
                 if(!validateBoard(firstTurnBoard)){
                     console.log("You used other players' tile to get to 30")
                     setMsgNotif(t("30other-notify"))
                     setShowNotif(true);
+                    recordMove({successfulMove: false, drewFromPile: false});
                     return;
                 }
                 setFirstTurn(false);
@@ -428,6 +430,7 @@ function Game() {
             handleWin()
         }
         console.log("ending turn")
+        recordMove({successfulMove: true, drewFromPile: false});
         setPlayersTurn(false)
     }
 
@@ -465,7 +468,6 @@ function Game() {
         handleStartGame();
     };
 
-
     const restoreFromSnapshot = () => {
         const restoredBoard = boardSnapshot.map(section =>
             section.map(group =>
@@ -497,6 +499,7 @@ function Game() {
         setBoard(newBoard);
         setPile(newPile);
         //end the turn of the cpu or the player
+        if(playersTurn) recordMove({successfulMove: true, drewFromPile: true});
         setPlayersTurn(!playersTurn);
     }
 
@@ -508,6 +511,7 @@ function Game() {
 
     const handleStartGame = () => {
         localStorage.removeItem("thinkTime");
+        localStorage.removeItem(`playerStats_${localStorage.getItem("username")}`);
         setPlayerWon(false)
         setGameStarted(true)
         setStartTurnTime(performance.now())

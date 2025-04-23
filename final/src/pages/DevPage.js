@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import {Space, Button }from "antd";
 import '../css/dev.css';
-import {getGamesCompletedByUser, getPileMovePercentage} from "../components/Functions/gameplayMetrics";
+import {
+    getAverageThinkTime,
+    getGamesCompletedByUser,
+    getPileMovePercentage,
+    getSuccessfulMovePercentage
+} from "../components/Functions/gameplayMetrics";
 
 function DevPage() {
     const [username, setUsername] = useState('');
@@ -10,6 +15,8 @@ function DevPage() {
     const [lastGameTime, setLastGameTime] = useState(null);
     const [pileMoveAVG, setPileMoveAVG] = useState(0);
     const [gameCompleted, setGameCompleted] = useState(0);
+    const [successfulMovePercentage, setSuccessfulMovePercentage] = useState(0);
+    const [avgThinkTime, setAvgThinkTime] = useState(null);
 
     useEffect(() => {
         const savedUsername = localStorage.getItem('username');
@@ -22,6 +29,8 @@ function DevPage() {
         const savedGameTime = localStorage.getItem('lastGameTime');
         setPileMoveAVG(getPileMovePercentage)
         setGameCompleted(getGamesCompletedByUser)
+        setSuccessfulMovePercentage(getSuccessfulMovePercentage)
+        setAvgThinkTime(getAverageThinkTime)
 
         if (savedUsername) setUsername(savedUsername);
         if (savedAge) setAge(savedAge);
@@ -47,6 +56,8 @@ function DevPage() {
             lastGameTime,
             pileMoveAVG,
             gameCompleted,
+            successfulMovePercentage,
+            avgThinkTime
         };
 
         const json = JSON.stringify(data, null, 2);
@@ -70,8 +81,10 @@ function DevPage() {
             <p><strong>Seed:</strong> {seed || 'Not set'}</p>
 
             <p><strong>Last Game Time:</strong> {lastGameTime ? `${lastGameTime} seconds` : 'No game played yet'}</p>
-            <p><strong>PileMoveAverage:</strong> {pileMoveAVG}%</p>
-            <p><strong>GameCompleted:</strong> {gameCompleted} games completed</p>
+            <p><strong>Pile Move Average:</strong> {pileMoveAVG}%</p>
+            <p><strong>Successful Move Percentage:</strong> {successfulMovePercentage}%</p>
+            <p><strong>Games Completed:</strong> {gameCompleted} games completed</p>
+            <p><strong>Average ThinkTime:</strong> {avgThinkTime ? `${avgThinkTime/1000} seconds` : 'No game played yet'} </p>
 
             <div className="seed-input-container">
                 <label htmlFor="seed">Change Seed:</label>
