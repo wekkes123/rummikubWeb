@@ -209,7 +209,8 @@ function Game() {
             simulatedBoard = [...board];
         } else {
             simulatedBoard = initializeBoard();
-            simulatedBoard[4] = JSON.parse(JSON.stringify(board[4]));
+            simulatedBoard[4] = JSON.parse(JSON.stringify(board[4]));//todo if this can give an exact copy of the desired board, we fix animatie problems
+            simulatedBoard[3] = JSON.parse(JSON.stringify(board[3]));
         }
 
         for (let i = 0; i < moves.length; i++) {
@@ -290,12 +291,11 @@ function Game() {
                 }
             }
         }
-
+        console.log("sboard:",simulatedBoard);
         const endLocations = getTileLocationsFromBoard(simulatedBoard);
         const unorderedTileMovements = getTileMovements(startLocations, endLocations);
         const openTile = findOpenSpot(board,simulatedBoard);
         const tileMovements = reorderTileMovements(unorderedTileMovements,openTile);
-        console.log(tileMovements);
         let currentBoard = structuredClone(board);
         for (const move of tileMovements) {
             const { tile, from, to } = move;
@@ -353,9 +353,17 @@ function Game() {
             } else if (toLoc.type === 'cpuhand') {
                 currentBoard[4].push(tile);
             }
-
             setBoard(structuredClone(currentBoard));
         }
+        for (let i = 0; i < simulatedBoard[2].length; i++) {
+            let row = simulatedBoard[2][i];
+            for (let j = 0; j < row.length; j++) {
+                if (row[j] !== '0' && !row[j].endsWith("j")) {
+                    row[j] = 1;
+                }
+            }
+        }
+        setBoard(simulatedBoard);
     };
 
     const onDone = () => {

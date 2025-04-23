@@ -22,7 +22,6 @@ const reverseMap = {
  * @returns {Promise<object|null>} - Returns an object containing the move details or null if no move is possible.
  * any problems with the api call will result in the cpu to pick up a tile
  */
-
 export const getBestMove = async (cpuHand, board, isFirstMove) => {
     const rack = convertTiles(cpuHand)
     const [groups, runs] = convertBoard(board);
