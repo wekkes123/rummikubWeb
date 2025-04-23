@@ -41,36 +41,115 @@ export function saveTime(startTime, endTime = null, key = "thinkTime", metadata 
 }
 
 /**
- * Records a pile move (draw) and updates total turn count for the player
- * @param {boolean} drewFromPile - Whether the move was a pile move
+ * Calculates the average think time from localStorage
+ * @returns {number|null} - The average think time in milliseconds, or null if no data
  */
-export function recordMove(drewFromPile) {
-    const key = 'playerPileStats';
+export function getAverageThinkTime() {
+    const key = "thinkTime";
+    const moveTimes = localStorage.getItem(key);
+
+    if (!moveTimes) {
+        return null;
+    }
+
+    try {
+        const timings = JSON.parse(moveTimes);
+        if (!Array.isArray(timings) || timings.length === 0) {
+            return null;
+        }
+
+        const totalThinkTime = timings.reduce((sum, record) => sum + (record.thinkTime || 0), 0);
+        return totalThinkTime / timings.length;
+    } catch (error) {
+        console.error('Error parsing timing data:', error);
+        return null;
+    }
+}
+
+
+/**
+ * Records a move and updates stats (pile, success, error) for the current user
+ * @param {Object} options
+ * @param {boolean} options.drewFromPile - True if the player drew from the pile
+ * @param {boolean} options.successfulMove - True if the move was successful
+ */
+export function recordMove({ drewFromPile = false, successfulMove = false }) {
+    const username = localStorage.getItem('username');
+    if (!username) return;
+
+    const key = `playerStats_${username}`;
     const stats = JSON.parse(localStorage.getItem(key)) || {
-        totalTurns: 0,
-        pileMoves: 0
+        pileMoves: 0,
+        successfulMoves: 0,
+        errorMoves: 0
     };
 
-    stats.totalTurns += 1;
-    if (drewFromPile) {
-        stats.pileMoves += 1;
-    }
+    if (drewFromPile) stats.pileMoves += 1;
+    if (successfulMove) stats.successfulMoves += 1;
+    else stats.errorMoves += 1;
 
     localStorage.setItem(key, JSON.stringify(stats));
 }
 
 /**
- * Gets the player's Pile Move Percentage
+ * Gets the Pile Move Percentage for the current user
  * @returns {number} - Pile move percentage (0–100)
  */
 export function getPileMovePercentage() {
-    const key = 'playerPileStats';
+    const username = localStorage.getItem('username');
+    if (!username) return 0;
+
+    const key = `playerStats_${username}`;
     const stats = JSON.parse(localStorage.getItem(key)) || {
-        totalTurns: 0,
-        pileMoves: 0
+        pileMoves: 0,
+        successfulMoves: 0
     };
 
-    if (stats.totalTurns === 0) return 0;
+    if (stats.successfulMoves === 0) return 0;
+    console.log("move stats:",stats.pileMoves,stats.successfulMoves);
+    return (stats.pileMoves / stats.successfulMoves) * 100;
+}
 
-    return (stats.pileMoves / stats.totalTurns) * 100;
+/**
+ * Gets the Successful Move Percentage for the current user
+ * @returns {number} - Successful move percentage (0–100)
+ */
+export function getSuccessfulMovePercentage() {
+    const username = localStorage.getItem('username');
+    if (!username) return 0;
+
+    const key = `playerStats_${username}`;
+    const stats = JSON.parse(localStorage.getItem(key)) || {
+        successfulMoves: 0,
+        errorMoves: 0
+    };
+
+    const totalBoardMoves = stats.successfulMoves + stats.errorMoves;
+    if (totalBoardMoves === 0) return 0;
+
+    return (stats.successfulMoves / totalBoardMoves) * 100;
+}
+
+/**
+ * Increments the count of completed games for the current user
+ */
+export function incrementGamesCompleted() {
+    const username = localStorage.getItem('username');
+    if (!username) return;
+
+    const key = `gamesCompleted_${username}`;
+    const currentCount = parseInt(localStorage.getItem(key) || '0', 10);
+    localStorage.setItem(key, (currentCount + 1).toString());
+}
+
+/**
+ * Gets the number of completed games for the current user
+ * @returns {number} - Games completed
+ */
+export function getGamesCompletedByUser() {
+    const username = localStorage.getItem('username');
+    if (!username) return 0;
+
+    const key = `gamesCompleted_${username}`;
+    return parseInt(localStorage.getItem(key) || '0', 10);
 }

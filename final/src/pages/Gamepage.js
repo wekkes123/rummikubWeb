@@ -23,8 +23,7 @@ import {
     getTileLocationParts,
     getTileLocationsFromBoard
 } from "../components/Functions/TileMover";
-import { saveTime } from "../components/Functions/gameplayMetrics"
-import { recordMove } from "../components/Functions/gameplayMetrics";
+import {incrementGamesCompleted, saveTime, recordMove} from "../components/Functions/gameplayMetrics";
 
 import '../App.css';
 import '../css/style.css'
@@ -125,7 +124,6 @@ function Game() {
     useEffect(() => {
         if (playersTurn === false) {
             setHasPlayed(false);
-            recordMove(true)
             setFirstTurnBoard(initializeBoard())
             cpuMove();
         }
@@ -391,12 +389,14 @@ function Game() {
             console.log("board isnt correct")
             setMsgNotif(t("The board is not correct"))
             setShowNotif(true);
+            recordMove({successfulMove: false, drewFromPile: false});
             return;
         }
         const playedtiles = playedTiles(boardSnapshot[3],board[3]);//step 2 did the player put down a tile? //todo something goes wrong here and the played tiles are not representative
         if(playedtiles.length === 0){
             setMsgNotif(t("You Have to place or draw a tile!"))
             setShowNotif(true);
+            recordMove({successfulMove: false, drewFromPile: false});
             return;
         } else if(firstTurn){ //if they did and its their first turn -> check if they played 30 points and if they didnt use another players's tiles
             let count = 0;
@@ -413,12 +413,14 @@ function Game() {
                 setMsgNotif(t(">30notify"))
                 setShowNotif(true);
                 console.log("less than 30 on first turn")
+                recordMove({successfulMove: false, drewFromPile: false});
                 return;
             } else {
                 if(!validateBoard(firstTurnBoard)){
                     console.log("You used other players' tile to get to 30")
                     setMsgNotif(t("30other-notify"))
                     setShowNotif(true);
+                    recordMove({successfulMove: false, drewFromPile: false});
                     return;
                 }
                 setFirstTurn(false);
@@ -428,6 +430,7 @@ function Game() {
             handleWin()
         }
         console.log("ending turn")
+        recordMove({successfulMove: true, drewFromPile: false});
         saveTime(startTurnTime, endTurnTime, "moveTime",{move:"Played 1 or more tiles"});
         setPlayersTurn(false)
     }
@@ -466,7 +469,6 @@ function Game() {
         handleStartGame();
     };
 
-
     const restoreFromSnapshot = () => {
         const restoredBoard = boardSnapshot.map(section =>
             section.map(group =>
@@ -499,6 +501,7 @@ function Game() {
         setBoard(newBoard);
         setPile(newPile);
         saveTime(startTurnTime, endTurnTime, "moveTime",{move:"Has drawn a tile"});
+        if(playersTurn) recordMove({successfulMove: true, drewFromPile: true});
         setPlayersTurn(!playersTurn);
     }
 
@@ -510,6 +513,7 @@ function Game() {
 
     const handleStartGame = () => {
         localStorage.removeItem("thinkTime");
+        localStorage.removeItem(`playerStats_${localStorage.getItem("username")}`);
         setPlayerWon(false)
         setGameStarted(true)
         setStartTurnTime(performance.now())
@@ -517,7 +521,12 @@ function Game() {
 
     const handleWin = () => {
         setPlayerWon(true);
-    };
+        incrementGamesCompleted()
+    }
+
+    const handleLose = () => {
+
+    }
 
     // Handle failed drag operations
     const handleDragEnd = (item) => {
