@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TouchBackend } from 'react-dnd-touch-backend';
 import { DndProvider} from "react-dnd";
+import {t} from "i18next";
 
 import ComputerRack from '../components/ComputerRack';
 import GameBoard from '../components/GameBoard';
@@ -24,6 +25,7 @@ import {
 
 import '../App.css';
 import '../css/style.css'
+import WinScreen from "../components/WinScreen";
 
 const backendForDND = TouchBackend;
 const backendOptions = { enableMouseEvents: true };
@@ -54,14 +56,9 @@ function Game() {
     const initializePile = () => {
         let pile = [];
         let joker;
-
-        if (Math.random() < 0.5) {
-            pile.push('1-j');
-            joker = '1-j';
-        } else {
-            pile.push('4-j');
-            joker = '4-j';
-        }
+        const rng = createSeededRNG(seed);
+        joker = rng() < 0.5 ? '1-j' : '4-j';
+        pile.push(joker);
 
         //fill pouch with all tiles
         for (let k = 0; k < 2; k++) {
@@ -371,14 +368,14 @@ function Game() {
 
         if(!validateBoard(board)){
             console.log("board isnt correct")
-            setMsgNotif("The board is not correct")
+            setMsgNotif(t("The board is not correct"))
             setShowNotif(true);
             return;
         }
         const playedtiles = playedTiles(boardSnapshot[3],board[3]);//step 2 did the player put down a tile? //todo something goes wrong here and the played tiles are not representative
         console.log("tiles:",playedtiles);
         if(playedtiles.length === 0){
-            setMsgNotif("You Have to place or draw a tile!")
+            setMsgNotif(t("You Have to place or draw a tile!"))
             setShowNotif(true);
             return;
         } else if(firstTurn){ //if they did and its their first turn -> check if they played 30 points and if they didnt use another players's tiles
@@ -393,22 +390,23 @@ function Game() {
             }
             console.log(count);
             if (count < 30){
-                setMsgNotif("You played less than 30 on your first turn")
+                setMsgNotif(t(">30notify"))
                 setShowNotif(true);
                 console.log("less than 30 on first turn")
                 return;
             } else {
                 if(!validateBoard(firstTurnBoard)){
-                    console.log("used other players' tile to get to 30")
-                    setMsgNotif("You used other players' tile to get to 30")
+                    console.log("You used other players' tile to get to 30")
+                    setMsgNotif(t("30other-notify"))
                     setShowNotif(true);
+                    return;
                 }
-                //if the code gets here, the user passed all first turn rules
                 setFirstTurn(false);
             }
         }
-        //is their hand empty? -> win
-        //else:
+        if (board[3].every(item => item === 'empty')) {
+            handleWin();
+        }
         console.log("ending turn");
         setPlayersTurn(false);
     }
@@ -481,7 +479,8 @@ function Game() {
     }
 
     const handleStartGame = () => {
-        setGameStarted(true);
+        setPlayerWon(false)
+        setGameStarted(true)
     };
 
     const handleWin = () => {
@@ -530,6 +529,7 @@ function Game() {
                         pressable={playersTurn}
                         hasPlayed={hasPlayed}
                     />
+                    {playerWon && <WinScreen onRestart={handleStartGame}/> }
                 </div>
                 {!gameStarted && <StartScreen onStart={handleStartGame} loadFromStorage={loadFromStorage}/>}
             </div>
