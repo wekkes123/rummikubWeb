@@ -10,6 +10,7 @@ import GameControls from '../components/GameControls';
 import StartScreen from '../components/StartScreen';
 import CustomDragLayer from '../dragDrop/CustomDragLayer';
 import Notification from '../components/Notification'
+import WinScreen from "../components/WinScreen";
 
 import { createSeededRNG, shuffleArray } from '../components/Functions/SeededRNG'
 import {validateBoard, playedTiles, findJokerValue} from "../components/Functions/gamePlayFunctions";
@@ -22,10 +23,11 @@ import {
     getTileLocationParts,
     getTileLocationsFromBoard
 } from "../components/Functions/TileMover";
+import {recordMove} from "../components/Functions/gameplayMetrics";
 
 import '../App.css';
 import '../css/style.css'
-import WinScreen from "../components/WinScreen";
+
 
 const backendForDND = TouchBackend;
 const backendOptions = { enableMouseEvents: true };
@@ -405,10 +407,11 @@ function Game() {
             }
         }
         if (board[3].every(item => item === 'empty')) {
-            handleWin();
+            handleWin()
         }
-        console.log("ending turn");
-        setPlayersTurn(false);
+        console.log("ending turn")
+        setPlayersTurn(false)
+        recordMove(false)
     }
 
     const saveToSnapshot = () => {
@@ -476,6 +479,7 @@ function Game() {
         setPile(newPile);
         //end the turn of the cpu or the player
         setPlayersTurn(!playersTurn);
+        if(playersTurn) recordMove(true)
     }
 
     const handleStartGame = () => {
