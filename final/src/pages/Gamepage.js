@@ -33,6 +33,7 @@ const placeAudio = new Audio("/sounds/place.mp3");
 
 function Game() {
     const [gameStarted, setGameStarted] = useState(false);
+    const [startTurnTime, setStartTurnTime] = useState();
     const [playerWon, setPlayerWon] = useState(false);
     const [firstTurn, setFirstTurn] = useState(true);
     const [cpuFirstTurn, setCpuFirstTurn] = useState(true);
@@ -355,7 +356,7 @@ function Game() {
         for (let i = 0; i < simulatedBoard[2].length; i++) {
             let row = simulatedBoard[2][i];
             for (let j = 0; j < row.length; j++) {
-                if (row[j] !== '0' && !row[j].endsWith("j")) {
+                if (row[j] !== '0' && row[j] !== "1-j" && row[j] !== '4-j') {
                     row[j] = 1;
                 }
             }
@@ -480,6 +481,8 @@ function Game() {
     const handleStartGame = () => {
         setPlayerWon(false)
         setGameStarted(true)
+        const startTime = performance.now()
+        setStartTurnTime(startTime)
     };
 
     const handleWin = () => {
