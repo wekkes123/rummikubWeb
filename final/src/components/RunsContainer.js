@@ -4,7 +4,7 @@ import Tile from './Tile';
 import DraggableTile from '../dragDrop/DraggableTile';
 import {addToFirstTurnBoard, isTileMoveValid, removeOriginalTile} from './Functions/gamePlayFunctions'
 
-function RunsContainer({ runs, sectionIndex, updateBoardTile, tilesAreDraggable = true, getBoardValue, removeFromHand, firstTurn }) {
+function RunsContainer({ runs, sectionIndex, updateBoardTile, tilesAreDraggable = true, getBoardValue, removeFromHand, firstTurn, onDragStart }) {
     const colors = ['1', '2', '3', '4'];
     const placeTileAudio = new Audio("/sounds/place.mp3"); // Adjust path if needed
     const colorMapping = {
@@ -16,7 +16,9 @@ function RunsContainer({ runs, sectionIndex, updateBoardTile, tilesAreDraggable 
 
     const handleTileDrop = (draggedTileData, dropData) => {
         console.log('Tile dropped in run:', draggedTileData, dropData);
-
+        if(draggedTileData.time){
+            onDragStart(draggedTileData.time)
+        }
         if(isTileMoveValid(draggedTileData, dropData, getBoardValue) === '0'){
             return;
         }

@@ -6,11 +6,13 @@ import { removeOriginalTile, isTileMoveValid, addToFirstTurnBoard } from './Func
 import '../css/style.css'
 const placeTileAudio = new Audio("/sounds/place.mp3");
 
-function GroupsContainer({ groups, sectionIndex, updateBoardTile, tilesAreDraggable = true, getBoardValue, removeFromHand, firstTurn}) {
+function GroupsContainer({ groups, sectionIndex, updateBoardTile, tilesAreDraggable = true, getBoardValue, removeFromHand, firstTurn,onDragStart}) {
 
     const handleTileDrop = (draggedTileData, dropData) => {
         console.log('Tile dropped in run:', draggedTileData, dropData);
-
+        if(draggedTileData.time){
+            onDragStart(draggedTileData.time)
+        }
         const tileId = `${draggedTileData.color}-${draggedTileData.number}`;
         let dropIndex = dropData.tileIndex;
         const moveValidation = isTileMoveValid(draggedTileData, dropData, getBoardValue);

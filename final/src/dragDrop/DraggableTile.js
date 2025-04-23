@@ -6,15 +6,15 @@ function DraggableTile(props) {
     const [{ isDragging }, dragRef, dragPreview] = useDrag({
         type: 'TILE',
         item: () => {
-            if (props.onDragStart) {
-                props.onDragStart();
-            }
+            const time = performance.now();
+            console.log(time);
             return {
                 id: props.id,
                 color: props.color,
                 number: props.number,
                 location: props.location,
-                curlo: props.curlo
+                curlo: props.curlo,
+                time: time
             };
         },
         collect: (monitor) => ({
