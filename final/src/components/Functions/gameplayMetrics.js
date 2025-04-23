@@ -32,3 +32,38 @@ export function thinkTimer(time, metadata = {}){
     timings.push(newTimingRecord);
     localStorage.setItem(key, JSON.stringify(timings));
 }
+
+/**
+ * Records a pile move (draw) and updates total turn count for the player
+ * @param {boolean} drewFromPile - Whether the move was a pile move
+ */
+export function recordMove(drewFromPile) {
+    const key = 'playerPileStats';
+    const stats = JSON.parse(localStorage.getItem(key)) || {
+        totalTurns: 0,
+        pileMoves: 0
+    };
+
+    stats.totalTurns += 1;
+    if (drewFromPile) {
+        stats.pileMoves += 1;
+    }
+
+    localStorage.setItem(key, JSON.stringify(stats));
+}
+
+/**
+ * Gets the player's Pile Move Percentage
+ * @returns {number} - Pile move percentage (0–100)
+ */
+export function getPileMovePercentage() {
+    const key = 'playerPileStats';
+    const stats = JSON.parse(localStorage.getItem(key)) || {
+        totalTurns: 0,
+        pileMoves: 0
+    };
+
+    if (stats.totalTurns === 0) return 0;
+
+    return (stats.pileMoves / stats.totalTurns) * 100;
+}

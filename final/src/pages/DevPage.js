@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import {Space, Button }from "antd";
 import '../css/dev.css';
+import {getPileMovePercentage} from "../components/Functions/gameplayMetrics";
 
 function DevPage() {
     const [username, setUsername] = useState('');
     const [age, setAge] = useState('');
     const [seed, setSeed] = useState('');
     const [lastGameTime, setLastGameTime] = useState(null);
+    const [pileMoveAVG, setPileMoveAVG] = useState(0);
 
     useEffect(() => {
         const savedUsername = localStorage.getItem('username');
@@ -17,6 +19,7 @@ function DevPage() {
             localStorage.setItem('seed', savedSeed);
         }
         const savedGameTime = localStorage.getItem('lastGameTime');
+        setPileMoveAVG( getPileMovePercentage())
 
         if (savedUsername) setUsername(savedUsername);
         if (savedAge) setAge(savedAge);
@@ -40,6 +43,7 @@ function DevPage() {
             age,
             seed,
             lastGameTime,
+            pileMoveAVG,
         };
 
         const json = JSON.stringify(data, null, 2);
@@ -63,6 +67,7 @@ function DevPage() {
             <p><strong>Seed:</strong> {seed || 'Not set'}</p>
 
             <p><strong>Last Game Time:</strong> {lastGameTime ? `${lastGameTime} seconds` : 'No game played yet'}</p>
+            <p><strong>PileMoveAverage:</strong> {pileMoveAVG}%</p>
 
             <div className="seed-input-container">
                 <label htmlFor="seed">Change Seed:</label>
