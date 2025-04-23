@@ -365,7 +365,6 @@ function Game() {
 
     const onDone = () => {
         //step 1 is the board correct?
-
         if(!validateBoard(board)){
             console.log("board isnt correct")
             setMsgNotif(t("The board is not correct"))
