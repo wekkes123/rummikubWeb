@@ -6,7 +6,7 @@ import {isTileMoveValid, removeOriginalTile} from "./Functions/gamePlayFunctions
 const placeTileAudio = new Audio("/sounds/place.mp3");
 
 
-function PlayerRack({ playerhand, onDragEnd, tilesAreDraggable = true, setBoard, board, getBoardValue, firstTurnBoard, setFirstTurnBoard}) {
+function PlayerRack({ playerhand, onDragEnd, tilesAreDraggable = true, setBoard, board, getBoardValue, firstTurnBoard, setFirstTurnBoard, onDragStart}) {
     const handleTileDrop = (draggedTileData, dropData) => {
         const newBoard = [...board];
         const newFirstTurnBoard = [...firstTurnBoard];
@@ -110,6 +110,7 @@ function PlayerRack({ playerhand, onDragEnd, tilesAreDraggable = true, setBoard,
                                 <DraggableTile
                                     {...tileProps}
                                     onDragEnd={handleTileDragEnd}
+                                    onDragStart={onDragStart}
                                 />
                             ) : (
                                 <Tile {...tileProps} />

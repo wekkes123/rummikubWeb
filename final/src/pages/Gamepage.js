@@ -12,7 +12,7 @@ import CustomDragLayer from '../dragDrop/CustomDragLayer';
 import Notification from '../components/Notification'
 
 import { createSeededRNG, shuffleArray } from '../components/Functions/SeededRNG'
-import {validateBoard, playedTiles, findJokerValue} from "../components/Functions/gamePlayFunctions";
+import { validateBoard, playedTiles, findJokerValue } from "../components/Functions/gamePlayFunctions";
 import { getBestMove } from "../components/cpu/rummikubAPI"
 import {
     flyTileBetweenContainers,
@@ -22,6 +22,7 @@ import {
     getTileLocationParts,
     getTileLocationsFromBoard
 } from "../components/Functions/TileMover";
+import { thinkTimer } from "../components/Functions/gameplayMetrics"
 
 import '../App.css';
 import '../css/style.css'
@@ -110,10 +111,11 @@ function Game() {
 
     //step 3 main gameplay loop
     useEffect(() => {
+        saveToSnapshot()
+        setStartTurnTime(performance.now());
         if (playersTurn === true) {//this is needed because otherwise the snapshot is taken before everything is properly initialised
             if(!firstTurn){
                 setHasPlayed(false);
-                saveToSnapshot()
             }
         }
     }, [playersTurn]);
@@ -478,6 +480,11 @@ function Game() {
         setPlayersTurn(!playersTurn);
     }
 
+    const onDragStart = () => {
+        thinkTimer(startTurnTime);
+        console.log("test");
+    }
+
     const handleStartGame = () => {
         setPlayerWon(false)
         setGameStarted(true)
@@ -522,14 +529,16 @@ function Game() {
                         setFirstTurnBoard={setFirstTurnBoard}
                         getBoardValue={getBoardValue}
                         tilesAreDraggable={playersTurn}
+                        onDragStart={onDragStart}
                     />
                     <GameControls
                         onDraw={drawTile}
                         onDone={onDone}
-                        //onReverse={restoreFromSnapshot}
-                        onReverse={printB}
+                        onReverse={restoreFromSnapshot}
+                        //onReverse={printB}
                         pressable={playersTurn}
                         hasPlayed={hasPlayed}
+                        onDragStart={onDragStart}
                     />
                     {playerWon && <WinScreen onRestart={handleStartGame}/> }
                 </div>
