@@ -482,7 +482,7 @@ function Game() {
     //index is used so you can use this function to add to the cpus hand index = 4 or the players hand index = 3
     const drawTile =async (index) => {
         const endTurnTime = performance.now();
-        if(index === 3){
+        if(index === 3) {
             restoreFromSnapshot(); // drawing a tile means they should not have played any tiles or changed the board
         }
         const newPile = [...pile];
