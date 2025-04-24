@@ -28,6 +28,7 @@ import {incrementGamesCompleted, recordMove} from "../components/Functions/gamep
 
 import '../App.css';
 import '../css/style.css'
+import {wait} from "@testing-library/user-event/dist/utils";
 
 
 const backendForDND = TouchBackend;
@@ -207,11 +208,11 @@ function Game() {
                 setCpuFirstTurn(false);
                 setPlayersTurn(true);
             } else {
-                drawTile(4);
+                await drawTile(4);
                 console.log("CPU has no valid move");
             }
         } catch (error) {
-            drawTile(4);
+            await drawTile(4);
             console.error("Error during CPU move:", error);
         }
     };
@@ -479,29 +480,58 @@ function Game() {
     };
 
     //index is used so you can use this function to add to the cpus hand index = 4 or the players hand index = 3
-    const drawTile = (index) => {
-        if(index === 3){
-            restoreFromSnapshot(); // drawing a tile means they should not have played any tiles or changed the board
+    const drawTile = async (index) => {
+        if (index === 3) {
+            restoreFromSnapshot();
         }
+
         const newPile = [...pile];
         const newHand = [...board[index]];
         const drawnTile = newPile.pop();
 
-        if (newHand.includes('empty')) {
-            const zeroIndex = newHand.indexOf('empty');
-            newHand[zeroIndex] = drawnTile;
-        } else {
-            newHand.push(drawnTile);
+        if (!newHand.includes('empty')) {
+            newHand.push('empty');
+            const tempBoard = [...board];
+            tempBoard[index] = newHand;
+            setBoard(tempBoard);
+            await new Promise(requestAnimationFrame); // Wait for DOM update
         }
 
-        const newBoard = [...board];
-        newBoard[index] = newHand;
-        setBoard(newBoard);
+        const indexOfHand = newHand.indexOf('empty');
+
+        const fromElem = document.querySelector('.draw');
+        const loc =
+            index === 3 ? `hand-${indexOfHand}` :
+                index === 4 ? `cpuhand-0` : null;
+
+        const animationTile = index === 4 ? '0' : drawnTile;
+        const toElem = document.querySelector(`[data-location='${loc}']`);
+
+        if (fromElem && toElem) {
+            await new Promise(resolve =>
+                flyTileBetweenContainers({
+                    tile: animationTile,
+                    fromElem,
+                    toElem,
+                    onComplete: resolve
+                })
+            );
+            placeAudio.play();
+        }
+
+        newHand[indexOfHand] = drawnTile;
+        const updatedBoard = [...board];
+        updatedBoard[index] = newHand;
+
+        setBoard(updatedBoard);
         setPile(newPile);
-        //end the turn of the cpu or the player
-        if(playersTurn) recordMove({successfulMove: true, drewFromPile: true});
+
+        if (playersTurn) {
+            recordMove({ successfulMove: true, drewFromPile: true });
+        }
         setPlayersTurn(!playersTurn);
-    }
+    };
+
 
     const onDragStart = (endTime = null) => {
         if(!hasPlayed){

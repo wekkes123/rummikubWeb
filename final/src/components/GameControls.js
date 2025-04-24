@@ -9,7 +9,7 @@ function GameControls({ onDraw, onDone, onReverse, pressable, hasPlayed }) {
     return (
         <div className='game-controls'>
             <div className= 'left'>
-                <button className="draw" onClick={() => onDraw(3)} disabled={!pressable}>
+                <button className="draw" onClick={async () => await onDraw(3)} disabled={!pressable}>
                     {/*<img src={pile} alt="Pick tile from pile" className="pile-button-img" />*/}
                     {t("draw")}
                 </button>

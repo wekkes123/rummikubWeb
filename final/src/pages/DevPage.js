@@ -83,6 +83,7 @@ function DevPage() {
             <p><strong>Last Game Time:</strong> {lastGameTime ? `${lastGameTime} seconds` : 'No game played yet'}</p>
             <p><strong>Pile Move Average:</strong> {pileMoveAVG}%</p>
             <p><strong>Successful Move Percentage:</strong> {successfulMovePercentage}%</p>
+            <p><strong>Erroneous Move Percentage:</strong> {100-successfulMovePercentage}%</p>
             <p><strong>Games Completed:</strong> {gameCompleted} games completed</p>
             <p><strong>Average ThinkTime:</strong> {avgThinkTime ? `${avgThinkTime/1000} seconds` : 'No game played yet'} </p>
 
