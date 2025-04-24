@@ -23,12 +23,10 @@ import {
     getTileLocationParts,
     getTileLocationsFromBoard
 } from "../components/Functions/TileMover";
-import { thinkTimer } from "../components/Functions/gameplayMetrics"
-import {incrementGamesCompleted, recordMove} from "../components/Functions/gameplayMetrics";
+import {incrementGamesCompleted, saveTime, recordMove} from "../components/Functions/gameplayMetrics";
 
 import '../App.css';
 import '../css/style.css'
-import {wait} from "@testing-library/user-event/dist/utils";
 
 
 const backendForDND = TouchBackend;
@@ -38,6 +36,7 @@ const placeAudio = new Audio("/sounds/place.mp3");
 function Game() {
     const [gameStarted, setGameStarted] = useState(false);
     const [startTurnTime, setStartTurnTime] = useState();
+    const [startGameTime, setStartGameTime] = useState();
     const [playerWon, setPlayerWon] = useState(false);
     const [firstTurn, setFirstTurn] = useState(true);
     const [cpuFirstTurn, setCpuFirstTurn] = useState(true);
@@ -226,7 +225,7 @@ function Game() {
             simulatedBoard = [...board];
         } else {
             simulatedBoard = initializeBoard();
-            simulatedBoard[4] = JSON.parse(JSON.stringify(board[4]));//todo if this can give an exact copy of the desired board, we fix animatie problems
+            simulatedBoard[4] = JSON.parse(JSON.stringify(board[4]));//todo fix dat de playcpu functie enkel de hand van de cpu kan zien met "tiles to play"
             simulatedBoard[3] = JSON.parse(JSON.stringify(board[3]));
         }
 
@@ -384,6 +383,7 @@ function Game() {
     };
 
     const onDone = () => {
+        const endTurnTime = performance.now();
         //step 1 is the board correct?
         if(!validateBoard(board)){
             console.log("board isnt correct")
@@ -392,7 +392,6 @@ function Game() {
             recordMove({successfulMove: false, drewFromPile: false});
             return;
         }
-        printB();
         const playedtiles = playedTiles(boardSnapshot[3],board[3]);//step 2 did the player put down a tile? //todo something goes wrong here and the played tiles are not representative
         if(playedtiles.length === 0){
             setMsgNotif(t("You Have to place or draw a tile!"))
@@ -432,6 +431,7 @@ function Game() {
         }
         console.log("ending turn")
         recordMove({successfulMove: true, drewFromPile: false});
+        saveTime(startTurnTime, endTurnTime, "moveTime",{move:"Played 1 or more tiles"});
         setPlayersTurn(false)
     }
 
@@ -480,11 +480,11 @@ function Game() {
     };
 
     //index is used so you can use this function to add to the cpus hand index = 4 or the players hand index = 3
-    const drawTile = async (index) => {
-        if (index === 3) {
-            restoreFromSnapshot();
+    const drawTile =async (index) => {
+        const endTurnTime = performance.now();
+        if(index === 3){
+            restoreFromSnapshot(); // drawing a tile means they should not have played any tiles or changed the board
         }
-
         const newPile = [...pile];
         const newHand = [...board[index]];
         const drawnTile = newPile.pop();
@@ -525,17 +525,14 @@ function Game() {
 
         setBoard(updatedBoard);
         setPile(newPile);
-
-        if (playersTurn) {
-            recordMove({ successfulMove: true, drewFromPile: true });
-        }
+        saveTime(startTurnTime, endTurnTime, "moveTime",{move:"Has drawn a tile"});
+        if(playersTurn) recordMove({successfulMove: true, drewFromPile: true});
         setPlayersTurn(!playersTurn);
-    };
-
+    }
 
     const onDragStart = (endTime = null) => {
         if(!hasPlayed){
-            thinkTimer(startTurnTime,endTime);
+            saveTime(startTurnTime,endTime);
         }
     }
 
