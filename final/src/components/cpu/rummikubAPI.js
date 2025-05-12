@@ -23,12 +23,10 @@ const reverseMap = {
  * any problems with the api call will result in the cpu to pick up a tile
  */
 export const getBestMove = async (cpuHand, board, isFirstMove) => {
-    const rack = convertTiles(cpuHand)
-    const [groups, runs] = convertBoard(board);
+    const [rack,Hjokers] = convertTiles(cpuHand)
+    const [groups, runs, Bjokers] = convertBoard(board);
     const convertedGroups = convertTiles(groups);
     const table = [...convertedGroups, ...runs]
-
-    console.log("s", table, rack);
 
     const payload = {
         rack,
@@ -64,11 +62,12 @@ export const getBestMove = async (cpuHand, board, isFirstMove) => {
 
         const result = await response.json();
         if (result.success) {
-            console.log(result);
+            const tiles_to_play = reverseConvertTiles(result.tiles_to_play,Hjokers);
+            const [sets, joker_values] = reverseConvertSets(result.sets_to_make,Bjokers,Hjokers);
             return {
-                tilesToPlay: reverseConvertTiles(result.tiles_to_play),
-                setsToMake: reverseConvertSets(result.sets_to_make),
-                jokerValue: result.joker_value
+                tilesToPlay: tiles_to_play,
+                setsToMake: sets,
+                jokerValue: joker_values
             };
         } else {
             console.warn("API Response indicates no valid move.", result);
@@ -81,16 +80,23 @@ export const getBestMove = async (cpuHand, board, isFirstMove) => {
 };
 
 const convertTiles = (tiles) => {
-    return tiles.map(tile => {
-        if (tile.endsWith('-j')) {
-            return 'j';
-        }
-        const [color, number] = tile.split('-');
-        const colorLetter = colorMap[Number(color)];
+    const converted = [];
+    const jokers = [];
 
-        return `${colorLetter}${number}`;
+    tiles.forEach(tile => {
+        if (tile.endsWith('-j')) {
+            jokers.push(tile);
+            converted.push('j');
+        } else {
+            const [color, number] = tile.split('-');
+            const colorLetter = colorMap[Number(color)];
+            converted.push(`${colorLetter}${number}`);
+        }
     });
+
+    return [converted, jokers];
 };
+
 
 const convertBoard = (board) => {
     const groupTiles = [];
@@ -101,17 +107,22 @@ const convertBoard = (board) => {
     const groups1 = board[0];
     const groups2 = board[1];
     const runs = board[2];
+    const Bjokers = [];
 
-    // Add all tiles from groups1 and groups2 to groupTiles
     groups1.forEach(group => group.forEach(tile => {
         if (tile !== '0') groupTiles.push(tile);
+        if (tile === "1-j" || tile === "4-j") {
+            Bjokers.push(tile);
+        }
     }));
 
     groups2.forEach(group => group.forEach(tile => {
         if (tile !== '0') groupTiles.push(tile);
+        if (tile === "1-j" || tile === "4-j") {
+            Bjokers.push(tile);
+        }
     }));
 
-    // Convert and add run tiles to runTiles
     runs.forEach((runGroup, groupIndex) => {
         const colorLetter = colorMap[groupIndex];
 
@@ -119,20 +130,27 @@ const convertBoard = (board) => {
             if (tile === 1) {
                 runTiles.push(`${colorLetter}${i + 1}`); // i+1 is the number of the tile
             } else if (tile === '1-j' || tile === '4-j') {
+                Bjokers.push(tile);
                 runTiles.push('j');
             }
         });
     });
-
-    return [groupTiles, runTiles];
+    return [groupTiles, runTiles, Bjokers];
 };
 
-const reverseConvertSets = (move) => {
-    return move.map(set => {
+const reverseConvertSets = (move, Bjokers, Hjokers) => {
+    const usedJokers = [];
+
+    const convertedMoves = move.map(([set, jokerValues]) => {
         const [type, ...tiles] = set;
 
         const converted = tiles.map(tile => {
-            if (tile === 'j') return 'j';
+            if (tile === 'j') {
+                const jokerTile = Bjokers.length > 0 ? Bjokers.shift() : Hjokers.shift();
+                const jokerValue = jokerValues[0];
+                usedJokers.push([jokerTile, jokerValue]);
+                return jokerTile;
+            }
 
             const colorLetter = tile[0];
             const number = tile.slice(1);
@@ -143,11 +161,21 @@ const reverseConvertSets = (move) => {
 
         return [type, ...converted];
     });
+
+
+    return [convertedMoves, usedJokers];
 };
 
-const reverseConvertTiles = (tiles) => {
+
+
+const reverseConvertTiles = (tiles, Hjoker) => {
+    let index = 0;
     return tiles.map(tile => {
-        if (tile === 'j') return 'j';
+        if (tile === 'j') {
+            const jokerTile = Hjoker[index];
+            index += 1;
+            return jokerTile;
+        }
 
         const colorLetter = tile[0];
         const number = tile.slice(1);
@@ -156,6 +184,8 @@ const reverseConvertTiles = (tiles) => {
         return `${colorNumber}-${number}`;
     });
 };
+
+
 
 
 

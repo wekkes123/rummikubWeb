@@ -45,7 +45,7 @@ function Game() {
     const [showNotif, setShowNotif] = useState(false);
     const [hasPlayed, setHasPlayed] = useState(false);
     const [msgNotif, setMsgNotif] = useState("hello");
-    const seed = 'ihvj';
+    const seed = 'i456';
 
     const initializeBoard = () => {
         const groups1 = Array(8).fill().map(() => Array(4).fill('0'));
@@ -59,10 +59,10 @@ function Game() {
 
     const initializePile = () => {
         let pile = [];
-        let joker;
-        const rng = createSeededRNG(seed);
-        joker = rng() < 0.5 ? '1-j' : '4-j';
-        pile.push(joker);
+        let joker = "1-j";
+
+        pile.push("1-j");
+        pile.push("4-j");
 
         //fill pouch with all tiles
         for (let k = 0; k < 2; k++) {
@@ -87,7 +87,7 @@ function Game() {
 
     //step 2 wait until both are done then take tiles from pile and put them into the players and cpu's hand
     useEffect(() => {
-        if (pile.length === 105) {
+        if (pile.length === 106) {
             const newPile = [...pile];
             const newPlayerHand = [];
             const newCpuHand = [];
@@ -203,6 +203,7 @@ function Game() {
         try {
             const bestMove = await getBestMove(board[4], board, cpuFirstTurn);
             if (bestMove) {
+                console.log("bestmove", bestMove)
                 await playCpuMove(bestMove.setsToMake, bestMove.tilesToPlay, bestMove.jokerValue);
                 setCpuFirstTurn(false);
                 setPlayersTurn(true);
@@ -225,20 +226,22 @@ function Game() {
             simulatedBoard = [...board];
         } else {
             simulatedBoard = initializeBoard();
-            simulatedBoard[4] = JSON.parse(JSON.stringify(board[4]));//todo fix dat de playcpu functie enkel de hand van de cpu kan zien met "tiles to play"
+            simulatedBoard[4] = JSON.parse(JSON.stringify(board[4]));
             simulatedBoard[3] = JSON.parse(JSON.stringify(board[3]));
+        }
+
+        const cpuHandLength = simulatedBoard[4].length;
+        const cpuHandEnd = simulatedBoard[4].filter(item => !tilesFromHand.includes(item));
+        simulatedBoard[4] = tilesFromHand;
+        while (simulatedBoard[4].length < cpuHandLength) {
+            simulatedBoard[4].push("empty");
         }
 
         for (let i = 0; i < moves.length; i++) {
             const move = moves[i];
             const type = move[0];
 
-            const moveData = move.slice(1).map(item => {
-                if (item === 'j') {
-                    return joker;
-                }
-                return item;
-            });
+            const moveData = move.slice(1);
 
             if (type === 'g') {
                 if (moveData.length === 3) moveData.push('0');
@@ -276,7 +279,16 @@ function Game() {
 
                     for (const tile of moveData) {
                         const [, tileNumber] = tile?.split('-') || [];
-                        const index = isJoker(tile) ? jokerValue - 1 : parseInt(tileNumber) - 1;
+                        let index = 0;
+                        if(isJoker(tile)){
+                            for (const tuples of jokerValue) {
+                                if(tuples[0] === tile){
+                                    index = tuples[1] - 1;
+                                }
+                            }
+                        } else {
+                            index = parseInt(tileNumber) - 1;
+                        }
 
                         if (!currentArray || currentArray[index] === '1' || currentArray[index] === 1) {
                             canFit = false;
@@ -293,7 +305,16 @@ function Game() {
 
                     for (const tile of moveData) {
                         const [, tileNumber] = tile?.split('-') || [];
-                        const index = isJoker(tile) ? jokerValue - 1 : parseInt(tileNumber) - 1;
+                        let index = 0;
+                        if(isJoker(tile)){
+                            for (const tuples of jokerValue) {
+                                if(tuples[0] === tile){
+                                    index = tuples[1] - 1;
+                                }
+                            }
+                        } else {
+                            index = parseInt(tileNumber) - 1;
+                        }
 
                         boardCopy[2][startIndex + targetArrayIndex][index] = tile;
 
@@ -379,6 +400,8 @@ function Game() {
                 }
             }
         }
+        simulatedBoard[4] = cpuHandEnd;
+        console.log("at the end:", simulatedBoard);
         setBoard(simulatedBoard);
     };
 

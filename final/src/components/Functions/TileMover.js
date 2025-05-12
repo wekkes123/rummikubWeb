@@ -96,7 +96,7 @@ export function reorderTileMovements(movements, tempLocation) {
             tempMove.from = tempLocation;
         }
     }
-
+    /*
     const movesToCpuHand = new Map();
     orderedMoves.forEach(move => {
         if (move.to.startsWith('cpuhand-')) {
@@ -114,7 +114,8 @@ export function reorderTileMovements(movements, tempLocation) {
             }
         }
     });
-    return orderedMoves.filter(move => !movesToRemove.has(move));
+    return orderedMoves.filter(move => !movesToRemove.has(move));*/
+    return orderedMoves;
 }
 
 // Example usage:
