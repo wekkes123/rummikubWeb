@@ -267,11 +267,40 @@ function Game() {
                     }
                 }
             }
-            else {
+            else { //todo the checking if the run can fit does not work atm
                 const color = parseInt(moveData[0].split('-')[0]);
                 const startIndex = (color - 1) * 2;
                 const colorArrays = [simulatedBoard[2][startIndex], simulatedBoard[2][startIndex + 1]];
                 let targetArrayIndex = -1;
+
+                /*
+                const reservedIndices = new Set();
+
+for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
+    const currentArray = colorArrays[arrayIndex];
+    let canFit = true;
+    reservedIndices.clear();
+
+    for (const tile of moveData) {
+        const [, tileNumber] = tile.split('-');
+        let index = isJoker(tile)
+            ? jokerValue.find(([t]) => t === tile)?.[1] - 1
+            : parseInt(tileNumber) - 1;
+
+        if (!currentArray || currentArray[index] === 1 || reservedIndices.has(index)) {
+            canFit = false;
+            break;
+        }
+
+        reservedIndices.add(index); // mark as reserved
+    }
+
+    if (canFit) {
+        targetArrayIndex = arrayIndex;
+        break;
+    }
+}
+                */
 
                 for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
                     const currentArray = colorArrays[arrayIndex];
@@ -290,7 +319,7 @@ function Game() {
                             index = parseInt(tileNumber) - 1;
                         }
 
-                        if (!currentArray || currentArray[index] === '1' || currentArray[index] === 1) {
+                        if (!currentArray || currentArray[index] !== '0') {
                             canFit = false;
                             break;
                         }
@@ -328,7 +357,6 @@ function Game() {
                 }
             }
         }
-        console.log("sboard:",simulatedBoard);
         const endLocations = getTileLocationsFromBoard(simulatedBoard);
         const unorderedTileMovements = getTileMovements(startLocations, endLocations);
         const openTile = findOpenSpot(board,simulatedBoard);
@@ -405,6 +433,7 @@ function Game() {
         setBoard(simulatedBoard);
     };
 
+    //todo pulling a tile when already playing a tile on the board works
     const onDone = () => {
         const endTurnTime = performance.now();
         //step 1 is the board correct?
@@ -415,7 +444,9 @@ function Game() {
             recordMove({successfulMove: false, drewFromPile: false});
             return;
         }
+
         const playedtiles = playedTiles(boardSnapshot[3],board[3]);//step 2 did the player put down a tile? //todo something goes wrong here and the played tiles are not representative
+        console.log(playedtiles)
         if(playedtiles.length === 0){
             setMsgNotif(t("You Have to place or draw a tile!"))
             setShowNotif(true);
@@ -459,6 +490,7 @@ function Game() {
     }
 
     const saveToSnapshot = () => {
+        console.log("snapshot taken");
         const snapshot = board.map(section =>
             section.map(group =>
                 Array.isArray(group) ? [...group] : group
@@ -503,7 +535,7 @@ function Game() {
     };
 
     //index is used so you can use this function to add to the cpus hand index = 4 or the players hand index = 3
-    const drawTile =async (index) => {
+    const drawTile = async (index) => {
         const endTurnTime = performance.now();
         if(index === 3) {
             restoreFromSnapshot(); // drawing a tile means they should not have played any tiles or changed the board
@@ -550,6 +582,7 @@ function Game() {
         setPile(newPile);
         saveTime(startTurnTime, endTurnTime, "moveTime",{move:"Has drawn a tile"});
         if(playersTurn) recordMove({successfulMove: true, drewFromPile: true});
+        saveToSnapshot();
         setPlayersTurn(!playersTurn);
     }
 
