@@ -24,6 +24,8 @@ import {
     getTileLocationsFromBoard
 } from "../components/Functions/TileMover";
 import {incrementGamesCompleted, saveTime, recordMove} from "../components/Functions/gameplayMetrics";
+import ColorPicker from '../components/ColorPicker'; // add this import
+
 
 import '../App.css';
 import '../css/style.css'
@@ -34,6 +36,8 @@ const backendOptions = { enableMouseEvents: true };
 const placeAudio = new Audio("/sounds/place.mp3");
 
 function Game() {
+    const [bgColor, setBgColor] = useState('#35654D'); // default white
+
     const [gameStarted, setGameStarted] = useState(false);
     const [startTurnTime, setStartTurnTime] = useState();
     const [startGameTime, setStartGameTime] = useState();
@@ -616,12 +620,13 @@ for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
 
     return (
         <DndProvider backend={backendForDND} options={backendOptions}>
-            <div className="app">
-                <CustomDragLayer />
+            {/*<ColorPicker color={bgColor} onChange={(color) => setBgColor(color.hex)} />*/}
+            <div className="app" style={{background: bgColor}}>
+                <CustomDragLayer  />
 
                 <Notification message={msgNotif} isVisible={showNotif} onClose={() => setShowNotif(false)}/>
                 <div id="tile-overlay-root"></div>
-                <div className={`game-container ${!gameStarted || playerWon ? 'blurred' : ''}`}>
+                <div className={`game-container ${!gameStarted || playerWon ? 'blurred' : ''}`} style={{background: bgColor}}>
                     <ComputerRack cpuhand={board[4]}/>
                     <GameBoard
                         board={board}

@@ -10,22 +10,26 @@
 }
 
 .container1 {
-    background-color: burlywood;
     display: flex;
     flex-direction: row;
     justify-content: center;
 }
 
 .container2 {
-    justify-content: center;
+    flex: 1;
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    gap: 1vw;
+    width: 100%;
+    box-sizing: border-box;
 }
 .container3 {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-self: flex-end;
     width: 100%;
 }
 
@@ -73,45 +77,36 @@
     max-width: 68vw;
 }
 
-.groups {
-    height: 70vh;
 
-    /* border: 1px solid black; */
-    margin: 1vh 1.5vw;
+.groups, .runs {
+    height: 70vh;
     display: flex;
     flex-direction: column;
-    flex-wrap: wrap;
-    /* padding: 1vh 1vw; */
+    flex: 1 1 0;
+    box-sizing: border-box;
+    min-width: 200px;
 }
 
-.group {
+.group, .run {
     height: 8.5vh;
     display: flex;
-    margin-bottom: 1px;
     flex-direction: row;
-
-}
-.runs {
-    height: 70vh;
-    /* border: 1px solid black; */
-    margin: 1vh 1.5vw;
-    display: flex;
-    flex-direction: column;
-}
-
-.run {
-    display: flex;
-    flex-direction: row;
-    height: 8.5vh;
-    margin-bottom: 1px;
+    margin-bottom: 0.05vh;
     position: relative;
-    border-radius: 5px;
-    padding: 0 10px;
+}
+
+@media (min-width: 1199px) {
+    .groups,
+    .runs {
+        padding: 1vh 2vw;
+        gap: 1vh;
+    }
 }
 
 .tile {
-    width: 40px;
-    height: 60px;
+    width: clamp(20px, 5vw, 40px); /* Responsive */
+    height: clamp(30px, 7vw, 60px);
+    flex-shrink: 1;
     margin: 5px;
     border-radius: 5px;
     background-image: url("../images/tileBack.png");
@@ -181,13 +176,9 @@
     transform: scale(1.05);
 }
 
-
-
-
 .filter {
 filter: blur(4px);
 }
-
 
 .notificationModal .ant-modal-content {
     background-color: burlywood; /* Set background color for the content area */
@@ -249,9 +240,9 @@ button:disabled {
 }
 
 .draw, .done, .reverse {
-    width: 100px;
-    padding: 10px;
-    font-size: 16px;
+    width: 10vw;
+    padding: 2vh;
+    font-size: 2vh;
     border: 2px black solid;
     background: #FFB703;
     z-index: 10;
@@ -259,7 +250,6 @@ button:disabled {
 }
 
 .game-container {
-    background-color: burlywood;
     display: flex;
     flex-direction: column;
     height: 100%;

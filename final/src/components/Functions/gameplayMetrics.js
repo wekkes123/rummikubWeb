@@ -8,15 +8,18 @@ import { useState, useEffect } from 'react';
  * @param {Object} [metadata={}] - Optional metadata to store with the timing (what move or more)
  * @returns {Array} - The complete array of timing records after adding the new one
  */
-export function saveTime(startTime, endTime = null, key = "thinkTime", metadata = {}){
+export function saveTime(startTime, endTime = null, key = "thinkTime", metadata = {}) {
+    const pseudonym = localStorage.getItem('pseudonym');
+    const keyWithUser = pseudonym ? `${key}_${pseudonym}` : key;
+
     let thinkTime;
-    if(!endTime){
+    if (!endTime) {
         thinkTime = Math.round(performance.now() - startTime);
     } else {
         thinkTime = Math.round(endTime - startTime);
     }
     console.log("time: ", thinkTime, metadata);
-    const moveTimes = localStorage.getItem(key);
+    const moveTimes = localStorage.getItem(keyWithUser);
     let timings = [];
 
     if (moveTimes) {
@@ -32,21 +35,23 @@ export function saveTime(startTime, endTime = null, key = "thinkTime", metadata 
     }
 
     const newTimingRecord = {
-    thinkTime: thinkTime,
+        thinkTime: thinkTime,
         ...metadata
     };
 
     timings.push(newTimingRecord);
-    localStorage.setItem(key, JSON.stringify(timings));
+    localStorage.setItem(keyWithUser, JSON.stringify(timings));
+    return timings;
 }
 
 /**
  * Calculates the average think time from localStorage
  * @returns {number|null} - The average think time in milliseconds, or null if no data
  */
-export function getAverageThinkTime() {
-    const key = "thinkTime";
-    const moveTimes = localStorage.getItem(key);
+export function getAverageThinkTime(key = "thinkTime") {
+    const pseudonym = localStorage.getItem('pseudonym');
+    const keyWithUser = pseudonym ? `${key}_${pseudonym}` : key;
+    const moveTimes = localStorage.getItem(keyWithUser);
 
     if (!moveTimes) {
         return null;
@@ -74,10 +79,10 @@ export function getAverageThinkTime() {
  * @param {boolean} options.successfulMove - True if the move was successful
  */
 export function recordMove({ drewFromPile = false, successfulMove = false }) {
-    const username = localStorage.getItem('username');
-    if (!username) return;
+    const pseudonym = localStorage.getItem('pseudonym');
+    if (!pseudonym) return;
 
-    const key = `playerStats_${username}`;
+    const key = `playerStats_${pseudonym}`;
     const stats = JSON.parse(localStorage.getItem(key)) || {
         pileMoves: 0,
         successfulMoves: 0,
@@ -96,10 +101,10 @@ export function recordMove({ drewFromPile = false, successfulMove = false }) {
  * @returns {number} - Pile move percentage (0–100)
  */
 export function getPileMovePercentage() {
-    const username = localStorage.getItem('username');
-    if (!username) return 0;
+    const pseudonym = localStorage.getItem('pseudonym');
+    if (!pseudonym) return 0;
 
-    const key = `playerStats_${username}`;
+    const key = `playerStats_${pseudonym}`;
     const stats = JSON.parse(localStorage.getItem(key)) || {
         pileMoves: 0,
         successfulMoves: 0
@@ -115,10 +120,10 @@ export function getPileMovePercentage() {
  * @returns {number} - Successful move percentage (0–100)
  */
 export function getSuccessfulMovePercentage() {
-    const username = localStorage.getItem('username');
-    if (!username) return 0;
+    const pseudonym = localStorage.getItem('pseudonym');
+    if (!pseudonym) return 0;
 
-    const key = `playerStats_${username}`;
+    const key = `playerStats_${pseudonym}`;
     const stats = JSON.parse(localStorage.getItem(key)) || {
         successfulMoves: 0,
         errorMoves: 0
@@ -134,10 +139,10 @@ export function getSuccessfulMovePercentage() {
  * Increments the count of completed games for the current user
  */
 export function incrementGamesCompleted() {
-    const username = localStorage.getItem('username');
-    if (!username) return;
+    const pseudonym = localStorage.getItem('pseudonym');
+    if (!pseudonym) return;
 
-    const key = `gamesCompleted_${username}`;
+    const key = `gamesCompleted_${pseudonym}`;
     const currentCount = parseInt(localStorage.getItem(key) || '0', 10);
     localStorage.setItem(key, (currentCount + 1).toString());
 }
@@ -147,9 +152,9 @@ export function incrementGamesCompleted() {
  * @returns {number} - Games completed
  */
 export function getGamesCompletedByUser() {
-    const username = localStorage.getItem('username');
-    if (!username) return 0;
+    const pseudonym = localStorage.getItem('pseudonym');
+    if (!pseudonym) return 0;
 
-    const key = `gamesCompleted_${username}`;
+    const key = `gamesCompleted_${pseudonym}`;
     return parseInt(localStorage.getItem(key) || '0', 10);
 }

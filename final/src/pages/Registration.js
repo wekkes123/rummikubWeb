@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Layout, Button, Space, ConfigProvider, Input, Form, Alert } from 'antd';
+import {Layout, Button, Space, ConfigProvider, Input, Form, Alert, DatePicker} from 'antd';
 import { ArrowLeftOutlined, RotateRightOutlined} from '@ant-design/icons';
 import LanguageButtons from "../components/LanguageButtons";
+import ThreePartDatePicker from "../components/ThreePartDatePicker";
+import dayjs from 'dayjs';
 
 const { Content } = Layout;
 
@@ -11,7 +13,7 @@ const Registration = () => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
-    const [age, setAge] = useState('');
+    const [birthday, setBirthday] = useState(null);
     const [errors, setErrors] = useState([]);
     const [isLandscape, setIsLandscape] = useState(false);
 
@@ -51,26 +53,54 @@ const Registration = () => {
         if (!username.trim()) {
             newErrors.push(t('Please enter a username'));
         }
-
-        if (!age.trim()) {
-            newErrors.push(t('Please enter your age'));
-        } else if (isNaN(age) || parseInt(age) <= 0) {
-            newErrors.push(t('Please enter a valid age'));
+        if (!birthday) {
+            newErrors.push(t('Please enter your birthday'));
+        } else {
+            const calculatedAge = calculateAge(birthday);
+            if (calculatedAge <= 0 || isNaN(calculatedAge)) {
+                newErrors.push(t('Please enter a valid birthday'));
+            }
         }
 
         setErrors(newErrors);
         return newErrors.length === 0;
     };
 
-    const handleFormSubmit = () => {
+    const handleFormSubmit = async () => {
         if (validateForm()) {
-            localStorage.setItem('username', username);
-            localStorage.setItem('age', age);
+            const pseudonym = await hashUsernameAndBirthday(username, birthday);
+            localStorage.setItem('pseudonym', pseudonym);
+            localStorage.setItem('birthday', birthday.toString());
+            const ageValue = calculateAge(birthday);
+            localStorage.setItem('age', ageValue.toString());
             navigate('/game');
         }
     };
 
-    const isFormValid = username.trim() && age.trim() && !isNaN(age) && parseInt(age) > 0;
+    const isFormValid = username.trim() && birthday && calculateAge(birthday) > 0;
+
+    async function hashUsernameAndBirthday(username, birthday) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(username + birthday.format('YYYY-MM-DD'));
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function calculateAge(birthday) {
+        if (!birthday) return null;
+        const now = dayjs();
+        const birthDate = dayjs(birthday);
+        let age = now.year() - birthDate.year();
+        if (
+            now.month() < birthDate.month() ||
+            (now.month() === birthDate.month() && now.date() < birthDate.date())
+        ) {
+            age--;
+        }
+        return age;
+    }
+
 
     return (
         <ConfigProvider
@@ -162,20 +192,19 @@ const Registration = () => {
                                 onChange={(e) => setUsername(e.target.value)}
                             />
 
-                            <div style={{ fontWeight: 'bold', color: 'black' }}>{t('age')}:</div>
-                            <Input
-                                size="large"
-                                style={{
-                                    height: 50,
-                                    color: 'black',
-                                    fontWeight: 'bold',
-                                    backgroundColor: 'rgba(255, 255, 255, 0.9)'
-                                }}
-                                value={age}
-                                onChange={(e) => setAge(e.target.value)}
-                                type="number"
-                                min="1"
+                            <div style={{ fontWeight: 'bold', color: 'black' }}>{t('birthday')}:</div>
+                            <ThreePartDatePicker
+                                value={birthday}
+                                onChange={setBirthday}
+                                t={t} // pass your translation function
                             />
+
+                            {birthday && (
+                                <div style={{ marginTop: 8, fontWeight: 'bold', color: 'black' }}>
+                                    {t('Age')}: {calculateAge(birthday)}
+                                </div>
+                            )}
+
                         </Space>
 
                         <Button

@@ -6,10 +6,7 @@ function GameBoard({ board, updateBoardTile, getBoardValue, tilesAreDraggable, r
     const [groups1, groups2, runs] = board;
 
     return (
-        <div className="container2"
-             style={{
-                     backgroundColor: `burlywood`
-            }}>
+        <div className="container2">
             <div className="board-section">
                 <GroupsContainer
                     groups={groups1}

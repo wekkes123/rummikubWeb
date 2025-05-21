@@ -19,14 +19,13 @@ function DevPage() {
     const [avgThinkTime, setAvgThinkTime] = useState(null);
 
     useEffect(() => {
-        const savedUsername = localStorage.getItem('username');
+        const savedUsername = localStorage.getItem('pseudonym');
         const savedAge = localStorage.getItem('age');
         let savedSeed = localStorage.getItem('seed');
         if (!savedSeed) {
             savedSeed = 'default_seed';
             localStorage.setItem('seed', savedSeed);
         }
-        const savedGameTime = localStorage.getItem('lastGameTime');
         setPileMoveAVG(getPileMovePercentage)
         setGameCompleted(getGamesCompletedByUser)
         setSuccessfulMovePercentage(getSuccessfulMovePercentage)
@@ -35,7 +34,6 @@ function DevPage() {
         if (savedUsername) setUsername(savedUsername);
         if (savedAge) setAge(savedAge);
         if (savedSeed) setSeed(savedSeed);
-        if (savedGameTime) setLastGameTime(savedGameTime);
     }, []);
 
     const handleSeedChange = (e) => {
@@ -76,7 +74,7 @@ function DevPage() {
     return (
         <div className="dev-page-container">
             <h1>Developer Page</h1>
-            <p><strong>Username:</strong> {username || 'Not set'}</p>
+            <p><strong>pseudonym hash:</strong> {username || 'Not set'}</p>
             <p><strong>Age:</strong> {age || 'Not set'}</p>
             <p><strong>Seed:</strong> {seed || 'Not set'}</p>
 
