@@ -1,20 +1,36 @@
-.pile-button {
+.draw, .done {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 250px;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    transition: opacity 0.2s ease;
     margin-bottom: 20px;
+    flex-direction: row;        /* side by side (horizontal) */
+    align-items: center;        /* vertical centering */
+    justify-content: center;    /* optional: center content in button */
+    gap: 1vw;                   /* optional: space between text and image */
+    width: 10vw;
+    padding: 10px 20px;
+    font-size: 2vh;
+    border: 2px black solid;
+    background: #FFB703;
+    z-index: 10;
+    text-align: center;
+    cursor: pointer;
 }
 
 .pile-button-img {
-    width: 68%;
+    width: 50px;
     height: auto;
     object-fit: contain;
     pointer-events: none;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.done-button-img {
+    width: 40px;
+    height: auto;
+    object-fit: contain;
+    pointer-events: none;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .settings-button {
@@ -56,10 +72,6 @@
     color: black !important;
     box-shadow: none !important;
     outline: none !important;
-}
-
-.pile-button:hover:not(.disabled) {
-    opacity: 0.8;
 }
 
 .pile-button.disabled {

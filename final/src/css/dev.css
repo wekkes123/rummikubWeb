@@ -37,15 +37,15 @@ p strong {
     color: #111827;
 }
 
-p:nth-of-type(5), /* Pile Move Average */
-p:nth-of-type(6), /* Successful Move Percentage */
-p:nth-of-type(7)  /* Erroneous Move Percentage */ {
+p:nth-of-type(5),
+p:nth-of-type(6),
+p:nth-of-type(7) {
     font-weight: 600;
-    color: #10b981; /* Green for performance metrics */
+    color: #10b981;
 }
 
 p:nth-of-type(7) {
-    color: #ef4444; /* Red for erroneous moves */
+    color: #ef4444;
 }
 
 .seed-input-container {
