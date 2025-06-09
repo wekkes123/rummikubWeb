@@ -47,6 +47,7 @@ export const getBestMove = async (cpuHand, board, isFirstMove) => {
         accept: "application/json",
         "Content-Type": "application/json"
     };
+    console.log(JSON.stringify(payload));
 
     try {
         const response = await fetch(url, {

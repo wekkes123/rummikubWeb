@@ -48,7 +48,7 @@ function Game() {
     const [showNotif, setShowNotif] = useState(false);
     const [hasPlayed, setHasPlayed] = useState(false);
     const [msgNotif, setMsgNotif] = useState("hello");
-    const seed = 'i456';
+    const seed = 'ihvjsd';
 
     const initializeBoard = () => {
         const groups1 = Array(8).fill().map(() => Array(4).fill('0'));
@@ -95,6 +95,7 @@ function Game() {
             const newPlayerHand = [];
             const newCpuHand = [];
 
+            /*
             //pick tiles for playerhand
             for (let i = 0; i < 14; i++) {
                 newPlayerHand.push(newPile.pop());
@@ -103,7 +104,13 @@ function Game() {
             //and tiles for the cpu
             for (let i = 0; i < 14; i++) {
                 newCpuHand.push(newPile.pop());
-            }
+            }*/
+            newPlayerHand.push("1-3")
+            newPlayerHand.push("1-4")
+            newPlayerHand.push("1-5")
+            newPlayerHand.push("1-3")
+            newPlayerHand.push("1-3")
+            newPlayerHand.push("1-3")
 
             const newBoard = [...board];
             newBoard[3] = newPlayerHand;
@@ -246,7 +253,6 @@ function Game() {
             const type = move[0];
 
             const moveData = move.slice(1);
-
             if (type === 'g') {
                 if (moveData.length === 3) moveData.push('0');
 
