@@ -41,6 +41,7 @@ function Game() {
     const [startTurnTime, setStartTurnTime] = useState();
     const [startGameTime, setStartGameTime] = useState();
     const [playerWon, setPlayerWon] = useState(false);
+    const [playerLose, setPlayerLose] = useState(false);
     const [firstTurn, setFirstTurn] = useState(true);
     const [cpuFirstTurn, setCpuFirstTurn] = useState(true);
     const [boardSnapshot, setBoardSnapshot] = useState(null);
@@ -95,7 +96,7 @@ function Game() {
             const newPlayerHand = [];
             const newCpuHand = [];
 
-            /*
+
             //pick tiles for playerhand
             for (let i = 0; i < 14; i++) {
                 newPlayerHand.push(newPile.pop());
@@ -104,13 +105,7 @@ function Game() {
             //and tiles for the cpu
             for (let i = 0; i < 14; i++) {
                 newCpuHand.push(newPile.pop());
-            }*/
-            newPlayerHand.push("1-3")
-            newPlayerHand.push("1-4")
-            newPlayerHand.push("1-5")
-            newPlayerHand.push("1-3")
-            newPlayerHand.push("1-3")
-            newPlayerHand.push("1-3")
+            }
 
             const newBoard = [...board];
             newBoard[3] = newPlayerHand;
@@ -120,6 +115,12 @@ function Game() {
             setBoardSnapshot(JSON.parse(JSON.stringify(newBoard))) //snapshot was taken before the game is done being initialized so for the beginning. json is a way to take a deep copy
         }
     }, [pile, board]);
+
+    useEffect(() => {
+        if (board[4].length === 0) {
+            handleLose()
+        }
+    }, [board]);
 
     useEffect(() => {
         if (playersTurn === true) {//this is needed because otherwise the snapshot is taken before everything is properly initialised
@@ -634,7 +635,8 @@ for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
     }
 
     const handleLose = () => {
-
+        setPlayerLose(true);
+        incrementGamesCompleted()
     }
 
     // Handle failed drag operations
@@ -681,8 +683,9 @@ for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
                         pressable={playersTurn}
                         hasPlayed={hasPlayed}
                     />
-                    {playerWon && <WinScreen onRestart={handleStartGame}/> }
                 </div>
+                {playerWon && <WinScreen onRestart={handleStartGame}/> }
+                {playerLose && <WinScreen onRestart={handleStartGame}/> }
                 {!gameStarted && <StartScreen onStart={handleStartGame} loadFromStorage={loadFromStorage}/>}
             </div>
         </DndProvider>
