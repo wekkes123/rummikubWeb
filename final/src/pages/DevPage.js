@@ -1,127 +1,114 @@
-    import React, { useEffect, useState } from 'react';
-    import {Space, Button }from "antd";
-    import dayjs from 'dayjs';
-    import localizedFormat from 'dayjs/plugin/localizedFormat';
-    import 'dayjs/locale/en'; // or 'fr', 'nl', etc. depending on your language
+import React, { useEffect, useState } from 'react';
+import {Space, Button }from "antd";
+import '../css/dev.css';
+import {
+    getAverageThinkTime,
+    getGamesCompletedByUser,
+    getPileMovePercentage,
+    getSuccessfulMovePercentage
+} from "../components/Functions/gameplayMetrics";
 
-    dayjs.extend(localizedFormat);
-    dayjs.locale('en');
-    import '../css/dev.css';
-    import {
-        getAverageThinkTime,
-        getGamesCompletedByUser,
-        getPileMovePercentage,
-        getSuccessfulMovePercentage
-    } from "../components/Functions/gameplayMetrics";
+function DevPage() {
+    const [username, setUsername] = useState('');
+    const [age, setAge] = useState('');
+    const [seed, setSeed] = useState('');
+    const [lastGameTime, setLastGameTime] = useState(null);
+    const [pileMoveAVG, setPileMoveAVG] = useState(0);
+    const [gameCompleted, setGameCompleted] = useState(0);
+    const [successfulMovePercentage, setSuccessfulMovePercentage] = useState(0);
+    const [avgThinkTime, setAvgThinkTime] = useState(null);
 
-    function DevPage() {
-        const [username, setUsername] = useState('');
-        const [age, setAge] = useState('');
-        const [seed, setSeed] = useState('');
-        const [birthday, setBirthday] = useState('');
-        const [lastGameTime, setLastGameTime] = useState(null);
-        const [pileMoveAVG, setPileMoveAVG] = useState(0);
-        const [gameCompleted, setGameCompleted] = useState(0);
-        const [successfulMovePercentage, setSuccessfulMovePercentage] = useState(0);
-        const [avgThinkTime, setAvgThinkTime] = useState(null);
+    useEffect(() => {
+        const savedUsername = localStorage.getItem('pseudonym');
+        const savedAge = localStorage.getItem('age');
+        let savedSeed = localStorage.getItem('seed');
+        if (!savedSeed) {
+            savedSeed = 'default_seed';
+            localStorage.setItem('seed', savedSeed);
+        }
+        setPileMoveAVG(getPileMovePercentage)
+        setGameCompleted(getGamesCompletedByUser)
+        setSuccessfulMovePercentage(getSuccessfulMovePercentage)
+        setAvgThinkTime(getAverageThinkTime)
 
-        useEffect(() => {
-            const savedUsername = localStorage.getItem('pseudonym');
-            const savedAge = localStorage.getItem('age');
-            let savedSeed = localStorage.getItem('seed');
-            if (!savedSeed) {
-                savedSeed = 'default_seed';
-                localStorage.setItem('seed', savedSeed);
-            }
-            const savedBirthday = localStorage.getItem('birthday');
-            setPileMoveAVG(getPileMovePercentage)
-            setGameCompleted(getGamesCompletedByUser)
-            setSuccessfulMovePercentage(getSuccessfulMovePercentage)
-            setAvgThinkTime(getAverageThinkTime)
+        if (savedUsername) setUsername(savedUsername);
+        if (savedAge) setAge(savedAge);
+        if (savedSeed) setSeed(savedSeed);
+    }, []);
 
-            if (savedUsername) setUsername(savedUsername);
-            if (savedAge) setAge(savedAge);
-            if (savedSeed) setSeed(savedSeed);
-            if (savedBirthday) {
-                setBirthday(dayjs(savedBirthday).format('D MMMM YYYY'))
-            }
-        }, []);
+    const handleSeedChange = (e) => {
+        const newSeed = e.target.value;
+        setSeed(newSeed);
+        localStorage.setItem('seed', newSeed);
+    };
 
-        const handleSeedChange = (e) => {
-            const newSeed = e.target.value;
-            setSeed(newSeed);
-            localStorage.setItem('seed', newSeed);
+    const handleEnterClick = () => {
+        localStorage.setItem('seed', seed);
+    };
+
+    const handleDownload = () => {
+        const data = {
+            username,
+            age,
+            seed,
+            lastGameTime,
+            pileMoveAVG,
+            gameCompleted,
+            successfulMovePercentage,
+            avgThinkTime
         };
 
-        const handleEnterClick = () => {
-            localStorage.setItem('seed', seed);
-        };
+        const json = JSON.stringify(data, null, 2);
 
-        const handleDownload = () => {
-            const data = {
-                username,
-                age,
-                birthday,
-                seed,
-                lastGameTime,
-                pileMoveAVG,
-                gameCompleted,
-                successfulMovePercentage,
-                avgThinkTime
-            };
+        const blob = new Blob([json], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
 
-            const json = JSON.stringify(data, null, 2);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'devpage_data.json';
+        a.click();
 
-            const blob = new Blob([json], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
+        URL.revokeObjectURL(url);
+    };
 
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'devpage_data.json';
-            a.click();
+    return (
+        <div className="dev-page-container">
+            <h1>Developer Page</h1>
+            <p><strong>pseudonym hash:</strong> {username || 'Not set'}</p>
+            <p><strong>Age:</strong> {age || 'Not set'}</p>
+            <p><strong>Seed:</strong> {seed || 'Not set'}</p>
 
-            URL.revokeObjectURL(url);
-        };
+            <p><strong>Last Game Time:</strong> {lastGameTime ? `${lastGameTime} seconds` : 'No game played yet'}</p>
+            <p><strong>Pile Move Average:</strong> {pileMoveAVG}%</p>
+            <p><strong>Successful Move Percentage:</strong> {successfulMovePercentage}%</p>
+            <p><strong>Erroneous Move Percentage:</strong> {100-successfulMovePercentage}%</p>
+            <p><strong>Games Completed:</strong> {gameCompleted} games completed</p>
+            <p><strong>Average ThinkTime:</strong> {avgThinkTime ? `${avgThinkTime/1000} seconds` : 'No game played yet'} </p>
 
-        return (
-            <div className="dev-page-container">
-                <h1>Developer Page</h1>
-                <p><strong>pseudonym hash:</strong> {username || 'Not set'}</p>
-                <p><strong>Age:</strong> {age || 'Not set'}</p>
-                <p><strong>Birthday:</strong> {birthday || 'Not set'}</p>
-                <p><strong>Seed:</strong> {seed || 'Not set'}</p>
+            <div className="seed-input-container">
+                <label htmlFor="seed">Change Seed:</label>
+                <input
+                    id="seed"
+                    type="text"
+                    value={seed}
+                    onChange={handleSeedChange}
+                    placeholder="Enter new seed"
+                />
+                <Space direction="vertical" size="large" style={{ width: '100%' }}>
+                    <Button
+                        className="enter-button"
+                        onClick={handleEnterClick}
+                    >
+                        Enter
+                    </Button>
 
-                <p><strong>Last Game Time:</strong> {lastGameTime ? `${lastGameTime} seconds` : 'No game played yet'}</p>
-                <p><strong>Pile Move Average:</strong> {pileMoveAVG}%</p>
-                <p><strong>Successful Move Percentage:</strong> {successfulMovePercentage}%</p>
-                <p><strong>Erroneous Move Percentage:</strong> {100-successfulMovePercentage}%</p>
-                <p><strong>Games Completed:</strong> {gameCompleted} games completed</p>
-                <p><strong>Average ThinkTime:</strong> {avgThinkTime ? `${avgThinkTime/1000} seconds` : 'No game played yet'} </p>
-
-                <div className="seed-input-container">
-                    <label htmlFor="seed">Change Seed:</label>
-                    <input
-                        id="seed"
-                        type="text"
-                        value={seed}
-                        onChange={handleSeedChange}
-                        placeholder="Enter new seed"
-                    />
-                    <Space direction="vertical" size="large" style={{ width: '100%' }}>
-                        <Button
-                            className="enter-button"
-                            onClick={handleEnterClick}
-                        >
-                            Enter
-                        </Button>
-
-                        <Button className="enter-button" onClick={handleDownload}>
-                            Download Data as JSON
-                        </Button>
-                    </Space>
-                </div>
+                    <Button className="enter-button" onClick={handleDownload}>
+                        Download Data as JSON
+                    </Button>
+                </Space>
             </div>
-        );
-    }
+        </div>
+    );
+}
 
-    export default DevPage;
+export default DevPage;
