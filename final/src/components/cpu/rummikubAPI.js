@@ -47,6 +47,7 @@ export const getBestMove = async (cpuHand, board, isFirstMove) => {
         accept: "application/json",
         "Content-Type": "application/json"
     };
+    console.log(JSON.stringify(payload));
 
     try {
         const response = await fetch(url, {
@@ -147,7 +148,7 @@ const reverseConvertSets = (move, Bjokers, Hjokers) => {
         const converted = tiles.map(tile => {
             if (tile === 'j') {
                 const jokerTile = Bjokers.length > 0 ? Bjokers.shift() : Hjokers.shift();
-                const jokerValue = jokerValues[0];
+                const jokerValue = jokerValues.shift();
                 usedJokers.push([jokerTile, jokerValue]);
                 return jokerTile;
             }

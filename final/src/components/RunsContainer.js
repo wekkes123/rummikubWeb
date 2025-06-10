@@ -131,11 +131,11 @@ function RunsContainer({ runs, sectionIndex, updateBoardTile, tilesAreDraggable 
                             className="run-stripe run-stripe-right"
                             style={{
                                 position: 'absolute',
-                                right: 0,
-                                top: 0,
+                                right: -5,
+                                top: -3,
                                 bottom: 0,
                                 width: '8px',
-                                height: '110%',
+                                height: '120%',
                                 backgroundColor: stripeColor
                             }}
                         />

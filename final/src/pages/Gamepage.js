@@ -36,12 +36,12 @@ const backendOptions = { enableMouseEvents: true };
 const placeAudio = new Audio("/sounds/place.mp3");
 
 function Game() {
-    const [bgColor, setBgColor] = useState('#35654D'); // default white
-
+    const [bgColor, setBgColor] = useState('#35654D');
     const [gameStarted, setGameStarted] = useState(false);
     const [startTurnTime, setStartTurnTime] = useState();
     const [startGameTime, setStartGameTime] = useState();
     const [playerWon, setPlayerWon] = useState(false);
+    const [playerLose, setPlayerLose] = useState(false);
     const [firstTurn, setFirstTurn] = useState(true);
     const [cpuFirstTurn, setCpuFirstTurn] = useState(true);
     const [boardSnapshot, setBoardSnapshot] = useState(null);
@@ -49,7 +49,7 @@ function Game() {
     const [showNotif, setShowNotif] = useState(false);
     const [hasPlayed, setHasPlayed] = useState(false);
     const [msgNotif, setMsgNotif] = useState("hello");
-    const seed = 'i456';
+    const seed = 'ihvjsd';
 
     const initializeBoard = () => {
         const groups1 = Array(8).fill().map(() => Array(4).fill('0'));
@@ -96,6 +96,7 @@ function Game() {
             const newPlayerHand = [];
             const newCpuHand = [];
 
+
             //pick tiles for playerhand
             for (let i = 0; i < 14; i++) {
                 newPlayerHand.push(newPile.pop());
@@ -114,6 +115,12 @@ function Game() {
             setBoardSnapshot(JSON.parse(JSON.stringify(newBoard))) //snapshot was taken before the game is done being initialized so for the beginning. json is a way to take a deep copy
         }
     }, [pile, board]);
+
+    useEffect(() => {
+        if (board[4].length === 0) {
+            handleLose()
+        }
+    }, [board]);
 
     useEffect(() => {
         if (playersTurn === true) {//this is needed because otherwise the snapshot is taken before everything is properly initialised
@@ -174,6 +181,7 @@ function Game() {
     const printB = () => {
         console.log(firstTurnBoard);
         console.log(board);
+        console.log(boardSnapshot)
     };
 
     const removeFromHand = (sectionIndex, handIndex) => {
@@ -246,7 +254,6 @@ function Game() {
             const type = move[0];
 
             const moveData = move.slice(1);
-
             if (type === 'g') {
                 if (moveData.length === 3) moveData.push('0');
 
@@ -528,6 +535,8 @@ for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
         handleStartGame();
     };
 
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+
     const restoreFromSnapshot = () => {
         const restoredBoard = boardSnapshot.map(section =>
             section.map(group =>
@@ -538,31 +547,47 @@ for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
         setBoard(restoredBoard);
     };
 
-    //index is used so you can use this function to add to the cpus hand index = 4 or the players hand index = 3
-    const drawTile = async (index) => {
-        const endTurnTime = performance.now();
-        if(index === 3) {
-            restoreFromSnapshot(); // drawing a tile means they should not have played any tiles or changed the board
+    //this is special use effect logic because the draw tile function need to wait for board updates to end before applying animations and setting the new board.
+    const [drawPending, setDrawPending] = useState(false);
+    const [drawIndex, setDrawIndex] = useState(null);
+
+    useEffect(() => {
+        if (drawPending && drawIndex !== null) {
+            actuallyDrawTile(drawIndex, board);
+            setDrawPending(false);
+            setDrawIndex(null);
         }
+    }, [drawPending, drawIndex, board]);
+
+    const drawTile = (index) => {
+        if (index === 3) {
+            setBoard(boardSnapshot);
+            setDrawIndex(index);
+            setDrawPending(true);
+        } else {
+            actuallyDrawTile(index, board);
+        }
+    };
+
+
+    //index is used so you can use this function to add to the cpus hand index = 4 or the players hand index = 3
+    const actuallyDrawTile = async (index, currentBoard) => {
+        const endTurnTime = performance.now();
         const newPile = [...pile];
-        const newHand = [...board[index]];
         const drawnTile = newPile.pop();
+        const newHand = [...currentBoard[index]];
 
         if (!newHand.includes('empty')) {
             newHand.push('empty');
-            const tempBoard = [...board];
-            tempBoard[index] = newHand;
-            setBoard(tempBoard);
-            await new Promise(requestAnimationFrame); // Wait for DOM update
+            currentBoard[index] = newHand;
+            setBoard([...currentBoard]);
+            await new Promise(resolve => setTimeout(resolve, 0));
         }
 
         const indexOfHand = newHand.indexOf('empty');
 
         const fromElem = document.querySelector('.draw');
-        const loc =
-            index === 3 ? `hand-${indexOfHand}` :
-                index === 4 ? `cpuhand-0` : null;
-
+        const loc = index === 3 ? `hand-${indexOfHand}` : index === 4 ? `cpuhand-0` : null;
         const animationTile = index === 4 ? '0' : drawnTile;
         const toElem = document.querySelector(`[data-location='${loc}']`);
 
@@ -579,16 +604,16 @@ for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
         }
 
         newHand[indexOfHand] = drawnTile;
-        const updatedBoard = [...board];
-        updatedBoard[index] = newHand;
+        currentBoard[index] = newHand;
 
-        setBoard(updatedBoard);
+        setBoard([...currentBoard]);
         setPile(newPile);
-        saveTime(startTurnTime, endTurnTime, "moveTime",{move:"Has drawn a tile"});
-        if(playersTurn) recordMove({successfulMove: true, drewFromPile: true});
-        saveToSnapshot();
+        saveTime(startTurnTime, endTurnTime, "moveTime", { move: "Has drawn a tile" });
+        if (playersTurn) recordMove({ successfulMove: true, drewFromPile: true });
         setPlayersTurn(!playersTurn);
-    }
+    };
+
+
 
     const onDragStart = (endTime = null) => {
         if(!hasPlayed){
@@ -610,7 +635,8 @@ for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
     }
 
     const handleLose = () => {
-
+        setPlayerLose(true);
+        incrementGamesCompleted()
     }
 
     // Handle failed drag operations
@@ -657,8 +683,9 @@ for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
                         pressable={playersTurn}
                         hasPlayed={hasPlayed}
                     />
-                    {playerWon && <WinScreen onRestart={handleStartGame}/> }
                 </div>
+                {playerWon && <WinScreen onRestart={handleStartGame}/> }
+                {playerLose && <WinScreen onRestart={handleStartGame}/> }
                 {!gameStarted && <StartScreen onStart={handleStartGame} loadFromStorage={loadFromStorage}/>}
             </div>
         </DndProvider>
