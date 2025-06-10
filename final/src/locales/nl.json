@@ -37,5 +37,11 @@
   "30other-notify" : "Je hebt de tegels van andere spelers gebruikt om 30 te bereiken",
   "The board is not correct": "het bord is niet correct",
   "You Have to place or draw a tile!" : "Je moet een tegel plaatsen of een nieuwe pakken!",
-  "win" : "jij WINT!"
+  "winTitle": "Je hebt gewonnen!",
+  "winMessage": "Gefeliciteerd! Je hebt je rek leeggespeeld.",
+  "loseTitle": "Game Over!",
+  "loseMessage": "Meer geluk de volgende keer! Je had nog tegels over.",
+  "cpuScore": " resterende score van de CPU",
+  "yourScore": "Jouw resterende score",
+  "restartButton": "Nog een keer spelen!"
 }

@@ -29,6 +29,7 @@ import ColorPicker from '../components/ColorPicker'; // add this import
 
 import '../App.css';
 import '../css/style.css'
+import GameEndScreen from "../components/WinScreen";
 
 
 const backendForDND = TouchBackend;
@@ -42,6 +43,8 @@ function Game() {
     const [startGameTime, setStartGameTime] = useState();
     const [playerWon, setPlayerWon] = useState(false);
     const [playerLose, setPlayerLose] = useState(false);
+    const [playerScore, setPlayerScore] = useState(0);
+    const [cpuScore, setCpuScore] = useState(0);
     const [firstTurn, setFirstTurn] = useState(true);
     const [cpuFirstTurn, setCpuFirstTurn] = useState(true);
     const [boardSnapshot, setBoardSnapshot] = useState(null);
@@ -631,13 +634,52 @@ for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
 
     const handleWin = () => {
         setPlayerWon(true);
-        incrementGamesCompleted()
+        incrementGamesCompleted();
+        setCpuScore(calculateCpuScore());
+        setPlayerScore(calculatePlayerScore());
     }
 
     const handleLose = () => {
         setPlayerLose(true);
-        incrementGamesCompleted()
+        incrementGamesCompleted();
+        setPlayerScore(calculatePlayerScore());
+        setCpuScore(calculateCpuScore());
     }
+
+    const calculatePlayerScore = () => {
+        const playerHand = board[3];
+        let score = 0;
+        for (const tile of playerHand) {
+            if (tile !== 'empty') {
+                const [, numberStr] = tile.split('-');
+                const number = parseInt(numberStr);
+                if (!isNaN(number)) {
+                    score += number;
+                } else if (tile.endsWith('-j')) {
+                    score += 25; //penalty for a joker left in hand
+                }
+            }
+        }
+        return score;
+    };
+
+    const calculateCpuScore = () => {
+        const cpuHand = board[4];
+        let score = 0;
+        for (const tile of cpuHand) {
+            if (tile !== 'empty') {
+                const [, numberStr] = tile.split('-');
+                const number = parseInt(numberStr);
+                if (!isNaN(number)) {
+                    score += number;
+                } else if (tile.endsWith('-j')) {
+                    score += 25; // penalty for a joker left in hand
+                }
+
+            }
+        }
+        return score;
+    };
 
     // Handle failed drag operations
     const handleDragEnd = (item) => {
@@ -684,8 +726,22 @@ for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
                         hasPlayed={hasPlayed}
                     />
                 </div>
-                {playerWon && <WinScreen onRestart={handleStartGame}/> }
-                {playerLose && <WinScreen onRestart={handleStartGame}/> }
+                {playerWon && (
+                    <GameEndScreen
+                        status="win"
+                        playerScore={playerScore}
+                        cpuScore={cpuScore}
+                        onRestart={handleStartGame}
+                    />
+                )}
+                {playerLose && (
+                    <GameEndScreen
+                        status="lose"
+                        playerScore={playerScore}
+                        cpuScore={cpuScore}
+                        onRestart={handleStartGame}
+                    />
+                )}
                 {!gameStarted && <StartScreen onStart={handleStartGame} loadFromStorage={loadFromStorage}/>}
             </div>
         </DndProvider>

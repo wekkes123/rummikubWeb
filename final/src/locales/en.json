@@ -36,5 +36,11 @@
   "30other-notify" : "You used other players' tile to get to 30",
   "The board is not correct": "The board is not correct",
   "You have to place or draw a tile!" : "You have to place or draw a tile!",
-  "win" : "You WIN!"
+  "winTitle": "You WIN!",
+  "winMessage": "Congratulations! You cleared your rack.",
+  "loseTitle": "Game Over!",
+  "loseMessage": "Better luck next time! You still had tiles left.",
+  "cpuScore": "CPU's Remaining Score",
+  "yourScore": "Your Remaining Score",
+  "restartButton": "Play Again!"
 }

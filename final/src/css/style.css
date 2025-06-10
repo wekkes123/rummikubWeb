@@ -131,15 +131,71 @@
     cursor: pointer;
 }
 
-.win {
+/* GameEndScreen.css */
+.game-end-screen {
     position: fixed;
     height: 60vh;
     width: 60vw;
     top: 20vh;
     left: 20vw;
-    background-color:burlywood ;
+    background-color: burlywood; /* Default background */
     border-radius: 15px;
     text-align: center;
+    display: flex; /* Use flexbox for vertical centering of content */
+    flex-direction: column;
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
+    padding: 20px; /* Add some padding */
+    box-sizing: border-box; /* Include padding in width/height */
+    color: #333; /* Default text color */
+    font-family: sans-serif; /* A more readable font */
+}
+
+/* Specific styles for win screen */
+.win-screen {
+    background-color: #d4edda; /* Light green */
+    border: 2px solid #28a745; /* Darker green border */
+    color: #155724; /* Dark green text */
+}
+
+/* Specific styles for lose screen */
+.lose-screen {
+    background-color: #f8d7da; /* Light red */
+    border: 2px solid #dc3545; /* Darker red border */
+    color: #721c24; /* Dark red text */
+}
+
+.game-end-screen h2 {
+    margin-bottom: 15px;
+    font-size: 2.5em;
+}
+
+.game-end-screen p {
+    margin-bottom: 25px;
+    font-size: 1.2em;
+}
+
+/* New style for score information */
+.game-end-screen .score-info {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #007bff; /* A distinct color for scores */
+}
+
+.game-end-screen .restart {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease;
+}
+
+.game-end-screen .restart:hover {
+    background-color: #0056b3;
 }
 
 .start {
