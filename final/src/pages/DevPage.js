@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import {Space, Button }from "antd";
+import dayjs from 'dayjs';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import 'dayjs/locale/en'; // or 'fr', 'nl', etc. depending on your language
+
+dayjs.extend(localizedFormat);
+dayjs.locale('en');
 import '../css/dev.css';
 import {
     getAverageThinkTime,
@@ -12,6 +18,7 @@ function DevPage() {
     const [username, setUsername] = useState('');
     const [age, setAge] = useState('');
     const [seed, setSeed] = useState('');
+    const [birthday, setBirthday] = useState('');
     const [lastGameTime, setLastGameTime] = useState(null);
     const [pileMoveAVG, setPileMoveAVG] = useState(0);
     const [gameCompleted, setGameCompleted] = useState(0);
@@ -26,6 +33,7 @@ function DevPage() {
             savedSeed = 'default_seed';
             localStorage.setItem('seed', savedSeed);
         }
+        const savedBirthday = localStorage.getItem('birthday');
         setPileMoveAVG(getPileMovePercentage)
         setGameCompleted(getGamesCompletedByUser)
         setSuccessfulMovePercentage(getSuccessfulMovePercentage)
@@ -34,6 +42,9 @@ function DevPage() {
         if (savedUsername) setUsername(savedUsername);
         if (savedAge) setAge(savedAge);
         if (savedSeed) setSeed(savedSeed);
+        if (savedBirthday) {
+            setBirthday(dayjs(savedBirthday).format('D MMMM YYYY'))
+        }
     }, []);
 
     const handleSeedChange = (e) => {
@@ -50,6 +61,7 @@ function DevPage() {
         const data = {
             username,
             age,
+            birthday,
             seed,
             lastGameTime,
             pileMoveAVG,
@@ -76,6 +88,7 @@ function DevPage() {
             <h1>Developer Page</h1>
             <p><strong>pseudonym hash:</strong> {username || 'Not set'}</p>
             <p><strong>Age:</strong> {age || 'Not set'}</p>
+            <p><strong>Birthday:</strong> {birthday || 'Not set'}</p>
             <p><strong>Seed:</strong> {seed || 'Not set'}</p>
 
             <p><strong>Last Game Time:</strong> {lastGameTime ? `${lastGameTime} seconds` : 'No game played yet'}</p>
