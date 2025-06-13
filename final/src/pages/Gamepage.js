@@ -631,6 +631,22 @@ for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
         setPlayerLose(false);
         setGameStarted(true)
         setStartTurnTime(performance.now())
+
+        const requestFullscreen = (element) => {
+            if (element.requestFullscreen) {
+                element.requestFullscreen();
+            } else if (element.mozRequestFullScreen) { /* Firefox */
+                element.mozRequestFullScreen();
+            } else if (element.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+                element.webkitRequestFullscreen();
+            } else if (element.msRequestFullscreen) { /* IE/Edge */
+                element.msRequestFullscreen();
+            }
+        };
+        if (document.documentElement) {
+            requestFullscreen(document.documentElement);
+        }
+
     };
 
     const handleWin = () => {
