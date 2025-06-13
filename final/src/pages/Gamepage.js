@@ -681,7 +681,7 @@ for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
                 if (!isNaN(number)) {
                     score += number;
                 } else if (tile.endsWith('-j')) {
-                    score += 25; //penalty for a joker left in hand
+                    score += 30; //penalty for a joker left in hand
                 }
             }
         }
@@ -698,7 +698,7 @@ for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
                 if (!isNaN(number)) {
                     score += number;
                 } else if (tile.endsWith('-j')) {
-                    score += 25;
+                    score += 30; // penalty for a joker left in hand
                 }
 
             }
@@ -744,6 +744,7 @@ for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
                     <GameControls
                         onDraw={drawTile}
                         onDone={onDone}
+                        //onReverse={restoreFromSnapshot}
                         onReverse={printB}
                         pressable={playersTurn}
                         hasPlayed={hasPlayed}
