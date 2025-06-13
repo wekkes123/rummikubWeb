@@ -28,16 +28,30 @@ const Registration = () => {
             i18n.changeLanguage(savedLang);
         }
 
-        // Check initial orientation
-        checkOrientation();
+        const storedName = localStorage.getItem('local_name');
+        const storedDay = localStorage.getItem('local_day');
+        const storedMonth = localStorage.getItem('local_month');
+        const storedYear = localStorage.getItem('local_year');
 
-        // Add event listener for orientation changes
+        if (storedName) {
+            setUsername(storedName);
+        }
+
+        if (storedDay && storedMonth && storedYear) {
+            const loadedBirthday = dayjs(`${storedYear}-${storedMonth}-${storedDay}`, 'YYYY-M-D');
+            if (loadedBirthday.isValid()) {
+                setBirthday(loadedBirthday);
+            }
+        }
+
+        checkOrientation();
         window.addEventListener('resize', checkOrientation);
 
         return () => {
             window.removeEventListener('resize', checkOrientation);
         };
     }, [i18n]);
+
 
     const checkOrientation = () => {
         setIsLandscape(window.innerWidth > window.innerHeight);
@@ -71,11 +85,15 @@ const Registration = () => {
             const pseudonym = await hashUsernameAndBirthday(username, birthday);
             localStorage.setItem('pseudonym', pseudonym);
             localStorage.setItem('birthday', birthday.toString());
-            const ageValue = calculateAge(birthday);
-            localStorage.setItem('age', ageValue.toString());
+            localStorage.setItem('age', calculateAge(birthday).toString());
+            localStorage.setItem('local_name', username);
+            localStorage.setItem('local_day', birthday.date().toString());
+            localStorage.setItem('local_month', (birthday.month() + 1).toString());
+            localStorage.setItem('local_year', birthday.year().toString());
             navigate('/game');
         }
     };
+
 
     const isFormValid = username.trim() && birthday && calculateAge(birthday) > 0;
 
@@ -152,7 +170,7 @@ const Registration = () => {
                             message={
                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                     <RotateRightOutlined style={{ marginRight: 8 }} />
-                                    {t('Please rotate your device to landscape mode')}
+                                    {t('device-rotation')}
                                 </div>
                             }
                             type="warning"

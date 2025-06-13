@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TouchBackend } from 'react-dnd-touch-backend';
 import { DndProvider} from "react-dnd";
+import { useNavigate } from 'react-router-dom';
 import {t} from "i18next";
 
 import ComputerRack from '../components/ComputerRack';
@@ -30,6 +31,8 @@ import ColorPicker from '../components/ColorPicker'; // add this import
 import '../App.css';
 import '../css/style.css'
 import GameEndScreen from "../components/WinScreen";
+import {Button} from "antd";
+import {ArrowLeftOutlined} from "@ant-design/icons";
 
 
 const backendForDND = TouchBackend;
@@ -52,7 +55,8 @@ function Game() {
     const [showNotif, setShowNotif] = useState(false);
     const [hasPlayed, setHasPlayed] = useState(false);
     const [msgNotif, setMsgNotif] = useState("hello");
-    const seed = 'ihvjsd';
+    const navigate = useNavigate();
+    const seed = 'ihvj';
 
     const initializeBoard = () => {
         const groups1 = Array(8).fill().map(() => Array(4).fill('0'));
@@ -230,6 +234,10 @@ function Game() {
             await drawTile(4);
             console.error("Error during CPU move:", error);
         }
+    };
+
+    const handleBack = () => {
+        navigate('/');
     };
 
     const isJoker = (tile) => tile && tile.endsWith('-j');
@@ -628,7 +636,7 @@ for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
         localStorage.removeItem("thinkTime");
         localStorage.removeItem(`playerStats_${localStorage.getItem("username")}`);
         setPlayerWon(false)
-        setPlayerLose(false);
+        setPlayerLose(false)
         setGameStarted(true)
         setStartTurnTime(performance.now())
 
@@ -690,7 +698,7 @@ for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
                 if (!isNaN(number)) {
                     score += number;
                 } else if (tile.endsWith('-j')) {
-                    score += 25; // penalty for a joker left in hand
+                    score += 25;
                 }
 
             }
@@ -698,7 +706,6 @@ for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
         return score;
     };
 
-    // Handle failed drag operations
     const handleDragEnd = (item) => {
         console.log("Drag ended without successful drop for item:", item);
     };
@@ -737,11 +744,28 @@ for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
                     <GameControls
                         onDraw={drawTile}
                         onDone={onDone}
-                        //onReverse={restoreFromSnapshot}
                         onReverse={printB}
                         pressable={playersTurn}
                         hasPlayed={hasPlayed}
                     />
+                    <Button
+                        icon={<ArrowLeftOutlined />}
+                        onClick={handleBack}
+                        style={{
+                            background: '#FFB703',
+                            padding: "10px",
+                            border: "1px solid black",
+                            borderRadius: 0,
+                            position: 'absolute',
+                            color: 'black',
+                            top: 20,
+                            right: 20,
+                            zIndex: 1,
+                            fontWeight: 'bold'
+                        }}
+                    >
+                        {t('back')}
+                    </Button>
                 </div>
                 {playerWon && (
                     <GameEndScreen

@@ -333,5 +333,79 @@ button:disabled {
     height: 20px
 }
 
+.gallery-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    touch-action: none;
+    user-select: none;
+    overflow: hidden;
+}
+
+.gallery-text {
+    font-size: 20px;
+    text-align: center;
+    padding: 1rem;
+    max-width: 90%;
+}
+
+.gallery-subtext {
+    margin-top: 1rem;
+    font-weight: normal;
+}
+
+.gallery-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    flex: 1;
+}
+
+.gallery-arrow {
+    font-size: 2.5rem;
+    height: 100%;
+    padding: 0 3rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.arrow-label {
+    font-size: 25px;
+    margin-top: 0.5rem; /* Space between arrow and label */
+}
+
+
+.gallery-image-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1rem;
+}
+
+.gallery-image {
+    max-height: 80vh;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.gallery-page-number {
+    margin-top: 10px;
+    font-size: 20px;
+    text-align: center;
+}
+
 
 

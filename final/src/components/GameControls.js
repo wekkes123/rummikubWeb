@@ -21,8 +21,8 @@ function GameControls({ onDraw, onDone, onReverse, pressable, hasPlayed }) {
             </div>
             <div className='right'>
                 <button className="reverse control-button" onClick={() => onReverse()} disabled={!pressable}>
-                    <img src={restore} alt="Restore board" className="restore" />
                     {t("reverse")}
+                    <img src={restore} alt="Restore board" className="restore" />
                 </button>
             </div>
         </div>

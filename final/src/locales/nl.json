@@ -11,6 +11,7 @@
   "sort-colour": "Sorteer op Kleur",
   "help-modal-title": "Help: Spelregels & Website Doel",
   "game-rules": "Spelregels:",
+  "device-rotation": "Draai uw apparaat alstublieft naar de liggende modus.",
   "rules-des-1": "Elke speler plaatst om de beurt tegels op het bord.",
   "rules-des-2": "Tegels worden geplaatst in sets van nummers of kleuren.",
   "rules-des-3": "Het doel is om alle tegels in geldige combinaties te rangschikken.",
@@ -29,7 +30,7 @@
   "month" : "maand",
   "year" : "jaar",
   "select_date" : "kies een datum",
-  "submit" : "Spellen",
+  "submit" : "Spelen",
   "draw": "Trek",
   "done": "Klaar",
   "reverse": "Omkeren",
@@ -43,5 +44,11 @@
   "loseMessage": "Meer geluk de volgende keer! Je had nog tegels over.",
   "cpuScore": " resterende score van de CPU",
   "yourScore": "Jouw resterende score",
-  "restartButton": "Nog een keer spelen!"
+  "restartButton": "Nog een keer spelen!",
+  "welcome_message": "Welkom bij Rummikub!",
+  "previous_game_message": "Een vorig spel is gedetecteerd. Wil je doorgaan of een nieuw spel starten?",
+  "start_new_game": "Start Nieuw Spel",
+  "load_previous_game": "Vorig Spel Hervatten",
+  "previous": "Ga Terug",
+  "next": "Volgende"
 }

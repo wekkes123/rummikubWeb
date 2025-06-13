@@ -11,6 +11,7 @@
   "sort-colour": "Sort by Colour",
   "help-modal-title": "Help: Game Rules & Website Purpose",
   "game-rules": "Game Rules:",
+  "device-rotation": "Please rotate your device to landscape mode",
   "rules-des-1": "Each player takes turns placing tiles on the board.",
   "rules-des-2": "Tiles are placed in sets of numbers or colors.",
   "rules-des-3": "The goal is to arrange all tiles in valid combinations.",
@@ -42,5 +43,11 @@
   "loseMessage": "Better luck next time! You still had tiles left.",
   "cpuScore": "CPU's Remaining Score",
   "yourScore": "Your Remaining Score",
-  "restartButton": "Play Again!"
+  "restartButton": "Play Again!",
+  "welcome_message": "Welcome to Rummikub!",
+  "previous_game_message": "A Previous game was detected, would you like to continue or start a new game?",
+  "start_new_game": "Start New Game",
+  "load_previous_game": "Continue previous game",
+  "previous": "Go Back",
+  "next": "Next"
 }

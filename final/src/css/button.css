@@ -104,24 +104,48 @@
     color: white;
 }
 
+.start-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: auto;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
 .start-button {
-    width: 25vw;
-    height: 25vh;
+    width: 15vw;
+    height: 15vh;
     background-color: #4caf50;
-    color: white;
+    color: black;
     font-size: 2rem;
     font-weight: bold;
     border: none;
     outline: none;
     cursor: pointer;
-    transition: all 0.3s ease;
+    margin: 20px;
+}
+
+.load-button {
+    width: 15vw;
+    height: 15vh;
+    background-color: #FFB703;
+    color: black;
+    font-size: 2rem;
+    font-weight: bold;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    margin: 20px;
 }
 
 /* Stop button styles */
 .stop-button {
     position: absolute;
-    top: 10px;
-    left: 10px;
+    top: 15px;
+    left: 15px;
     background-color: red;
     color: white;
     font-size: 1.5rem;

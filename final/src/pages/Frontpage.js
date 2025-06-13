@@ -117,10 +117,11 @@ const FrontPage = () => {
                             color: 'black',
                             marginBottom: 48,
                         }}
+                        onClick={() => navigate('/tutorial')}
                     >
                         {t('tutorial')}
                     </Button>
-
+                    {/*
                     <Button
                         type="primary"
                         size="large"
@@ -138,6 +139,7 @@ const FrontPage = () => {
                     >
                         {t('settings')}
                     </Button>
+                    */}
                 </Content>
             </Layout>
         </ConfigProvider>
