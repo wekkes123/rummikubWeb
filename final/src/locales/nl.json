@@ -48,5 +48,7 @@
   "welcome_message": "Welkom bij Rummikub!",
   "previous_game_message": "Een vorig spel is gedetecteerd. Wil je doorgaan of een nieuw spel starten?",
   "start_new_game": "Start Nieuw Spel",
-  "load_previous_game": "Vorig Spel Hervatten"
+  "load_previous_game": "Vorig Spel Hervatten",
+  "previous": "Ga Terug",
+  "next": "Volgende"
 }

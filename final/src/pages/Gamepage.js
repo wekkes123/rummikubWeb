@@ -101,10 +101,17 @@ function Game() {
 
 
             //pick tiles for playerhand
+            /*
             for (let i = 0; i < 14; i++) {
                 newPlayerHand.push(newPile.pop());
-            }
-
+            }*/
+            newPlayerHand.push(newPile.pop());
+            newPlayerHand.push("1-5");
+            newPlayerHand.push("2-5");
+            newPlayerHand.push("1-j");
+            newPlayerHand.push("4-j");
+            newPlayerHand.push("2-1");
+            newPlayerHand.push("2-3");
 
             //and tiles for the cpu
             for (let i = 0; i < 14; i++) {

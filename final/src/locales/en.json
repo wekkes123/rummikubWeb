@@ -47,5 +47,7 @@
   "welcome_message": "Welcome to Rummikub!",
   "previous_game_message": "A Previous game was detected, would you like to continue or start a new game?",
   "start_new_game": "Start New Game",
-  "load_previous_game": "Continue previous game"
+  "load_previous_game": "Continue previous game",
+  "previous": "Go Back",
+  "next": "Next"
 }
