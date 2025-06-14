@@ -43,5 +43,9 @@
   "loseMessage": "Better luck next time! You still had tiles left.",
   "cpuScore": "CPU's Remaining Score",
   "yourScore": "Your Remaining Score",
-  "restartButton": "Play Again!"
+  "restartButton": "Play Again!",
+  "welcome_message": "Welcome to Rummikub!",
+  "previous_game_message": "A Previous game was detected, would you like to continue or start a new game?",
+  "start_new_game": "Start New Game",
+  "load_previous_game": "Continue previous game"
 }

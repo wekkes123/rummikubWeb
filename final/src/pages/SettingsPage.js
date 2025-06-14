@@ -13,7 +13,6 @@ const SettingsPage = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
 
-    // Load saved setting from localStorage (default: right-handed)
     const savedHandPreference = localStorage.getItem('handPreference') === 'left';
     const [isLeftHanded, setIsLeftHanded] = useState(savedHandPreference);
 

@@ -44,5 +44,9 @@
   "loseMessage": "Meer geluk de volgende keer! Je had nog tegels over.",
   "cpuScore": " resterende score van de CPU",
   "yourScore": "Jouw resterende score",
-  "restartButton": "Nog een keer spelen!"
+  "restartButton": "Nog een keer spelen!",
+  "welcome_message": "Welkom bij Rummikub!",
+  "previous_game_message": "Een vorig spel is gedetecteerd. Wil je doorgaan of een nieuw spel starten?",
+  "start_new_game": "Start Nieuw Spel",
+  "load_previous_game": "Vorig Spel Hervatten"
 }

@@ -2,10 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {Space, Button }from "antd";
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
-import 'dayjs/locale/en'; // or 'fr', 'nl', etc. depending on your language
-
-dayjs.extend(localizedFormat);
-dayjs.locale('en');
+import 'dayjs/locale/en';
 import '../css/dev.css';
 import {
     getAverageThinkTime,
@@ -13,6 +10,9 @@ import {
     getPileMovePercentage,
     getSuccessfulMovePercentage
 } from "../components/Functions/gameplayMetrics";
+dayjs.extend(localizedFormat);
+dayjs.locale('en');
+
 
 function DevPage() {
     const [username, setUsername] = useState('');

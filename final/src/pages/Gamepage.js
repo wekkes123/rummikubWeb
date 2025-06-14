@@ -105,11 +105,11 @@ function Game() {
                 newPlayerHand.push(newPile.pop());
             }
 
-            /*
+
             //and tiles for the cpu
             for (let i = 0; i < 14; i++) {
                 newCpuHand.push(newPile.pop());
-            }*/
+            }
 
             const newBoard = [...board];
             newBoard[3] = newPlayerHand;
@@ -675,7 +675,7 @@ for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
                 if (!isNaN(number)) {
                     score += number;
                 } else if (tile.endsWith('-j')) {
-                    score += 25; // penalty for a joker left in hand
+                    score += 25;
                 }
 
             }
@@ -683,7 +683,6 @@ for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
         return score;
     };
 
-    // Handle failed drag operations
     const handleDragEnd = (item) => {
         console.log("Drag ended without successful drop for item:", item);
     };
@@ -722,7 +721,6 @@ for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
                     <GameControls
                         onDraw={drawTile}
                         onDone={onDone}
-                        //onReverse={restoreFromSnapshot}
                         onReverse={printB}
                         pressable={playersTurn}
                         hasPlayed={hasPlayed}
