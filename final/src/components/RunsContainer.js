@@ -26,7 +26,7 @@ function RunsContainer({ runs, sectionIndex, updateBoardTile, tilesAreDraggable 
         removeOriginalTile(draggedTileData, updateBoardTile, removeFromHand, firstTurn)
         const add = addToFirstTurnBoard(draggedTileData, getBoardValue)
 
-        placeTileAudio.play();
+        //placeTileAudio.play();
 
         if(draggedTileData.number === 'j'){
             updateBoardTile(

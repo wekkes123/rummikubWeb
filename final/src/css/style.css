@@ -102,10 +102,13 @@
         padding: 1vh 2vw;
         gap: 1vh;
     }
+    .tile{
+        width: clamp(20px, 4.5vw, 35px);
+    }
 }
 
 .tile {
-    width: clamp(20px, 5vw, 40px); /* Responsive */
+    width: clamp(20px, 4.5vw, 35px); /* Responsive */
     height: clamp(30px, 7vw, 60px);
     flex-shrink: 1;
     margin: 5px;

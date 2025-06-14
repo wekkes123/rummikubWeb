@@ -33,6 +33,7 @@ import '../css/style.css'
 import GameEndScreen from "../components/WinScreen";
 import {Button} from "antd";
 import {ArrowLeftOutlined} from "@ant-design/icons";
+import {button} from "framer-motion/m";
 
 
 const backendForDND = TouchBackend;
@@ -418,7 +419,7 @@ for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
                         onComplete: resolve
                     })
                 );
-                placeAudio.play(); //this place audio is 0.41 seconds so the animation needs to be longer for the audio to not bug out
+                //this place audio is 0.41 seconds so the animation needs to be longer for the audio to not bug out
             }
 
             if (toLoc.type === 'group') {
@@ -611,7 +612,6 @@ for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
                     onComplete: resolve
                 })
             );
-            placeAudio.play();
         }
 
         newHand[indexOfHand] = drawnTile;

@@ -23,7 +23,7 @@ function GroupsContainer({ groups, sectionIndex, updateBoardTile, tilesAreDragga
         }
         removeOriginalTile(draggedTileData, updateBoardTile, removeFromHand, firstTurn);
         const add = addToFirstTurnBoard(draggedTileData, getBoardValue)
-        placeTileAudio.play();
+        //placeTileAudio.play();
 
         updateBoardTile(
             sectionIndex,

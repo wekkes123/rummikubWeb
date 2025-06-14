@@ -18,7 +18,7 @@ function PlayerRack({ playerhand, onDragEnd, tilesAreDraggable = true, setBoard,
             newBoard[3][dropData.handIndex] = tileId;
             newBoard[3][startHandIndex] = dropTile;
             setBoard(newBoard);
-            placeTileAudio.play();
+            //placeTileAudio.play();
             return;
         }
 
