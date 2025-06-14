@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Registration from "./pages/Registration";
 import "./App.css"
 import SettingsPage from "./pages/SettingsPage";
+import TestPage from "./pages/TestPage";
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
           <Route path="/registration" element={<Registration />} />
           <Route path="/game" element={<GamePage />} />
           <Route path="/dev" element={<DevPage />} />
+          <Route path="/test" element={<TestPage />} />
         </Routes>
       </Router>
   );
