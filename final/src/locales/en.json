@@ -11,6 +11,7 @@
   "sort-colour": "Sort by Colour",
   "help-modal-title": "Help: Game Rules & Website Purpose",
   "game-rules": "Game Rules:",
+  "device-rotation": "Please rotate your device to landscape mode",
   "rules-des-1": "Each player takes turns placing tiles on the board.",
   "rules-des-2": "Tiles are placed in sets of numbers or colors.",
   "rules-des-3": "The goal is to arrange all tiles in valid combinations.",

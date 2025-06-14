@@ -117,6 +117,7 @@ const FrontPage = () => {
                             color: 'black',
                             marginBottom: 48,
                         }}
+                        onClick={() => navigate('/tutorial')}
                     >
                         {t('tutorial')}
                     </Button>

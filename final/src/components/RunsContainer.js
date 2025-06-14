@@ -59,7 +59,7 @@ function RunsContainer({ runs, sectionIndex, updateBoardTile, tilesAreDraggable 
                 const stripeColor = colorMapping[color];
 
                 return (
-                    <div key={`run-${runIndex}`} className="run" style={{ position: 'relative' }}>
+                    <div key={`run-${runIndex}`} className="run" style={{position: 'relative'}}>
                         {/* Left color stripe
                         <div
                             className="run-stripe run-stripe-left"
@@ -76,7 +76,7 @@ function RunsContainer({ runs, sectionIndex, updateBoardTile, tilesAreDraggable 
                         />*/}
 
                         {run.map((tileValue, tileIndex) => {
-                            let number, isHighlighted, isGreyedOut,tileProps;
+                            let number, isHighlighted, isGreyedOut, tileProps;
                             if (tileValue === '1-j' || tileValue === '4-j') {
                                 isHighlighted = 1;
                                 tileProps = {
@@ -139,7 +139,20 @@ function RunsContainer({ runs, sectionIndex, updateBoardTile, tilesAreDraggable 
                                 backgroundColor: stripeColor
                             }}
                         />
+                        <div
+                            className="run-stripe run-stripe-right"
+                            style={{
+                                position: 'absolute',
+                                left: -5,
+                                top: -3,
+                                bottom: 0,
+                                width: '8px',
+                                height: '120%',
+                                backgroundColor: stripeColor
+                            }}
+                        />
                     </div>
+
                 );
             })}
         </div>

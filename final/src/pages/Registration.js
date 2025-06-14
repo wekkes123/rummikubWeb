@@ -152,7 +152,7 @@ const Registration = () => {
                             message={
                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                     <RotateRightOutlined style={{ marginRight: 8 }} />
-                                    {t('Please rotate your device to landscape mode')}
+                                    {t('device-rotation')}
                                 </div>
                             }
                             type="warning"

@@ -20,7 +20,7 @@ function ThreePartDatePicker({ value, onChange, t }) {
     }, [value]);
 
     const handleChange = (part, val) => {
-        const cleanVal = val.replace(/\D/g, ''); // Allow only numbers
+        const cleanVal = val.replace(/\D/g, '');
 
         if (part === 'day') setDay(cleanVal);
         if (part === 'month') setMonth(cleanVal);
@@ -30,7 +30,8 @@ function ThreePartDatePicker({ value, onChange, t }) {
         const m = part === 'month' ? cleanVal : month;
         const y = part === 'year' ? cleanVal : year;
 
-        if (d && m && y) {
+
+        if (d.length >= 1 && m.length >= 1 && y.length === 4) {
             const date = dayjs(`${y}-${m}-${d}`, 'YYYY-M-D');
             if (date.isValid() && !date.isAfter(dayjs())) {
                 onChange(date);
@@ -38,7 +39,7 @@ function ThreePartDatePicker({ value, onChange, t }) {
                 onChange(null);
             }
         } else {
-            onChange(null);
+            onChange(null); // Still incomplete
         }
     };
 

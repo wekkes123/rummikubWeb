@@ -102,10 +102,11 @@ function Game() {
                 newPlayerHand.push(newPile.pop());
             }
 
+            /*
             //and tiles for the cpu
             for (let i = 0; i < 14; i++) {
                 newCpuHand.push(newPile.pop());
-            }
+            }*/
 
             const newBoard = [...board];
             newBoard[3] = newPlayerHand;
