@@ -636,7 +636,7 @@ for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
         localStorage.removeItem("thinkTime");
         localStorage.removeItem(`playerStats_${localStorage.getItem("username")}`);
         setPlayerWon(false)
-        setPlayerLose(false);
+        setPlayerLose(false)
         setGameStarted(true)
         setStartTurnTime(performance.now())
     };
