@@ -121,7 +121,7 @@ const FrontPage = () => {
                     >
                         {t('tutorial')}
                     </Button>
-
+                    {/*
                     <Button
                         type="primary"
                         size="large"
@@ -139,6 +139,7 @@ const FrontPage = () => {
                     >
                         {t('settings')}
                     </Button>
+                    */}
                 </Content>
             </Layout>
         </ConfigProvider>
