@@ -82,7 +82,8 @@ const Registration = () => {
 
     const handleFormSubmit = async () => {
         if (validateForm()) {
-            const pseudonym = await hashUsernameAndBirthday(username, birthday);
+            //const pseudonym = await hashUsernameAndBirthday(username, birthday);
+            const pseudonym = username + birthday
             localStorage.setItem('pseudonym', pseudonym);
             localStorage.setItem('birthday', birthday.toString());
             localStorage.setItem('age', calculateAge(birthday).toString());

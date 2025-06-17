@@ -295,35 +295,6 @@ function Game() {
                 const colorArrays = [simulatedBoard[2][startIndex], simulatedBoard[2][startIndex + 1]];
                 let targetArrayIndex = -1;
 
-                /*
-                const reservedIndices = new Set();
-
-for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
-    const currentArray = colorArrays[arrayIndex];
-    let canFit = true;
-    reservedIndices.clear();
-
-    for (const tile of moveData) {
-        const [, tileNumber] = tile.split('-');
-        let index = isJoker(tile)
-            ? jokerValue.find(([t]) => t === tile)?.[1] - 1
-            : parseInt(tileNumber) - 1;
-
-        if (!currentArray || currentArray[index] === 1 || reservedIndices.has(index)) {
-            canFit = false;
-            break;
-        }
-
-        reservedIndices.add(index); // mark as reserved
-    }
-
-    if (canFit) {
-        targetArrayIndex = arrayIndex;
-        break;
-    }
-}
-                */
-
                 for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
                     const currentArray = colorArrays[arrayIndex];
                     let canFit = true;

@@ -52,6 +52,7 @@ export function flyTileBetweenContainers({ tile, fromElem, toElem, onComplete = 
 }
 
 export function reorderTileMovements(movements, tempLocation) {
+    console.log(movements)
     const remainingMoves = [...movements];
     const orderedMoves = [];
 
@@ -96,25 +97,6 @@ export function reorderTileMovements(movements, tempLocation) {
             tempMove.from = tempLocation;
         }
     }
-    /*
-    const movesToCpuHand = new Map();
-    orderedMoves.forEach(move => {
-        if (move.to.startsWith('cpuhand-')) {
-            movesToCpuHand.set(move.tile, move);
-        }
-    });
-
-    const movesToRemove = new Set();
-    orderedMoves.forEach(move => {
-        if (move.from.startsWith('cpuhand-')) {
-            const cpuHandMove = movesToCpuHand.get(move.tile);
-            if (cpuHandMove && move.to === cpuHandMove.from) {
-                movesToRemove.add(cpuHandMove);
-                movesToRemove.add(move);
-            }
-        }
-    });
-    return orderedMoves.filter(move => !movesToRemove.has(move));*/
     return orderedMoves;
 }
 
