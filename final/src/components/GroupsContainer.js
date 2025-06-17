@@ -4,7 +4,7 @@ import Tile from './Tile';
 import DraggableTile from '../dragDrop/DraggableTile';
 import { removeOriginalTile, isTileMoveValid, addToFirstTurnBoard } from './Functions/gamePlayFunctions'
 import '../css/style.css'
-const placeTileAudio = new Audio("/sounds/place.mp3");
+const placeTileAudio = new Audio("/sounds/place.wav");
 
 function GroupsContainer({ groups, sectionIndex, updateBoardTile, tilesAreDraggable = true, getBoardValue, removeFromHand, firstTurn,onDragStart}) {
 

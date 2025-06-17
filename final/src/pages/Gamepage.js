@@ -25,7 +25,7 @@ import {
     getTileLocationsFromBoard
 } from "../components/Functions/TileMover";
 import {incrementGamesCompleted, saveTime, recordMove} from "../components/Functions/gameplayMetrics";
-import ColorPicker from '../components/ColorPicker'; // add this import
+import ColorPicker from '../components/ColorPicker';
 
 
 import '../App.css';
@@ -37,7 +37,7 @@ import {ArrowLeftOutlined} from "@ant-design/icons";
 
 const backendForDND = TouchBackend;
 const backendOptions = { enableMouseEvents: true };
-const placeAudio = new Audio("/sounds/place.mp3");
+const placeAudio = new Audio("/sounds/place.wav");
 
 function Game() {
     const [bgColor, setBgColor] = useState('#35654D');

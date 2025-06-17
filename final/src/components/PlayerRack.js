@@ -3,7 +3,7 @@ import DraggableTile from '../dragDrop/DraggableTile';
 import Tile from './Tile';
 import DropZone from '../dragDrop/DropZone';
 import {isTileMoveValid, removeOriginalTile} from "./Functions/gamePlayFunctions";
-const placeTileAudio = new Audio("/sounds/place.mp3");
+const placeTileAudio = new Audio("/sounds/place.wav");
 
 
 function PlayerRack({ playerhand, onDragEnd, tilesAreDraggable = true, setBoard, board, getBoardValue, firstTurnBoard, setFirstTurnBoard, onDragStart}) {
