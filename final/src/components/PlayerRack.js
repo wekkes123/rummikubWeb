@@ -55,7 +55,7 @@ function PlayerRack({ playerhand, onDragEnd, tilesAreDraggable = true, setBoard,
         }
         setBoard(newBoard);
         setFirstTurnBoard(firstTurnBoard);
-        placeTileAudio.play();
+        //placeTileAudio.play();
     };
 
     const handleTileDragEnd = (item) => {
