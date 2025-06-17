@@ -81,6 +81,7 @@
 .groups, .runs {
     height: 70vh;
     display: flex;
+    position: relative;
     flex-direction: column;
     flex: 1 1 0;
     box-sizing: border-box;
@@ -88,7 +89,7 @@
 }
 
 .group, .run {
-    height: 8.5vh;
+    height: 8vh;
     display: flex;
     flex-direction: row;
     margin-bottom: 0.05vh;

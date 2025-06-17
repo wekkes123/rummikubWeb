@@ -607,9 +607,25 @@ function Game() {
         localStorage.removeItem("thinkTime");
         localStorage.removeItem(`playerStats_${localStorage.getItem("username")}`);
         setPlayerWon(false)
-        setPlayerLose(false);
+        setPlayerLose(false)
         setGameStarted(true)
         setStartTurnTime(performance.now())
+
+        const requestFullscreen = (element) => {
+            if (element.requestFullscreen) {
+                element.requestFullscreen();
+            } else if (element.mozRequestFullScreen) { /* Firefox */
+                element.mozRequestFullScreen();
+            } else if (element.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+                element.webkitRequestFullscreen();
+            } else if (element.msRequestFullscreen) { /* IE/Edge */
+                element.msRequestFullscreen();
+            }
+        };
+        if (document.documentElement) {
+            requestFullscreen(document.documentElement);
+        }
+
     };
 
     const handleWin = () => {
@@ -636,7 +652,7 @@ function Game() {
                 if (!isNaN(number)) {
                     score += number;
                 } else if (tile.endsWith('-j')) {
-                    score += 25; //penalty for a joker left in hand
+                    score += 30; //penalty for a joker left in hand
                 }
             }
         }
@@ -653,7 +669,7 @@ function Game() {
                 if (!isNaN(number)) {
                     score += number;
                 } else if (tile.endsWith('-j')) {
-                    score += 25;
+                    score += 30; // penalty for a joker left in hand
                 }
 
             }
@@ -699,6 +715,7 @@ function Game() {
                     <GameControls
                         onDraw={drawTile}
                         onDone={onDone}
+                        //onReverse={restoreFromSnapshot}
                         onReverse={printB}
                         pressable={playersTurn}
                         hasPlayed={hasPlayed}

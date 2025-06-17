@@ -6,6 +6,7 @@ import { ArrowLeftOutlined, RotateRightOutlined} from '@ant-design/icons';
 import LanguageButtons from "../components/LanguageButtons";
 import ThreePartDatePicker from "../components/ThreePartDatePicker";
 import dayjs from 'dayjs';
+import SHA256 from 'crypto-js/sha256';
 
 const { Content } = Layout;
 
@@ -99,12 +100,19 @@ const Registration = () => {
     const isFormValid = username.trim() && birthday && calculateAge(birthday) > 0;
 
     async function hashUsernameAndBirthday(username, birthday) {
-        const encoder = new TextEncoder();
-        const data = encoder.encode(username + birthday.format('YYYY-MM-DD'));
-        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        const input = username + birthday.format('YYYY-MM-DD');
+
+        if (window.crypto && window.crypto.subtle) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(input);
+            const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        return SHA256(input).toString();
     }
+
 
     function calculateAge(birthday) {
         if (!birthday) return null;
