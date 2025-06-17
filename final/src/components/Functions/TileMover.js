@@ -97,6 +97,25 @@ export function reorderTileMovements(movements, tempLocation) {
             tempMove.from = tempLocation;
         }
     }
+
+    for (let i = 0; i < orderedMoves.length - 1; i++) {
+        const first = orderedMoves[i];
+        const second = orderedMoves[i + 1];
+
+        if (
+            first.tile === second.tile &&
+            first.to === second.from
+        ) {
+            const optimizedMove = {
+                tile: first.tile,
+                from: first.from,
+                to: second.to
+            };
+            orderedMoves.splice(i, 2, optimizedMove);
+            i -= 1;
+        }
+    }
+
     return orderedMoves;
 }
 

@@ -127,7 +127,7 @@ function Game() {
         if (board[4].length === 0) {
             handleLose()
         }
-    }, [board]);
+    }, [playersTurn]);
 
     useEffect(() => {
         if (playersTurn === true) {//this is needed because otherwise the snapshot is taken before everything is properly initialised
