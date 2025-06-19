@@ -141,7 +141,7 @@ export function findOpenSpot(board, newBoard) {
 export function getTileLocationsFromBoard(board) {
     const tileLocations = [];
 
-    // Runs (board[2])
+    //runs
     board[2].forEach((runArray, runIndex) => {
         runArray.forEach((tile, tileIndex) => {
             if (tile && tile !== 0 && tile !== '0') {
@@ -154,7 +154,7 @@ export function getTileLocationsFromBoard(board) {
         });
     });
 
-    // Groups (board[0] and board[1])
+    //groups
     for (let sectionIndex = 0; sectionIndex <= 1; sectionIndex++) {
         board[sectionIndex].forEach((group, groupIndex) => {
             group.forEach((tile, tileIndex) => {
@@ -165,7 +165,7 @@ export function getTileLocationsFromBoard(board) {
         });
     }
 
-    // CPU hand (board[4])
+    //CPU hand
     board[4].forEach((tile, index) => {
         if (tile && tile !== '0') {
             tileLocations.push([tile, `cpuhand-${index}`]);
@@ -219,3 +219,77 @@ export function getTileMovements(start, end) {
     });
     return movements;
 }
+
+export function moveReducer(board, simulatedBoard) {
+    const printer = structuredClone(simulatedBoard);
+    console.log("board before:", board, printer);
+
+    const newGroups = [];
+    const groupsNotMove = [];
+
+    function sameElement(arr1, arr2) {
+        if (arr1.length !== arr2.length) return false;
+        const sorted1 = [...arr1].sort();
+        const sorted2 = [...arr2].sort();
+        return sorted1.every((value, index) => value === sorted2[index]);
+    }
+
+    for (let i = 0; i < 2; i++) {
+        const subArray = simulatedBoard[i];
+        for (let item of subArray) {
+            if (JSON.stringify(item) !== JSON.stringify(['0', '0', '0', '0'])) {
+                newGroups.push(item);
+            }
+        }
+    }
+
+    const usedBoardPositions = new Set();
+    const unusedNewGroups = [];
+
+    for (let group of newGroups) {
+        let foundMatch = false;
+
+        for (let boardIndex = 0; boardIndex < 2 && !foundMatch; boardIndex++) {
+            const boardSection = board[boardIndex];
+            for (let subIndex = 0; subIndex < boardSection.length && !foundMatch; subIndex++) {
+                const currentArray = boardSection[subIndex];
+                const key = `${boardIndex}-${subIndex}`;
+
+                if (!usedBoardPositions.has(key) && sameElement(currentArray, group)) {
+                    groupsNotMove.push([[boardIndex, subIndex], structuredClone(group)]);
+                    usedBoardPositions.add(key);
+                    foundMatch = true;
+                }
+            }
+        }
+
+        if (!foundMatch) {
+            unusedNewGroups.push(structuredClone(group));
+        }
+    }
+
+    const simulatedBoardClone = structuredClone(simulatedBoard);
+    simulatedBoardClone[0] = Array(simulatedBoard[0].length).fill(null).map(() => ['0', '0', '0', '0']);
+    simulatedBoardClone[1] = Array(simulatedBoard[1].length).fill(null).map(() => ['0', '0', '0', '0']);
+
+    for (let [[boardIndex, subIndex], array] of groupsNotMove) {
+        simulatedBoardClone[boardIndex][subIndex] = structuredClone(array);
+    }
+
+    for (let part = 0; part < 2; part++) {
+        for (let i = 0; i < simulatedBoardClone[part].length; i++) {
+            if (unusedNewGroups.length === 0) break;
+            if (JSON.stringify(simulatedBoardClone[part][i]) === JSON.stringify(['0', '0', '0', '0'])) {
+                simulatedBoardClone[part][i] = structuredClone(unusedNewGroups.shift());
+            }
+        }
+    }
+
+    simulatedBoard[0] = simulatedBoardClone[0];
+    simulatedBoard[1] = simulatedBoardClone[1];
+    console.log("board after:", board, simulatedBoard);
+}
+
+
+
+
