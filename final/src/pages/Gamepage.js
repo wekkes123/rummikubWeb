@@ -57,7 +57,7 @@ function Game() {
     const [hasPlayed, setHasPlayed] = useState(false);
     const [msgNotif, setMsgNotif] = useState("hello");
     const navigate = useNavigate();
-    const seed = 'ihvj652652';
+    const seed = 'ihvj';
 
     const initializeBoard = () => {
         const groups1 = Array(8).fill().map(() => Array(4).fill('0'));
