@@ -1237,8 +1237,8 @@ function Game() {
                     <GameControls
                         onDraw={drawTile}
                         onDone={onDone}
-                        //onReverse={restoreFromSnapshot}
-                        onReverse={printB}
+                        onReverse={restoreFromSnapshot}
+                        //onReverse={printB}
                         pressable={playersTurn}
                         hasPlayed={hasPlayed}
                     />
