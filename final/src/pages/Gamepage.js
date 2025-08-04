@@ -1018,11 +1018,18 @@ function Game() {
         setBoardSnapshot(snapshot);
     };
 
+    const incrementGamesStarted = () => {
+        let gamesStarted = parseInt(localStorage.getItem('gamesStarted') || '0', 10);
+        gamesStarted += 1;
+        localStorage.setItem('gamesStarted', gamesStarted);
+    };
+
     const loadFromStorage = () => {
         const snapshot = JSON.parse(localStorage.getItem("snapshot"));
         const firstTurn = JSON.parse(localStorage.getItem("firstTurn"));
         const cpuFirstTurn = JSON.parse(localStorage.getItem("cpuFirstTurn"));
         const pile = JSON.parse(localStorage.getItem("pile"));
+        setStartGameTime(performance.now())
 
         if (snapshot && pile !== null && firstTurn !== null && cpuFirstTurn !== null) {
             setBoard(snapshot);
@@ -1030,6 +1037,7 @@ function Game() {
             setFirstTurn(firstTurn);
             setCpuFirstTurn(cpuFirstTurn);
             setPile(pile);
+            incrementGamesStarted()
         } else {
             handleStartGame()
             setMsgNotif("Something went wrong while loading the previous game, we have started a new one")
@@ -1128,19 +1136,21 @@ function Game() {
     const handleStartGame = () => {
         localStorage.removeItem("thinkTime");
         localStorage.removeItem(`playerStats_${localStorage.getItem("username")}`);
+        incrementGamesStarted()
         setPlayerWon(false)
         setPlayerLose(false)
         setGameStarted(true)
         setStartTurnTime(performance.now())
+        setStartGameTime(performance.now())
 
         const requestFullscreen = (element) => {
             if (element.requestFullscreen) {
                 element.requestFullscreen();
-            } else if (element.mozRequestFullScreen) { /* Firefox */
+            } else if (element.mozRequestFullScreen) {
                 element.mozRequestFullScreen();
-            } else if (element.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+            } else if (element.webkitRequestFullscreen) {
                 element.webkitRequestFullscreen();
-            } else if (element.msRequestFullscreen) { /* IE/Edge */
+            } else if (element.msRequestFullscreen) {
                 element.msRequestFullscreen();
             }
         };
@@ -1150,19 +1160,40 @@ function Game() {
 
     };
 
+    const endGame = (playerScoreValue, cpuScoreValue) => {
+        const endTime = performance.now();
+        const gameDurationSeconds = ((endTime - startGameTime) / 1000).toFixed(2);
+
+        let totalGameTime = JSON.parse(localStorage.getItem('totalGameTime')) || [];
+        totalGameTime.push(parseFloat(gameDurationSeconds));
+        localStorage.setItem('totalGameTime', JSON.stringify(totalGameTime));
+
+        let totalGameScore = JSON.parse(localStorage.getItem('totalGameScore')) || [];
+        totalGameScore.push({ player: playerScoreValue, cpu: cpuScoreValue });
+        localStorage.setItem('totalGameScore', JSON.stringify(totalGameScore));
+    };
+
     const handleWin = () => {
         setPlayerWon(true);
         incrementGamesCompleted();
-        setCpuScore(calculateCpuScore());
-        setPlayerScore(calculatePlayerScore());
-    }
+        const cpuScoreValue = calculateCpuScore();
+        const playerScoreValue = calculatePlayerScore();
+        setCpuScore(cpuScoreValue);
+        setPlayerScore(playerScoreValue);
+        endGame(playerScoreValue, cpuScoreValue);
+    };
 
     const handleLose = () => {
         setPlayerLose(true);
         incrementGamesCompleted();
-        setPlayerScore(calculatePlayerScore());
-        setCpuScore(calculateCpuScore());
-    }
+        const playerScoreValue = calculatePlayerScore();
+        const cpuScoreValue = calculateCpuScore();
+        setPlayerScore(playerScoreValue);
+        setCpuScore(cpuScoreValue);
+        endGame(playerScoreValue, cpuScoreValue);
+    };
+
+
 
     const calculatePlayerScore = () => {
         const playerHand = board[3];
@@ -1237,8 +1268,8 @@ function Game() {
                     <GameControls
                         onDraw={drawTile}
                         onDone={onDone}
-                        onReverse={restoreFromSnapshot}
-                        //onReverse={printB}
+                        //onReverse={restoreFromSnapshot}
+                        onReverse={handleWin}
                         pressable={playersTurn}
                         hasPlayed={hasPlayed}
                     />
