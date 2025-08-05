@@ -34,7 +34,7 @@ const galleryItems = [
         image: '/images/tutorial-6.png',
     },
     {
-        text: 'Er zijn ook 2 jokers in het spel, deze mogen andere blokjes vervangen en kunnen gaten in je groepe of straten vullen. Voor de eerste beurt neemt de joker de waarde aan van het blokje dat het vervangt',
+        text: 'Er zijn ook 2 jokers in het spel, deze mogen andere blokjes vervangen en kunnen gaten in je groepen of straten vullen. Voor de eerste beurt neemt de joker de waarde aan van het blokje dat het vervangt',
         subtext: "",
         image: '/images/tutorial-7.png',
     },
