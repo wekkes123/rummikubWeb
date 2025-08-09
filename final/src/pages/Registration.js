@@ -223,7 +223,7 @@ const Registration = () => {
                             <ThreePartDatePicker
                                 value={birthday}
                                 onChange={setBirthday}
-                                t={t} // pass your translation function
+                                t={t}
                             />
 
                             {birthday && (
