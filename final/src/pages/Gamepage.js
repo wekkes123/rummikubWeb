@@ -59,8 +59,18 @@ function Game() {
     const [showNotif, setShowNotif] = useState(false);
     const [hasPlayed, setHasPlayed] = useState(false);
     const [msgNotif, setMsgNotif] = useState("hello");
+    const [seed, setSeed] = useState('');
     const navigate = useNavigate();
-    const seed = 'ihvj';
+
+    //get the stored seed
+    useEffect(()=>{
+        let savedSeed = localStorage.getItem('seed');
+        if (!savedSeed) {
+            savedSeed = 'default_seed';
+            localStorage.setItem('seed', savedSeed);
+        }
+        if (savedSeed) setSeed(savedSeed);
+    })
 
     const initializeBoard = () => {
         const groups1 = Array(8).fill().map(() => Array(4).fill('0'));

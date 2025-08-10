@@ -2,6 +2,12 @@ import React, { useEffect } from 'react';
 import { useDrag } from 'react-dnd';
 import Tile from '../components/Tile';
 
+/**
+ * makes tiles that are draggable
+ * @param props
+ * @returns {*}
+ * @constructor
+ */
 function DraggableTile(props) {
     const [{ isDragging }, dragRef, dragPreview] = useDrag({
         type: 'TILE',

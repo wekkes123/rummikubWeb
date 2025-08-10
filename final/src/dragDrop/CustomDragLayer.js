@@ -2,6 +2,11 @@ import React from 'react';
 import { useDragLayer } from 'react-dnd';
 import Tile from '../components/Tile';
 
+/**
+ * creates a custom drag layer on top of everything
+ * @returns {*|null}
+ * @constructor
+ */
 function CustomDragLayer() {
     const { itemType, isDragging, item, initialOffset, currentOffset } = useDragLayer((monitor) => ({
         item: monitor.getItem(),

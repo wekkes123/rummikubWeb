@@ -1,6 +1,16 @@
 import React from 'react';
 import { useDrop } from 'react-dnd';
 
+/**
+ * makes a zone where draggableTiles can be dropped on
+ * @param onDrop
+ * @param children
+ * @param dropData
+ * @param className
+ * @param canDrop
+ * @returns {*}
+ * @constructor
+ */
 function DropZone({ onDrop, children, dropData, className, canDrop }) {
     const [{ isOver, canDropItem }, dropRef] = useDrop({
         accept: 'TILE',
