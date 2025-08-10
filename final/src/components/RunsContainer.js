@@ -4,6 +4,19 @@ import Tile from './Tile';
 import DraggableTile from '../dragDrop/DraggableTile';
 import {addToFirstTurnBoard, isTileMoveValid, removeOriginalTile} from './Functions/gamePlayFunctions'
 
+/**
+ * creates functional visuals for the runs container
+ * @param runs
+ * @param sectionIndex
+ * @param updateBoardTile
+ * @param tilesAreDraggable
+ * @param getBoardValue
+ * @param removeFromHand
+ * @param firstTurn
+ * @param onDragStart
+ * @returns {*}
+ * @constructor
+ */
 function RunsContainer({ runs, sectionIndex, updateBoardTile, tilesAreDraggable = true, getBoardValue, removeFromHand, firstTurn, onDragStart }) {
     const colors = ['1', '2', '3', '4'];
     const placeTileAudio = new Audio("/sounds/place.wav");

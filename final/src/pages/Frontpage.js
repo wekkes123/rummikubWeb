@@ -9,6 +9,11 @@ import HelpModal from '../components/RulesModal';
 const { Content } = Layout;
 const { Title } = Typography;
 
+/**
+ * creates the front page visuals and functionalty
+ * @returns {*}
+ * @constructor
+ */
 const FrontPage = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();

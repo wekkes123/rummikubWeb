@@ -41,7 +41,11 @@ const galleryItems = [
 ];
 
 
-
+/**
+ * creates a functional visual for the tutorial page
+ * @returns {*}
+ * @constructor
+ */
 const GalleryPage = () => {
     const [index, setIndex] = useState(0);
     const { t } = useTranslation();

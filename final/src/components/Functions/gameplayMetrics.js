@@ -1,5 +1,3 @@
-import { useState, useEffect } from 'react';
-
 /**
  * Records timing data in local storage
  * @param {number} startTime - The start time in milliseconds

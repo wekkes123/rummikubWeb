@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * creates a visual for the start screen with button
+ * @param onStart
+ * @param loadFromStorage
+ * @returns {*}
+ * @constructor
+ */
 const StartScreen = ({ onStart, loadFromStorage }) => {
     const [hasSavedGame, setHasSavedGame] = useState(false);
     const { t } = useTranslation();

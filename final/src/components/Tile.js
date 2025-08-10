@@ -1,3 +1,15 @@
+/**
+ * makes a tile with all necessarily parameters
+ * @param id
+ * @param color
+ * @param number
+ * @param isHighlighted
+ * @param isGreyedOut
+ * @param location
+ * @param curlo
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function Tile({ id, color, number, isHighlighted, isGreyedOut, location, curlo }) {
     let backgroundImage;
     switch (id) {

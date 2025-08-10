@@ -11,7 +11,6 @@ import GameControls from '../components/GameControls';
 import StartScreen from '../components/StartScreen';
 import CustomDragLayer from '../dragDrop/CustomDragLayer';
 import Notification from '../components/Notification'
-import WinScreen from "../components/WinScreen";
 
 import { createSeededRNG, shuffleArray } from '../components/Functions/SeededRNG'
 import { validateBoard, playedTiles, findJokerValue } from "../components/Functions/gamePlayFunctions";
@@ -26,7 +25,6 @@ import {
     moveReducer
 } from "../components/Functions/TileMover";
 import {incrementGamesCompleted, saveTime, recordMove} from "../components/Functions/gameplayMetrics";
-import ColorPicker from '../components/ColorPicker';
 
 
 import '../App.css';
@@ -40,6 +38,11 @@ const backendForDND = TouchBackend;
 const backendOptions = { enableMouseEvents: true };
 const placeAudio = new Audio("/sounds/place.wav");
 
+/**
+ * handels functionalty from the game page and also the visuals
+ * @returns {*}
+ * @constructor
+ */
 function Game() {
     const [bgColor, setBgColor] = useState('#35654D');
     const [gameStarted, setGameStarted] = useState(false);
@@ -103,7 +106,6 @@ function Game() {
             const newPile = [...pile];
             const newPlayerHand = [];
             const newCpuHand = [];
-
 
             //pick tiles for playerhand
             for (let i = 0; i < 14; i++) {
@@ -184,531 +186,6 @@ function Game() {
             setFirstTurnBoard(updateBoardState);
         }
         setBoard(updateBoardState);
-    };
-
-    const printB = () => {
-        //console.log(firstTurnBoard);
-        //console.log(board);
-        //console.log(boardSnapshot);
-        const array1 = [
-            [
-                [
-                    "2-12",
-                    "3-12",
-                    "4-12",
-                    "0"
-                ],
-                [
-                    "3-9",
-                    "1-9",
-                    "2-9",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ]
-            ],
-            [
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ]
-            ],
-            [
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    1,
-                    1,
-                    1,
-                    1
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ]
-            ],
-            [
-                "4-6",
-                "1-2",
-                "1-4",
-                "1-7",
-                "4-11",
-                "1-5",
-                "1-1",
-                "2-2",
-                "3-11",
-                "2-10",
-                "4-1",
-                "4-7",
-                "4-3",
-                "empty"
-            ],
-            [
-                "3-1",
-                "4-8",
-                "3-1",
-                "1-8",
-                "4-8",
-                "4-13",
-                "4-2",
-                "3-6",
-                "4-3",
-                "2-4",
-                "1-7",
-                "2-6",
-                "4-13",
-                "3-12",
-                "2-3",
-                "2-11",
-                "1-1",
-                "2-13"
-            ]
-        ]
-        const array2 = [
-            [
-                [
-                    "1-9",
-                    "2-9",
-                    "3-9",
-                    "0"
-                ],
-                [
-                    "1-13",
-                    "2-13",
-                    "4-13",
-                    "0"
-                ],
-                [
-                    "2-12",
-                    "3-12",
-                    "4-12",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ]
-            ],
-            [
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ]
-            ],
-            [
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "1-10",
-                    "1-11",
-                    "1-12",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ],
-                [
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0",
-                    "0"
-                ]
-            ],
-            [
-                "4-6",
-                "1-2",
-                "1-4",
-                "1-7",
-                "4-11",
-                "1-5",
-                "1-1",
-                "2-2",
-                "3-11",
-                "2-10",
-                "4-1",
-                "4-7",
-                "4-3",
-                "empty"
-            ],
-            [
-                "empty",
-                "empty",
-                "empty",
-                "empty",
-                "empty",
-                "empty",
-                "empty",
-                "empty",
-                "empty",
-                "empty",
-                "empty",
-                "empty",
-                "empty",
-                "empty",
-                "empty",
-                "empty"
-            ]
-        ]
-        moveReducer(array1,array2)
     };
 
     const removeFromHand = (sectionIndex, handIndex) => {
@@ -948,7 +425,6 @@ function Game() {
         setBoard(simulatedBoard);
     };
 
-    //todo pulling a tile when already playing a tile on the board works
     const onDone = () => {
         const endTurnTime = performance.now();
         //step 1 is the board correct?
@@ -1046,8 +522,6 @@ function Game() {
         }
         handleStartGame();
     };
-
-    const sleep = ms => new Promise(r => setTimeout(r, ms));
 
     const restoreFromSnapshot = () => {
         const restoredBoard = boardSnapshot.map(section =>
@@ -1268,8 +742,7 @@ function Game() {
                     <GameControls
                         onDraw={drawTile}
                         onDone={onDone}
-                        //onReverse={restoreFromSnapshot}
-                        onReverse={handleWin}
+                        onReverse={restoreFromSnapshot}
                         pressable={playersTurn}
                         hasPlayed={hasPlayed}
                     />

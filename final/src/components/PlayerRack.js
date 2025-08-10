@@ -5,7 +5,20 @@ import DropZone from '../dragDrop/DropZone';
 import {isTileMoveValid, removeOriginalTile} from "./Functions/gamePlayFunctions";
 const placeTileAudio = new Audio("/sounds/place.wav");
 
-
+/**
+ * handels playback functionality and creates the necessary visual for the player rack
+ * @param playerhand
+ * @param onDragEnd
+ * @param tilesAreDraggable
+ * @param setBoard
+ * @param board
+ * @param getBoardValue
+ * @param firstTurnBoard
+ * @param setFirstTurnBoard
+ * @param onDragStart
+ * @returns {*}
+ * @constructor
+ */
 function PlayerRack({ playerhand, onDragEnd, tilesAreDraggable = true, setBoard, board, getBoardValue, firstTurnBoard, setFirstTurnBoard, onDragStart}) {
     const handleTileDrop = (draggedTileData, dropData) => {
         const newBoard = [...board];

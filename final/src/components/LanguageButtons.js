@@ -4,6 +4,11 @@ import ukFlag from '../images/Flag_of_the_United_Kingdom.png';
 import nlFlag from '../images/Flag_of_Belgium.png';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * makes functional visuals for the language buttons to change the language
+ * @returns {*}
+ * @constructor
+ */
 const LanguageButtons = () => {
     const { i18n } = useTranslation();
 

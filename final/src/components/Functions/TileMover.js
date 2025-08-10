@@ -3,6 +3,13 @@ import { motion } from 'framer-motion';
 import React from 'react';
 import Tile from '../Tile';
 
+/**
+ * animates a tile from a html element to another using motion
+ * @param tile
+ * @param fromElem
+ * @param toElem
+ * @param onComplete
+ */
 export function flyTileBetweenContainers({ tile, fromElem, toElem, onComplete = () => {} }) {
     const overlayContainer = document.getElementById('tile-overlay-root');
     if (!fromElem || !toElem || !overlayContainer) {
@@ -51,6 +58,12 @@ export function flyTileBetweenContainers({ tile, fromElem, toElem, onComplete = 
     root.render(tileComponent);
 }
 
+/**
+ * reorder the tile movements so it can be animated in a better way
+ * @param movements
+ * @param tempLocation
+ * @returns {*[]}
+ */
 export function reorderTileMovements(movements, tempLocation) {
     console.log(movements)
     const remainingMoves = [...movements];
@@ -121,7 +134,12 @@ export function reorderTileMovements(movements, tempLocation) {
 
 // Example usage:
 // const orderedMovements = reorderTileMovements(tileMovements, "group-0-0-2");
-
+/**
+ * gives back an open location on the board and the new board
+ * @param board
+ * @param newBoard
+ * @returns {string}
+ */
 export function findOpenSpot(board, newBoard) {
     for (let sectionIndex = 1; sectionIndex >= 0; sectionIndex--) {
         const boardSection = board[sectionIndex];
@@ -138,6 +156,11 @@ export function findOpenSpot(board, newBoard) {
     return "group-0-0-0";
 }
 
+/**
+ * gives back the locations from the tiles on the board
+ * @param board
+ * @returns {*[]}
+ */
 export function getTileLocationsFromBoard(board) {
     const tileLocations = [];
 
@@ -174,6 +197,11 @@ export function getTileLocationsFromBoard(board) {
     return tileLocations;
 }
 
+/**
+ * gives back the location in pieces depending on the type of location
+ * @param location
+ * @returns {{type: string}|{type: string, runIndex: *, tileIndex: *}|{type: string, sectionIndex: *, groupIndex: *, tileIndex: *}|{type: string, index: *}}
+ */
 export function getTileLocationParts(location) {
     if (location.startsWith('group-')) {
         const [, sectionIndex, groupIndex, tileIndex] = location.split('-').map((val, i) => i === 0 ? val : Number(val));
@@ -188,6 +216,12 @@ export function getTileLocationParts(location) {
     return { type: 'unknown' };
 }
 
+/**
+ * gives the movements from a tile using the start and end location
+ * @param start
+ * @param end
+ * @returns {*[]}
+ */
 export function getTileMovements(start, end) {
     const movements = [];
     const startTiles = new Map();
@@ -220,6 +254,11 @@ export function getTileMovements(start, end) {
     return movements;
 }
 
+/**
+ * reduces movements for the ai so it doesn't do unnecessary moves
+ * @param board
+ * @param simulatedBoard
+ */
 export function moveReducer(board, simulatedBoard) {
     const printer = structuredClone(simulatedBoard);
     console.log("board before:", board, printer);

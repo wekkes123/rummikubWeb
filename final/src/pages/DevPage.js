@@ -14,6 +14,11 @@ import {
 dayjs.extend(localizedFormat);
 dayjs.locale('en');
 
+/**
+ * makes a custom developer page with settings and biomarkers
+ * @returns {*}
+ * @constructor
+ */
 function DevPage() {
     const [username, setUsername] = useState('');
     const [age, setAge] = useState('');

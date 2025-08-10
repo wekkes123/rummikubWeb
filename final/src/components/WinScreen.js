@@ -2,6 +2,15 @@
 import React from 'react';
 import { t } from "i18next";
 
+/**
+ * creates a visual for the game end screen
+ * @param status
+ * @param playerScore
+ * @param cpuScore
+ * @param onRestart
+ * @returns {*}
+ * @constructor
+ */
 function GameEndScreen({ status, playerScore, cpuScore, onRestart }) {
     let title = '';
     let message = '';

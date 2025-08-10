@@ -8,7 +8,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Registration from "./pages/Registration";
 import "./App.css"
 import SettingsPage from "./pages/SettingsPage";
-import TestPage from "./pages/TestPage";
+
 
 
 function App() {

@@ -2,6 +2,13 @@ import React from 'react';
 import { Modal, Button } from 'antd';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * creates a functional help button visual
+ * @param isVisible
+ * @param onClose
+ * @returns {*}
+ * @constructor
+ */
 const HelpModal = ({ isVisible, onClose }) => {
     const { t } = useTranslation();
 

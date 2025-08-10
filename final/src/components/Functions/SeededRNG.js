@@ -1,3 +1,8 @@
+/**
+ * creates an RNG function from a sting seed
+ * @param seed
+ * @returns {function(): *}
+ */
 export function createSeededRNG(seed) {
     let seedNum = typeof seed === 'string' ?
         seed.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) : seed;
@@ -10,6 +15,12 @@ export function createSeededRNG(seed) {
     };
 }
 
+/**
+ * Shuffles the tiles using the rng function
+ * @param array
+ * @param rngFunction
+ * @returns {*[]}
+ */
 export function shuffleArray(array, rngFunction) {
     const result = [...array];
     for (let i = result.length - 1; i > 0; i--) {

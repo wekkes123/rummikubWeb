@@ -2,6 +2,18 @@ import React from 'react';
 import GroupsContainer from './GroupsContainer';
 import RunsContainer from './RunsContainer';
 
+/**
+ * makes a visual for the full gameboard
+ * @param board
+ * @param updateBoardTile
+ * @param getBoardValue
+ * @param tilesAreDraggable
+ * @param removeFromHand
+ * @param firstTurn
+ * @param onDragStart
+ * @returns {*}
+ * @constructor
+ */
 function GameBoard({ board, updateBoardTile, getBoardValue, tilesAreDraggable, removeFromHand, firstTurn, onDragStart }) {
     const [groups1, groups2, runs] = board;
 

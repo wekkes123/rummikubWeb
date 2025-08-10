@@ -1,6 +1,12 @@
 import React from 'react';
 import Tile from './Tile';
 
+/**
+ * makes a cpu hand visual
+ * @param cpuhand
+ * @returns {*}
+ * @constructor
+ */
 function ComputerRack({ cpuhand }) {
     return (
         <div className="container1">

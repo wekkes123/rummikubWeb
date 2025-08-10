@@ -9,6 +9,11 @@ import '../css/button.css'
 const { Content } = Layout;
 const { Title } = Typography;
 
+/**
+ * creates a functional visual for the settings page
+ * @returns {*}
+ * @constructor
+ */
 const SettingsPage = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();

@@ -5,7 +5,16 @@ import done from '../images/checkmark.png';
 import restore from '../images/restore.png';
 import {t} from "i18next";
 
-
+/**
+ * creates visuals for the game controls
+ * @param onDraw
+ * @param onDone
+ * @param onReverse
+ * @param pressable
+ * @param hasPlayed
+ * @returns {*}
+ * @constructor
+ */
 function GameControls({ onDraw, onDone, onReverse, pressable, hasPlayed }) {
     return (
         <div className='game-controls'>

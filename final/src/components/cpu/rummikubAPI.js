@@ -14,14 +14,6 @@ const reverseMap = {
     r: '4'
 };
 
-/**
- * Calls the Rummikub solver API to determine the best move for a given player.
- * @param {string[]} cpuHand - The player's current tiles.
- * @param {string[][]} board - The current sets on the table.
- * @param {boolean} isFirstMove - Whether this is the player's first move.
- * @returns {Promise<object|null>} - Returns an object containing the move details or null if no move is possible.
- * any problems with the api call will result in the cpu to pick up a tile
- */
 export const getBestMove = async (cpuHand, board, isFirstMove) => {
     const [rack,Hjokers] = convertTiles(cpuHand)
     const [groups, runs, Bjokers] = convertBoard(board);

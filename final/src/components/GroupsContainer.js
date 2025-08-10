@@ -6,6 +6,19 @@ import { removeOriginalTile, isTileMoveValid, addToFirstTurnBoard } from './Func
 import '../css/style.css'
 const placeTileAudio = new Audio("/sounds/place.wav");
 
+/**
+ * makes functional visuals for the groups container
+ * @param groups
+ * @param sectionIndex
+ * @param updateBoardTile
+ * @param tilesAreDraggable
+ * @param getBoardValue
+ * @param removeFromHand
+ * @param firstTurn
+ * @param onDragStart
+ * @returns {*}
+ * @constructor
+ */
 function GroupsContainer({ groups, sectionIndex, updateBoardTile, tilesAreDraggable = true, getBoardValue, removeFromHand, firstTurn,onDragStart}) {
 
     const handleTileDrop = (draggedTileData, dropData) => {

@@ -4,12 +4,16 @@ import { useTranslation } from 'react-i18next';
 import {Layout, Button, Space, ConfigProvider, Input, Form, Alert, DatePicker} from 'antd';
 import { ArrowLeftOutlined, RotateRightOutlined} from '@ant-design/icons';
 import LanguageButtons from "../components/LanguageButtons";
-import ThreePartDatePicker from "../components/ThreePartDatePicker";
+import ThreeDatePicker from "../components/ThreeDatePicker";
 import dayjs from 'dayjs';
 import SHA256 from 'crypto-js/sha256';
 
 const { Content } = Layout;
-
+/**
+ * makes functional visual for the registration page
+ * @returns {*}
+ * @constructor
+ */
 const Registration = () => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
@@ -17,12 +21,6 @@ const Registration = () => {
     const [birthday, setBirthday] = useState(null);
     const [errors, setErrors] = useState([]);
     const [isLandscape, setIsLandscape] = useState(false);
-
-    const changeLanguage = (lang) => {
-        i18n.changeLanguage(lang);
-        localStorage.setItem('lang', lang);
-    };
-
     useEffect(() => {
         const savedLang = localStorage.getItem('lang');
         if (savedLang) {
@@ -53,7 +51,6 @@ const Registration = () => {
         };
     }, [i18n]);
 
-
     const checkOrientation = () => {
         setIsLandscape(window.innerWidth > window.innerHeight);
     };
@@ -83,8 +80,8 @@ const Registration = () => {
 
     const handleFormSubmit = async () => {
         if (validateForm()) {
-            //const pseudonym = await hashUsernameAndBirthday(username, birthday);
-            const pseudonym = username + birthday
+            const pseudonym = await hashUsernameAndBirthday(username, birthday);
+            //const pseudonym = username + birthday
             localStorage.setItem('pseudonym', pseudonym);
             localStorage.setItem('birthday', birthday.toString());
             localStorage.setItem('age', calculateAge(birthday).toString());
@@ -95,7 +92,6 @@ const Registration = () => {
             navigate('/game');
         }
     };
-
 
     const isFormValid = username.trim() && birthday && calculateAge(birthday) > 0;
 
@@ -113,7 +109,6 @@ const Registration = () => {
         return SHA256(input).toString();
     }
 
-
     function calculateAge(birthday) {
         if (!birthday) return null;
         const now = dayjs();
@@ -127,7 +122,6 @@ const Registration = () => {
         }
         return age;
     }
-
 
     return (
         <ConfigProvider
@@ -220,7 +214,7 @@ const Registration = () => {
                             />
 
                             <div style={{ fontWeight: 'bold', color: 'black' }}>{t('birthday')}:</div>
-                            <ThreePartDatePicker
+                            <ThreeDatePicker
                                 value={birthday}
                                 onChange={setBirthday}
                                 t={t}

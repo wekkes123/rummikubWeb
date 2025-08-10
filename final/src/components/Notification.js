@@ -1,6 +1,14 @@
 import React from 'react';
 import { Modal } from 'antd';
 
+/**
+ * makes a pop-up notification visual
+ * @param message
+ * @param isVisible
+ * @param onClose
+ * @returns {*}
+ * @constructor
+ */
 export default function NotificationModal({ message, isVisible, onClose }) {
     return (
         <Modal

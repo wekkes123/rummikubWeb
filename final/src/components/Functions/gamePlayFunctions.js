@@ -1,3 +1,9 @@
+/**
+ * Removes the original tile from the board after moving the tile
+ * @param draggedTileData
+ * @param updateBoardTile
+ * @param removeFromHand
+ */
 export function removeOriginalTile(draggedTileData, updateBoardTile, removeFromHand) {
     if (draggedTileData.location) {
         if (draggedTileData.location.startsWith('group-')) {
@@ -26,6 +32,14 @@ export function removeOriginalTile(draggedTileData, updateBoardTile, removeFromH
     }
 }
 
+/**
+ * checks if a move is legal
+ * @param draggedTileData
+ * @param dropData
+ * @param getBoardValue
+ * @param firstTurnBoard
+ * @returns {string}
+ */
 export function isTileMoveValid(draggedTileData, dropData, getBoardValue, firstTurnBoard) {
     //if its in a group
     if (dropData.sectionIndex === 1 || dropData.sectionIndex === 0) {
@@ -42,9 +56,6 @@ export function isTileMoveValid(draggedTileData, dropData, getBoardValue, firstT
         }
         const row = getBoardValue(dropData.sectionIndex, dropData.groupIndex, -1)
         if (row[dropData.tileIndex] === '0'){
-            /*if(!row.includes(draggedTileData.id) || (sourceSectionIndex === dropData.sectionIndex && sourceGroupIndex === dropData.groupIndex)){
-                return true
-            }*/
             return '1';
         } else if (row.includes('0')) {
             return `m${row.indexOf('0')}`;
@@ -83,6 +94,11 @@ export function isTileMoveValid(draggedTileData, dropData, getBoardValue, firstT
     return '0';
 }
 
+/**
+ * checks if a group is legal (3 or 4 of the same number)
+ * @param groupArray
+ * @returns {boolean}
+ */
 export function isValidGroup(groupArray) {
     const tiles = groupArray.filter(tile => tile !== '0');
     if (tiles.length === 0) return true;
@@ -116,6 +132,11 @@ export function isValidGroup(groupArray) {
     return seenColors.size === tiles.length && seenColors.size <= 4;
 }
 
+/**
+ * checks if a run is legal (min 3 consecutive tiles of the same colour)
+ * @param tiles
+ * @returns {boolean}
+ */
 export function isValidRun(tiles) {
     let i = 0;
     while (i < tiles.length) {
@@ -141,6 +162,11 @@ export function isValidRun(tiles) {
     return true;
 }
 
+/**
+ * validates the full board using helper functions
+ * @param board
+ * @returns {boolean}
+ */
 export function validateBoard(board) {
     let i = 0;
     // first group
@@ -172,6 +198,12 @@ export function validateBoard(board) {
     return true;
 }
 
+/**
+ * gives back only the new tiles that are played by the user
+ * @param beforeHand
+ * @param afterHand
+ * @returns {*[]}
+ */
 export function playedTiles(beforeHand, afterHand) {
     console.log(beforeHand,afterHand)
     const afterHandMap = new Map();
@@ -192,6 +224,12 @@ export function playedTiles(beforeHand, afterHand) {
     return playedTiles;
 }
 
+/**
+ * finds the joker index
+ * @param board
+ * @param joker
+ * @returns {*|null}
+ */
 export function findJokerValue(board, joker) {
     //groups
     for (let groupSetIndex = 0; groupSetIndex < 2; groupSetIndex++) {
@@ -227,6 +265,12 @@ export function findJokerValue(board, joker) {
     return null;
 }
 
+/**
+ * checks whether a dragged tile is coming from the first turn board or the players hand
+ * @param draggedTileData
+ * @param getBoardValue
+ * @returns {boolean}
+ */
 export function addToFirstTurnBoard(draggedTileData, getBoardValue) {
     if (draggedTileData.location) {
         if (draggedTileData.location.startsWith('group-')) {

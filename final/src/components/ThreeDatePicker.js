@@ -1,16 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 
-function ThreePartDatePicker({ value, onChange, t }) {
+
+/**
+ * makes an input visual so the user can pick a date (it's consists of the input parts)
+ * @param value
+ * @param onChange
+ * @param t
+ * @returns {*}
+ * @constructor
+ */
+function ThreeDatePicker({ value, onChange, t }) {
     const [day, setDay] = useState('');
     const [month, setMonth] = useState('');
     const [year, setYear] = useState('');
 
-    // Sync internal state with external value when it changes
     useEffect(() => {
         if (value) {
             setDay(value.date().toString());
-            setMonth((value.month() + 1).toString()); // month is 0-based
+            setMonth((value.month() + 1).toString());
             setYear(value.year().toString());
         } else {
             setDay('');
@@ -39,7 +47,7 @@ function ThreePartDatePicker({ value, onChange, t }) {
                 onChange(null);
             }
         } else {
-            onChange(null); // Still incomplete
+            onChange(null);
         }
     };
 
@@ -76,4 +84,4 @@ function ThreePartDatePicker({ value, onChange, t }) {
     );
 }
 
-export default ThreePartDatePicker;
+export default ThreeDatePicker;
