@@ -21,7 +21,6 @@ function App() {
           <Route path="/registration" element={<Registration />} />
           <Route path="/game" element={<GamePage />} />
           <Route path="/dev" element={<DevPage />} />
-          <Route path="/test" element={<TestPage />} />
         </Routes>
       </Router>
   );

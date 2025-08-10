@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import '../css/style.css'
 import {useTranslation} from "react-i18next";
+import {ArrowLeftOutlined} from "@ant-design/icons";
+import { useNavigate } from 'react-router-dom';
+import {Button} from "antd";
 
 const galleryItems = [
     {
@@ -49,6 +52,7 @@ const galleryItems = [
 const GalleryPage = () => {
     const [index, setIndex] = useState(0);
     const { t } = useTranslation();
+    const navigate = useNavigate();
 
     const goPrevious = () => {
         setIndex((prev) => (prev === 0 ? galleryItems.length - 1 : prev - 1));
@@ -58,8 +62,27 @@ const GalleryPage = () => {
         setIndex((prev) => (prev === galleryItems.length - 1 ? 0 : prev + 1));
     };
 
+    const handleBack = () => {
+        navigate('/');
+    };
+
     return (
         <div className="gallery-container">
+            <Button
+                type="primary"
+                icon={<ArrowLeftOutlined />}
+                onClick={handleBack}
+                style={{
+                    position: 'absolute',
+                    color: 'black',
+                    bottom: 5,
+                    right: 5,
+                    zIndex: 1,
+                    fontWeight: 'bold'
+                }}
+            >
+                {t('back')}
+            </Button>
             <div className="gallery-text">
                 {galleryItems[index].text}
                 {galleryItems[index].subtext && (
