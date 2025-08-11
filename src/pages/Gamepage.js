@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { TouchBackend } from 'react-dnd-touch-backend';
+import React, {useEffect} from 'react';
 import { DndProvider} from "react-dnd";
+import { TouchBackend } from 'react-dnd-touch-backend';
 import { useNavigate } from 'react-router-dom';
 import {t} from "i18next";
+import {Button} from "antd";
+import {ArrowLeftOutlined} from "@ant-design/icons";
 
 import ComputerRack from '../components/ComputerRack';
 import GameBoard from '../components/GameBoard';
@@ -11,55 +13,72 @@ import GameControls from '../components/GameControls';
 import StartScreen from '../components/StartScreen';
 import CustomDragLayer from '../dragDrop/CustomDragLayer';
 import Notification from '../components/Notification'
+import GameEndScreen from "../components/WinScreen";
 
-import { createSeededRNG, shuffleArray } from '../components/Functions/SeededRNG'
 import { validateBoard, playedTiles, findJokerValue } from "../components/Functions/gamePlayFunctions";
-import { getBestMove } from "../components/cpu/rummikubAPI"
-import {
-    flyTileBetweenContainers,
-    reorderTileMovements,
-    findOpenSpot,
-    getTileMovements,
-    getTileLocationParts,
-    getTileLocationsFromBoard,
-    moveReducer
-} from "../components/Functions/TileMover";
-import {incrementGamesCompleted, saveTime, recordMove} from "../components/Functions/gameplayMetrics";
 
+import {saveTime, recordMove} from "../components/Functions/gameplayMetrics";
+import {useGameLogic} from "../components/Functions/useGameLogic";
 
 import '../App.css';
 import '../css/style.css'
-import GameEndScreen from "../components/WinScreen";
-import {Button} from "antd";
-import {ArrowLeftOutlined} from "@ant-design/icons";
 
-
+const DEFAULT_BG_COLOR = '#35654D';
 const backendForDND = TouchBackend;
 const backendOptions = { enableMouseEvents: true };
-const placeAudio = new Audio("/sounds/place.wav");
+
 
 /**
- * handels functionalty from the game page and also the visuals
+ * handels functionality from the game page and also the visuals
  * @returns {*}
  * @constructor
  */
 function Game() {
-    const [bgColor, setBgColor] = useState('#35654D');
-    const [gameStarted, setGameStarted] = useState(false);
-    const [startTurnTime, setStartTurnTime] = useState();
-    const [startGameTime, setStartGameTime] = useState();
-    const [playerWon, setPlayerWon] = useState(false);
-    const [playerLose, setPlayerLose] = useState(false);
-    const [playerScore, setPlayerScore] = useState(0);
-    const [cpuScore, setCpuScore] = useState(0);
-    const [firstTurn, setFirstTurn] = useState(true);
-    const [cpuFirstTurn, setCpuFirstTurn] = useState(true);
-    const [boardSnapshot, setBoardSnapshot] = useState(null);
-    const [playersTurn, setPlayersTurn] = useState(true);
-    const [showNotif, setShowNotif] = useState(false);
-    const [hasPlayed, setHasPlayed] = useState(false);
-    const [msgNotif, setMsgNotif] = useState("hello");
-    const [seed, setSeed] = useState('');
+    const {
+        boardSnapshot,
+        setSeed,
+        msgNotif,
+        showNotif,
+        playersTurn,
+        playerWon,
+        playerLose,
+        firstTurn,
+        cpuFirstTurn,
+        gameStarted,
+        hasPlayed,
+        drawPending,
+        drawIndex,
+        startTurnTime,
+        setStartTurnTime,
+        setStartGameTime,
+        setBoardSnapshot,
+        setHasPlayed,
+        setMsgNotif,
+        setShowNotif,
+        setFirstTurn,
+        setDrawPending,
+        setCpuFirstTurn,
+        setPlayersTurn,
+        setDrawIndex,
+        board,
+        setBoard,
+        firstTurnBoard,
+        setFirstTurnBoard,
+        pile,
+        setPile,
+        initializeBoard,
+        updateBoardTile,
+        removeFromHand,
+        getBoardValue,
+        cpuMove,
+        drawTile,
+        actuallyDrawTile,
+        onDragStart,
+        handleStartGame,
+        handleWin,
+        handleLose,
+        incrementGamesStarted
+    } = useGameLogic();
     const navigate = useNavigate();
 
     //get the stored seed
@@ -71,44 +90,6 @@ function Game() {
         }
         if (savedSeed) setSeed(savedSeed);
     })
-
-    const initializeBoard = () => {
-        const groups1 = Array(8).fill().map(() => Array(4).fill('0'));
-        const groups2 = Array(8).fill().map(() => Array(4).fill('0'));
-        const runs = Array(8).fill().map(() => Array(13).fill('0'));
-        const playerhand = Array(14)
-        const cpuhand = Array(14)
-
-        return [groups1, groups2, runs, playerhand, cpuhand];
-    };
-
-    const initializePile = () => {
-        let pile = [];
-        let joker = "1-j";
-
-        pile.push("1-j");
-        pile.push("4-j");
-
-        //fill pouch with all tiles
-        for (let k = 0; k < 2; k++) {
-            for (let i = 1; i <= 4; i++) {
-                for (let j = 1; j <= 13; j++) {
-                    pile.push(`${i}-${j}`);
-                }
-            }
-        }
-
-        pile = shuffleArray(pile,createSeededRNG(seed));
-        return [pile,joker];
-    }
-
-    //step 1 initialize the arrays
-    const [board, setBoard] = useState(initializeBoard());
-    const [firstTurnBoard, setFirstTurnBoard] = useState(initializeBoard());
-    const [initialPile, initialJoker] = initializePile();
-    const [pile, setPile] = useState(initialPile);
-    const [joker, setJoker] = useState(initialJoker);
-
 
     //step 2 wait until both are done then take tiles from pile and put them into the players and cpu's hand
     useEffect(() => {
@@ -144,9 +125,9 @@ function Game() {
 
     useEffect(() => {
         if (playersTurn === true) {//this is needed because otherwise the snapshot is taken before everything is properly initialised
-            setStartTurnTime(performance.now());
+            setStartTurnTime(performance.now())
             if(!firstTurn){
-                setHasPlayed(false);
+                setHasPlayed(false)
                 saveToSnapshot()
             }
         }
@@ -154,7 +135,7 @@ function Game() {
 
     useEffect(() => {
         if (playersTurn === false) {
-            setHasPlayed(false);
+            setHasPlayed(false)
             setFirstTurnBoard(initializeBoard())
             cpuMove();
         }
@@ -162,7 +143,7 @@ function Game() {
 
     useEffect(() => {
         if (playersTurn === true && gameStarted === true) {
-            setHasPlayed(true);
+            setHasPlayed(true)
         }
     }, [firstTurnBoard]);
 
@@ -174,266 +155,9 @@ function Game() {
         console.log("started timer", startTurnTime)
     }, [startTurnTime]);
 
-    const updateBoardTile = (section, groupIndex, tileIndex, value, add = null) => {
-        setHasPlayed(true);
 
-        const updateBoardState = (prevBoard) => {
-            const newBoard = [...prevBoard];
+    const handleBack = () => navigate('/');
 
-            if (section === 3) {
-                newBoard[section] = [...newBoard[section]];
-                newBoard[section][groupIndex] = value;
-            } else {
-                newBoard[section] = [...newBoard[section]];
-                newBoard[section][groupIndex] = [...newBoard[section][groupIndex]];
-                newBoard[section][groupIndex][tileIndex] = value;
-            }
-
-            return newBoard;
-        };
-
-        if (add) {
-            setFirstTurnBoard(updateBoardState);
-        }
-        setBoard(updateBoardState);
-    };
-
-    const removeFromHand = (sectionIndex, handIndex) => {
-        const newBoard = [...board];
-        const hand = [...newBoard[sectionIndex]];
-
-        if (sectionIndex === 3 && hand.length <= 14) {
-            hand[handIndex] = 'empty';
-        } else {
-            hand.splice(handIndex, 1);
-        }
-
-        newBoard[sectionIndex] = hand;
-        setBoard(newBoard);
-    };
-
-    const getBoardValue = (section, groupIndex, tileIndex, add = null) => {
-        if(add){
-            if(tileIndex === -1){
-                return [board[section][groupIndex], firstTurnBoard[section][groupIndex]];
-            }
-            return [board[section][groupIndex][tileIndex], firstTurnBoard[section][groupIndex][tileIndex]];
-        }
-        if(tileIndex === -1){
-            return board[section][groupIndex];
-        }
-        return board[section][groupIndex][tileIndex];
-    };
-
-    const cpuMove = async () => {
-        try {
-            const bestMove = await getBestMove(board[4], board, cpuFirstTurn);
-            if (bestMove) {
-                console.log("bestmove", bestMove)
-                await playCpuMove(bestMove.setsToMake, bestMove.tilesToPlay, bestMove.jokerValue);
-                setCpuFirstTurn(false);
-                setPlayersTurn(true);
-            } else {
-                await drawTile(4);
-                console.log("CPU has no valid move");
-            }
-        } catch (error) {
-            await drawTile(4);
-            console.error("Error during CPU move:", error);
-        }
-    };
-
-    const handleBack = () => {
-        navigate('/');
-    };
-
-    const isJoker = (tile) => tile && tile.endsWith('-j');
-
-    const playCpuMove = async (moves, tilesFromHand, jokerValue) => {
-        const startLocations = getTileLocationsFromBoard(board);
-        let simulatedBoard;
-        if(cpuFirstTurn){
-            simulatedBoard = [...board];
-        } else {
-            simulatedBoard = initializeBoard();
-            simulatedBoard[4] = JSON.parse(JSON.stringify(board[4]));
-            simulatedBoard[3] = JSON.parse(JSON.stringify(board[3]));
-        }
-
-        const cpuHandLength = simulatedBoard[4].length;
-        const cpuHandEnd = simulatedBoard[4].filter(item => !tilesFromHand.includes(item));
-        simulatedBoard[4] = tilesFromHand;
-        while (simulatedBoard[4].length < cpuHandLength) {
-            simulatedBoard[4].push("empty");
-        }
-
-        for (let i = 0; i < moves.length; i++) {
-            const move = moves[i];
-            const type = move[0];
-
-            const moveData = move.slice(1);
-            if (type === 'g') {
-                if (moveData.length === 3) moveData.push('0');
-
-                outerLoop: for (let j = 0; j < simulatedBoard.length; j++) {
-                    for (let k = 0; k < simulatedBoard[j].length; k++) {
-                        if (Array.isArray(simulatedBoard[j][k]) && simulatedBoard[j][k].every(item => item === '0')) {
-                            const boardCopy = structuredClone(simulatedBoard);
-
-                            moveData.forEach((tile, m) => {
-                                if (tile !== '0') {
-                                    boardCopy[j][k][m] = tile;
-
-                                    const indexToRemove = boardCopy[4].indexOf(tile);
-                                    if (indexToRemove !== -1) {
-                                        boardCopy[4].splice(indexToRemove, 1);
-                                    }
-                                }
-                            });
-                            simulatedBoard = boardCopy;
-                            break outerLoop;
-                        }
-                    }
-                }
-            }
-            else {
-                const color = parseInt(moveData[0].split('-')[0]);
-                const startIndex = (color - 1) * 2;
-                const colorArrays = [simulatedBoard[2][startIndex], simulatedBoard[2][startIndex + 1]];
-                let targetArrayIndex = -1;
-
-                for (let arrayIndex = 0; arrayIndex < colorArrays.length; arrayIndex++) {
-                    const currentArray = colorArrays[arrayIndex];
-                    let canFit = true;
-
-                    for (const tile of moveData) {
-                        const [, tileNumber] = tile?.split('-') || [];
-                        let index = 0;
-                        if(isJoker(tile)){
-                            for (const tuples of jokerValue) {
-                                if(tuples[0] === tile){
-                                    index = tuples[1] - 1;
-                                }
-                            }
-                        } else {
-                            index = parseInt(tileNumber) - 1;
-                        }
-
-                        if (!currentArray || currentArray[index] !== '0') {
-                            canFit = false;
-                            break;
-                        }
-                    }
-                    if (canFit) {
-                        targetArrayIndex = arrayIndex;
-                        break;
-                    }
-                }
-                if (targetArrayIndex !== -1) {
-                    const boardCopy = structuredClone(simulatedBoard);
-
-                    for (const tile of moveData) {
-                        const [, tileNumber] = tile?.split('-') || [];
-                        let index = 0;
-                        if(isJoker(tile)){
-                            for (const tuples of jokerValue) {
-                                if(tuples[0] === tile){
-                                    index = tuples[1] - 1;
-                                }
-                            }
-                        } else {
-                            index = parseInt(tileNumber) - 1;
-                        }
-
-                        boardCopy[2][startIndex + targetArrayIndex][index] = tile;
-
-                        const indexToRemove = boardCopy[4].indexOf(tile);
-                        if (indexToRemove !== -1) {
-                            boardCopy[4].splice(indexToRemove, 1);
-                        }
-                    }
-
-                    simulatedBoard = boardCopy;
-                }
-            }
-        }
-        moveReducer(board,simulatedBoard);
-        const endLocations = getTileLocationsFromBoard(simulatedBoard);
-        const unorderedTileMovements = getTileMovements(startLocations, endLocations);
-        const openTile = findOpenSpot(board,simulatedBoard);
-        const orderedtileMovements = reorderTileMovements(unorderedTileMovements,openTile);
-        const tileMovements = orderedtileMovements.filter(move =>
-            !move.from.startsWith('cpuhand') || tilesFromHand.includes(move.tile)
-        );
-        let currentBoard = structuredClone(board);
-        for (const move of tileMovements) {
-            const { tile, from, to } = move;
-
-            const fromLoc = getTileLocationParts(from);
-            const toLoc = getTileLocationParts(to);
-
-            if (fromLoc.type === 'group') {
-                const { sectionIndex, groupIndex, tileIndex } = fromLoc;
-                currentBoard[sectionIndex][groupIndex][tileIndex] = '0';
-            } else if (fromLoc.type === 'run') {
-                currentBoard[2][fromLoc.runIndex][fromLoc.tileIndex] = '0';
-            } else if (fromLoc.type === 'cpuhand') {
-                const cpuHand = currentBoard[4];
-                const tileIndex = cpuHand.indexOf(tile);
-                if (tileIndex !== -1) {
-                    cpuHand.splice(tileIndex, 1);
-                }
-            }
-            setBoard(structuredClone(currentBoard));
-            const fromElem = document.querySelector(`[data-location="${from}"]`)
-                || document.querySelector('.computer-rack');
-            const toElem = document.querySelector(`[data-location="${to}"]`);
-
-            if (fromElem && toElem) {
-                await new Promise(resolve =>
-                    flyTileBetweenContainers({
-                        tile,
-                        fromElem,
-                        toElem,
-                        onComplete: resolve
-                    })
-                );
-                placeAudio.play(); //this place audio is 0.41 seconds so the animation needs to be longer for the audio to not bug out
-            }
-
-            if (toLoc.type === 'group') {
-                const { sectionIndex, groupIndex, tileIndex } = toLoc;
-                while (currentBoard.length <= sectionIndex) currentBoard.push([]);
-                while (currentBoard[sectionIndex].length <= groupIndex) currentBoard[sectionIndex].push([]);
-                while (currentBoard[sectionIndex][groupIndex].length <= tileIndex) currentBoard[sectionIndex][groupIndex].push('0');
-                currentBoard[sectionIndex][groupIndex][tileIndex] = tile;
-            } else if (toLoc.type === 'run') {
-                const { runIndex, tileIndex } = toLoc;
-                if (!currentBoard[2][runIndex]) {
-                    currentBoard[2][runIndex] = [];
-                }
-                if (isJoker(tile)) {
-                    currentBoard[2][runIndex][tileIndex] = tile;
-                } else {
-                    currentBoard[2][runIndex][tileIndex] = 1;
-                }
-            } else if (toLoc.type === 'cpuhand') {
-                currentBoard[4].push(tile);
-            }
-            setBoard(structuredClone(currentBoard));
-        }
-        for (let i = 0; i < simulatedBoard[2].length; i++) {
-            let row = simulatedBoard[2][i];
-            for (let j = 0; j < row.length; j++) {
-                if (row[j] !== '0' && row[j] !== "1-j" && row[j] !== '4-j') {
-                    row[j] = 1;
-                }
-            }
-        }
-        simulatedBoard[4] = cpuHandEnd;
-        console.log("at the end:", simulatedBoard);
-        setBoard(simulatedBoard);
-    };
 
     const onDone = () => {
         const endTurnTime = performance.now();
@@ -441,16 +165,16 @@ function Game() {
         if(!validateBoard(board)){
             console.log("board isnt correct")
             setMsgNotif(t("The board is not correct"))
-            setShowNotif(true);
+            setShowNotif(true)
             recordMove({successfulMove: false, drewFromPile: false});
             return;
         }
 
-        const playedtiles = playedTiles(boardSnapshot[3],board[3]);//step 2 did the player put down a tile? //todo something goes wrong here and the played tiles are not representative
+        const playedtiles = playedTiles(boardSnapshot [3],board[3]);//step 2 did the player put down a tile?
         console.log(playedtiles)
         if(playedtiles.length === 0){
-            setMsgNotif(t("You Have to place or draw a tile!"))
-            setShowNotif(true);
+            setMsgNotif(t("You Have to place or draw a tile!"));
+            setShowNotif(true)
             recordMove({successfulMove: false, drewFromPile: false});
             return;
         } else if(firstTurn){ //if they did and its their first turn -> check if they played 30 points and if they didnt use another players's tiles
@@ -466,7 +190,7 @@ function Game() {
             console.log(count);
             if (count < 30){
                 setMsgNotif(t(">30notify"))
-                setShowNotif(true);
+                setShowNotif(true)
                 console.log("less than 30 on first turn")
                 recordMove({successfulMove: false, drewFromPile: false});
                 return;
@@ -474,11 +198,11 @@ function Game() {
                 if(!validateBoard(firstTurnBoard)){
                     console.log("You used other players' tile to get to 30")
                     setMsgNotif(t("30other-notify"))
-                    setShowNotif(true);
+                    setShowNotif(true)
                     recordMove({successfulMove: false, drewFromPile: false});
                     return;
                 }
-                setFirstTurn(false);
+                setFirstTurn(false)
             }
         }
         if (board[3].every(item => item === 'empty')) {
@@ -504,30 +228,25 @@ function Game() {
         setBoardSnapshot(snapshot);
     };
 
-    const incrementGamesStarted = () => {
-        let gamesStarted = parseInt(localStorage.getItem('gamesStarted') || '0', 10);
-        gamesStarted += 1;
-        localStorage.setItem('gamesStarted', gamesStarted);
-    };
 
     const loadFromStorage = () => {
         const snapshot = JSON.parse(localStorage.getItem("snapshot"));
-        const firstTurn = JSON.parse(localStorage.getItem("firstTurn"));
-        const cpuFirstTurn = JSON.parse(localStorage.getItem("cpuFirstTurn"));
+        const FirstTurn = JSON.parse(localStorage.getItem("firstTurn"));
+        const CpuFirstTurn = JSON.parse(localStorage.getItem("cpuFirstTurn"));
         const pile = JSON.parse(localStorage.getItem("pile"));
         setStartGameTime(performance.now())
 
-        if (snapshot && pile !== null && firstTurn !== null && cpuFirstTurn !== null) {
+        if (snapshot && pile !== null && FirstTurn !== null && CpuFirstTurn !== null) {
             setBoard(snapshot);
             setBoardSnapshot(snapshot);
-            setFirstTurn(firstTurn);
-            setCpuFirstTurn(cpuFirstTurn);
+            setFirstTurn(FirstTurn)
+            setCpuFirstTurn(CpuFirstTurn)
             setPile(pile);
             incrementGamesStarted()
         } else {
             handleStartGame()
             setMsgNotif("Something went wrong while loading the previous game, we have started a new one")
-            setShowNotif(true);
+            setMsgNotif(true)
             return;
         }
         handleStartGame();
@@ -543,190 +262,23 @@ function Game() {
         setBoard(restoredBoard);
     };
 
-    //this is special use effect logic because the draw tile function need to wait for board updates to end before applying animations and setting the new board.
-    const [drawPending, setDrawPending] = useState(false);
-    const [drawIndex, setDrawIndex] = useState(null);
-
     useEffect(() => {
         if (drawPending && drawIndex !== null) {
             actuallyDrawTile(drawIndex, board);
-            setDrawPending(false);
-            setDrawIndex(null);
+            setDrawIndex(null)
+            setDrawPending(false)
         }
     }, [drawPending, drawIndex, board]);
 
-    const drawTile = (index) => {
-        if (index === 3) {
-            setBoard(boardSnapshot);
-            setDrawIndex(index);
-            setDrawPending(true);
-        } else {
-            actuallyDrawTile(index, board);
-        }
-    };
-
-
-    //index is used so you can use this function to add to the cpus hand index = 4 or the players hand index = 3
-    const actuallyDrawTile = async (index, currentBoard) => {
-        const endTurnTime = performance.now();
-        const newPile = [...pile];
-        const drawnTile = newPile.pop();
-        const newHand = [...currentBoard[index]];
-
-        if (!newHand.includes('empty')) {
-            newHand.push('empty');
-            currentBoard[index] = newHand;
-            setBoard([...currentBoard]);
-            await new Promise(resolve => setTimeout(resolve, 0));
-        }
-
-        const indexOfHand = newHand.indexOf('empty');
-
-        const fromElem = document.querySelector('.draw');
-        const loc = index === 3 ? `hand-${indexOfHand}` : index === 4 ? `cpuhand-0` : null;
-        const animationTile = index === 4 ? '0' : drawnTile;
-        const toElem = document.querySelector(`[data-location='${loc}']`);
-
-        if (fromElem && toElem) {
-            await new Promise(resolve =>
-                flyTileBetweenContainers({
-                    tile: animationTile,
-                    fromElem,
-                    toElem,
-                    onComplete: resolve
-                })
-            );
-            placeAudio.play();
-        }
-
-        newHand[indexOfHand] = drawnTile;
-        currentBoard[index] = newHand;
-
-        setBoard([...currentBoard]);
-        setPile(newPile);
-        saveTime(startTurnTime, endTurnTime, "moveTime", { move: "Has drawn a tile" });
-        if (playersTurn) recordMove({ successfulMove: true, drewFromPile: true });
-        setPlayersTurn(!playersTurn);
-    };
-
-
-
-    const onDragStart = (endTime = null) => {
-        if(!hasPlayed){
-            saveTime(startTurnTime,endTime);
-        }
-    }
-
-    const handleStartGame = () => {
-        localStorage.removeItem("thinkTime");
-        localStorage.removeItem(`playerStats_${localStorage.getItem("username")}`);
-        incrementGamesStarted()
-        setPlayerWon(false)
-        setPlayerLose(false)
-        setGameStarted(true)
-        setStartTurnTime(performance.now())
-        setStartGameTime(performance.now())
-
-        const requestFullscreen = (element) => {
-            if (element.requestFullscreen) {
-                element.requestFullscreen();
-            } else if (element.mozRequestFullScreen) {
-                element.mozRequestFullScreen();
-            } else if (element.webkitRequestFullscreen) {
-                element.webkitRequestFullscreen();
-            } else if (element.msRequestFullscreen) {
-                element.msRequestFullscreen();
-            }
-        };
-        if (document.documentElement) {
-            requestFullscreen(document.documentElement);
-        }
-
-    };
-
-    const endGame = (playerScoreValue, cpuScoreValue) => {
-        const endTime = performance.now();
-        const gameDurationSeconds = ((endTime - startGameTime) / 1000).toFixed(2);
-
-        let totalGameTime = JSON.parse(localStorage.getItem('totalGameTime')) || [];
-        totalGameTime.push(parseFloat(gameDurationSeconds));
-        localStorage.setItem('totalGameTime', JSON.stringify(totalGameTime));
-
-        let totalGameScore = JSON.parse(localStorage.getItem('totalGameScore')) || [];
-        totalGameScore.push({ player: playerScoreValue, cpu: cpuScoreValue });
-        localStorage.setItem('totalGameScore', JSON.stringify(totalGameScore));
-    };
-
-    const handleWin = () => {
-        setPlayerWon(true);
-        incrementGamesCompleted();
-        const cpuScoreValue = calculateCpuScore();
-        const playerScoreValue = calculatePlayerScore();
-        setCpuScore(cpuScoreValue);
-        setPlayerScore(playerScoreValue);
-        endGame(playerScoreValue, cpuScoreValue);
-    };
-
-    const handleLose = () => {
-        setPlayerLose(true);
-        incrementGamesCompleted();
-        const playerScoreValue = calculatePlayerScore();
-        const cpuScoreValue = calculateCpuScore();
-        setPlayerScore(playerScoreValue);
-        setCpuScore(cpuScoreValue);
-        endGame(playerScoreValue, cpuScoreValue);
-    };
-
-
-
-    const calculatePlayerScore = () => {
-        const playerHand = board[3];
-        let score = 0;
-        for (const tile of playerHand) {
-            if (tile !== 'empty') {
-                const [, numberStr] = tile.split('-');
-                const number = parseInt(numberStr);
-                if (!isNaN(number)) {
-                    score += number;
-                } else if (tile.endsWith('-j')) {
-                    score += 30; //penalty for a joker left in hand
-                }
-            }
-        }
-        return score;
-    };
-
-    const calculateCpuScore = () => {
-        const cpuHand = board[4];
-        let score = 0;
-        for (const tile of cpuHand) {
-            if (tile !== 'empty') {
-                const [, numberStr] = tile.split('-');
-                const number = parseInt(numberStr);
-                if (!isNaN(number)) {
-                    score += number;
-                } else if (tile.endsWith('-j')) {
-                    score += 30; // penalty for a joker left in hand
-                }
-
-            }
-        }
-        return score;
-    };
-
-    const handleDragEnd = (item) => {
-        console.log("Drag ended without successful drop for item:", item);
-    };
 
     return (
         <DndProvider backend={backendForDND} options={backendOptions}>
-            {/*<ColorPicker color={bgColor} onChange={(color) => setBgColor(color.hex)} />*/}
-            <div className="app" style={{background: bgColor}}>
+            <div className="app" style={{background: DEFAULT_BG_COLOR}}>
                 <CustomDragLayer  />
 
-                <Notification message={msgNotif} isVisible={showNotif} onClose={() => setShowNotif(false)}/>
+                <Notification message={msgNotif} isVisible={showNotif} onClose={() => setShowNotif( false)}/>
                 <div id="tile-overlay-root"></div>
-                <div className={`game-container ${!gameStarted || playerWon ? 'blurred' : ''}`} style={{background: bgColor}}>
+                <div className={`game-container ${!gameStarted || playerWon ? 'blurred' : ''}`} style={{background: DEFAULT_BG_COLOR}}>
                     <ComputerRack cpuhand={board[4]}/>
                     <GameBoard
                         board={board}
@@ -743,7 +295,6 @@ function Game() {
                         firstTurnBoard={firstTurnBoard}
                         removeFromHand={removeFromHand}
                         updateBoardTile = {updateBoardTile}
-                        onDragEnd={handleDragEnd}
                         setBoard={setBoard}
                         setFirstTurnBoard={setFirstTurnBoard}
                         getBoardValue={getBoardValue}
