@@ -8,7 +8,7 @@ import {
     getAverageThinkTime,
     getGamesCompletedByUser,
     getPileMovePercentage,
-    getSuccessfulMovePercentage
+    getSuccessfulMovePercentage, getThinkTimeStd
 } from "../components/Functions/gameplayMetrics";
 
 dayjs.extend(localizedFormat);
@@ -29,7 +29,9 @@ function DevPage() {
     const [gameCompleted, setGameCompleted] = useState(0);
     const [successfulMovePercentage, setSuccessfulMovePercentage] = useState(0);
     const [avgThinkTime, setAvgThinkTime] = useState(null);
+    const [sdThinkTime, setSdThinkTime] = useState(null);
     const [averageGameTime, setAverageGameTime] = useState(null);
+    const [sdGameTime, setSdGameTime] = useState(null);
     const [averagePlayerScore, setAveragePlayerScore] = useState(null);
     const [averageCpuScore, setAverageCpuScore] = useState(null);
     const [gamesStarted, setGamesStarted] = useState(0);
@@ -53,6 +55,7 @@ function DevPage() {
         setGameCompleted(getGamesCompletedByUser);
         setSuccessfulMovePercentage(getSuccessfulMovePercentage);
         setAvgThinkTime(getAverageThinkTime);
+        setSdThinkTime(getThinkTimeStd);
 
         if (savedUsername) setUsername(savedUsername);
         if (savedAge) setAge(savedAge);
@@ -69,6 +72,10 @@ function DevPage() {
                 totalGameTimeArray.reduce((a, b) => a + b, 0) / totalGameTimeArray.length
             ).toFixed(2);
             setAverageGameTime(avg);
+            const mean = totalGameTimeArray.reduce((a, b) => a + b, 0) / totalGameTimeArray.length;
+            const variance = totalGameTimeArray.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / totalGameTimeArray.length;
+            const sd = Math.sqrt(variance).toFixed(2);
+            setSdGameTime(sd);
         }
 
         if (totalGameScoreArray.length > 0) {
@@ -112,7 +119,9 @@ function DevPage() {
             gameCompleted,
             successfulMovePercentage,
             avgThinkTime,
+            sdThinkTime,
             averageGameTime,
+            sdGameTime,
             averagePlayerScore,
             averageCpuScore,
             gamesStarted,
@@ -139,6 +148,7 @@ function DevPage() {
 
             <p><strong>Last Game Time:</strong> {lastGameTime ? `${lastGameTime} seconds` : 'No game played yet'}</p>
             <p><strong>Average Game Time:</strong> {averageGameTime ? `${averageGameTime} seconds` : 'No data yet'}</p>
+            <p><strong>Standard Deviation Game Time:</strong> {sdGameTime ? `${sdGameTime} seconds` : 'No data yet'}</p>
             <p><strong>Average Player Score:</strong> {averagePlayerScore !== null ? averagePlayerScore : 'No data yet'}</p>
             <p><strong>Average CPU Score:</strong> {averageCpuScore !== null ? averageCpuScore : 'No data yet'}</p>
             <p><strong>Pile Move Average:</strong> {pileMoveAVG}%</p>
@@ -146,6 +156,7 @@ function DevPage() {
             <p><strong>Erroneous Move Percentage:</strong> {100 - successfulMovePercentage}%</p>
             <p><strong>Games Completed:</strong> {gameCompleted} games completed</p>
             <p><strong>Average ThinkTime:</strong> {avgThinkTime ? `${avgThinkTime / 1000} seconds` : 'No game played yet'} </p>
+            <p><strong>Standard Deviation ThinkTime:</strong> {sdThinkTime ? `${sdThinkTime / 1000} seconds` : 'No game played yet'} </p>
             <p><strong>Games Started:</strong> {gamesStarted}</p>
             <p><strong>Games Solved Ratio:</strong> {gamesRatio !== null ? `${gamesRatio}%` : 'No data yet'}</p>
 

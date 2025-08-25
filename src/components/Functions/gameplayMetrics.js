@@ -69,6 +69,39 @@ export function getAverageThinkTime(key = "thinkTime") {
     }
 }
 
+/**
+ * Calculates the standard deviation of think times from localStorage
+ * @param {string} key - The key under which think times are stored
+ * @returns {number|null} - The standard deviation in milliseconds, or null if no data
+ */
+export function getThinkTimeStd(key = "thinkTime") {
+    const pseudonym = localStorage.getItem('pseudonym');
+    const keyWithUser = pseudonym ? `${key}_${pseudonym}` : key;
+    const moveTimes = localStorage.getItem(keyWithUser);
+
+    if (!moveTimes) {
+        return null;
+    }
+
+    try {
+        const timings = JSON.parse(moveTimes);
+        if (!Array.isArray(timings) || timings.length === 0) {
+            return null;
+        }
+
+        const mean = timings.reduce((sum, record) => sum + (record.thinkTime || 0), 0) / timings.length;
+        const variance = timings.reduce((sum, record) => {
+            const diff = (record.thinkTime || 0) - mean;
+            return sum + diff * diff;
+        }, 0) / timings.length;
+
+        return Math.sqrt(variance);
+    } catch (error) {
+        console.error('Error parsing timing data:', error);
+        return null;
+    }
+}
+
 
 /**
  * Records a move and updates stats (pile, success, error) for the current user
