@@ -149,6 +149,27 @@ function DevPage() {
         URL.revokeObjectURL(url);
     };
 
+    const handleDownloadAll = () => {
+        const dump = {};
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            const val = localStorage.getItem(key);
+            try {
+                dump[key] = JSON.parse(val);
+            } catch {
+                dump[key] = val;
+            }
+        }
+        const json = JSON.stringify(dump, null, 2);
+        const blob = new Blob([json], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'localStorage_full_dump.json';
+        a.click();
+        URL.revokeObjectURL(url);
+    };
+
     return (
         <div className="dev-page-container">
             <h1>Developer Page</h1>
@@ -183,15 +204,16 @@ function DevPage() {
                     placeholder="Enter new seed"
                 />
                 <Space direction="vertical" size="large" style={{ width: '100%' }}>
-                    <Button
-                        className="enter-button"
-                        onClick={handleEnterClick}
-                    >
+                    <Button className="enter-button" onClick={handleEnterClick}>
                         Enter
                     </Button>
 
                     <Button className="enter-button" onClick={handleDownload}>
                         Download Data as JSON
+                    </Button>
+
+                    <Button className="enter-button" onClick={handleDownloadAll}>
+                        Download Full LocalStorage
                     </Button>
                 </Space>
             </div>
