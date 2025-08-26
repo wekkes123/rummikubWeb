@@ -10,7 +10,7 @@ import {
 } from "./TileMover";
 
 
-import {incrementGamesCompleted, recordMove, saveTime} from "./gameplayMetrics";
+import {incrementGamesCompleted, recordMove, saveTime, recordTilesMoved} from "./gameplayMetrics";
 
 const placeAudio = new Audio("/sounds/place.wav");
 
@@ -296,7 +296,7 @@ export function useGameLogic() {
                         onComplete: resolve
                     })
                 );
-                playPlaceSound() //this place audio is 0.41 seconds so the animation needs to be longer for the audio to not bug out
+                playPlaceSound()
             }
 
             if (toLoc.type === 'group') {
@@ -427,7 +427,7 @@ export function useGameLogic() {
 
     const endGame = (playerScoreValue, cpuScoreValue) => {
         const endTime = performance.now();
-        const gameDurationSeconds = ((endTime - state.startGameTime) / 1000).toFixed(2);
+        const gameDurationSeconds = ((endTime - startGameTime) / 1000).toFixed(2);
 
         let totalGameTime = JSON.parse(localStorage.getItem('totalGameTime')) || [];
         totalGameTime.push(parseFloat(gameDurationSeconds));
@@ -494,6 +494,8 @@ export function useGameLogic() {
     };
 
     return {
+        playerScore,
+        cpuScore,
         boardSnapshot,
         setSeed,
         msgNotif,

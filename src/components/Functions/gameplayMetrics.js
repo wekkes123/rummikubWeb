@@ -180,7 +180,7 @@ export function incrementGamesCompleted() {
 
 /**
  * Gets the number of completed games for the current user
- * @returns {number} - Games completed
+ * @returns {number} - Games completedF
  */
 export function getGamesCompletedByUser() {
     const pseudonym = localStorage.getItem('pseudonym');
@@ -188,4 +188,29 @@ export function getGamesCompletedByUser() {
 
     const key = `gamesCompleted_${pseudonym}`;
     return parseInt(localStorage.getItem(key) || '0', 10);
+}
+
+/**
+ * Records how many tiles a user moved in a turn
+ * @param {number} tilesMoved - Number of tiles moved in this turn
+ * @returns {Array} - The updated array of tiles moved per turn
+ */
+export function recordTilesMoved(tilesMoved) {
+    const pseudonym = localStorage.getItem('pseudonym');
+    const key = pseudonym ? `tilesMoved_${pseudonym}` : "tilesMoved";
+
+    let tilesArray = [];
+    const existing = localStorage.getItem(key);
+    if (existing) {
+        try {
+            tilesArray = JSON.parse(existing);
+            if (!Array.isArray(tilesArray)) {
+                tilesArray = [];
+            }
+        } catch {
+            tilesArray = [];
+        }
+    }
+    tilesArray.push(tilesMoved);
+    localStorage.setItem(key, JSON.stringify(tilesArray));
 }

@@ -14,11 +14,6 @@ import {
 dayjs.extend(localizedFormat);
 dayjs.locale('en');
 
-/**
- * makes a custom developer page with settings and biomarkers
- * @returns {*}
- * @constructor
- */
 function DevPage() {
     const [username, setUsername] = useState('');
     const [age, setAge] = useState('');
@@ -36,6 +31,8 @@ function DevPage() {
     const [averageCpuScore, setAverageCpuScore] = useState(null);
     const [gamesStarted, setGamesStarted] = useState(0);
     const [gamesRatio, setGamesRatio] = useState(null);
+    const [avgTilesMoved, setAvgTilesMoved] = useState(null);
+    const [sdTilesMoved, setSdTilesMoved] = useState(null);
 
     useEffect(() => {
         const savedUsername = localStorage.getItem('pseudonym');
@@ -51,11 +48,11 @@ function DevPage() {
         const totalGameScoreArray = JSON.parse(localStorage.getItem('totalGameScore')) || [];
         const storedGamesStarted = parseInt(localStorage.getItem('gamesStarted') || '0', 10);
 
-        setPileMoveAVG(getPileMovePercentage);
-        setGameCompleted(getGamesCompletedByUser);
-        setSuccessfulMovePercentage(getSuccessfulMovePercentage);
-        setAvgThinkTime(getAverageThinkTime);
-        setSdThinkTime(getThinkTimeStd);
+        setPileMoveAVG(getPileMovePercentage());
+        setGameCompleted(getGamesCompletedByUser());
+        setSuccessfulMovePercentage(getSuccessfulMovePercentage());
+        setAvgThinkTime(getAverageThinkTime());
+        setSdThinkTime(getThinkTimeStd());
 
         if (savedUsername) setUsername(savedUsername);
         if (savedAge) setAge(savedAge);
@@ -96,6 +93,18 @@ function DevPage() {
         } else {
             setGamesRatio(null);
         }
+
+        const tilesKey = savedUsername ? `tilesMoved_${savedUsername}` : "tilesMoved";
+        const tilesArray = JSON.parse(localStorage.getItem(tilesKey)) || [];
+        if (Array.isArray(tilesArray) && tilesArray.length > 0) {
+            const mean = tilesArray.reduce((a, b) => a + b, 0) / tilesArray.length;
+            const variance = tilesArray.reduce((s, v) => s + Math.pow(v - mean, 2), 0) / tilesArray.length;
+            setAvgTilesMoved(mean.toFixed(2));
+            setSdTilesMoved(Math.sqrt(variance).toFixed(2));
+        } else {
+            setAvgTilesMoved(null);
+            setSdTilesMoved(null);
+        }
     }, []);
 
     const handleSeedChange = (e) => {
@@ -125,7 +134,9 @@ function DevPage() {
             averagePlayerScore,
             averageCpuScore,
             gamesStarted,
-            gamesRatio
+            gamesRatio,
+            avgTilesMoved,
+            sdTilesMoved
         };
 
         const json = JSON.stringify(data, null, 2);
@@ -159,6 +170,8 @@ function DevPage() {
             <p><strong>Standard Deviation ThinkTime:</strong> {sdThinkTime ? `${sdThinkTime / 1000} seconds` : 'No game played yet'} </p>
             <p><strong>Games Started:</strong> {gamesStarted}</p>
             <p><strong>Games Solved Ratio:</strong> {gamesRatio !== null ? `${gamesRatio}%` : 'No data yet'}</p>
+            <p><strong>Average Tiles Moved per Turn:</strong> {avgTilesMoved !== null ? avgTilesMoved : 'No data yet'}</p>
+            <p><strong>Standard Deviation Tiles Moved:</strong> {sdTilesMoved !== null ? sdTilesMoved : 'No data yet'}</p>
 
             <div className="seed-input-container">
                 <label htmlFor="seed">Change Seed:</label>

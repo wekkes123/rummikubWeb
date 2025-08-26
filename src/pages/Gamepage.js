@@ -17,7 +17,7 @@ import GameEndScreen from "../components/WinScreen";
 
 import { validateBoard, playedTiles, findJokerValue } from "../components/Functions/gamePlayFunctions";
 
-import {saveTime, recordMove} from "../components/Functions/gameplayMetrics";
+import {saveTime, recordMove, recordTilesMoved} from "../components/Functions/gameplayMetrics";
 import {useGameLogic} from "../components/Functions/useGameLogic";
 
 import '../App.css';
@@ -35,6 +35,8 @@ const backendOptions = { enableMouseEvents: true };
  */
 function Game() {
     const {
+        playerScore,
+        cpuScore,
         boardSnapshot,
         setSeed,
         msgNotif,
@@ -209,6 +211,7 @@ function Game() {
             handleWin()
         }
         console.log("ending turn")
+        recordTilesMoved(playedtiles.length)
         recordMove({successfulMove: true, drewFromPile: false});
         saveTime(startTurnTime, endTurnTime, "moveTime",{move:"Played 1 or more tiles"});
         setPlayersTurn(false)
