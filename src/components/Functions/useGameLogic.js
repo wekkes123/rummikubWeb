@@ -17,7 +17,7 @@ const placeAudio = new Audio("/sounds/place.wav");
 //function for playing the place sound and resetting the playback position
 const playPlaceSound = () => {
     placeAudio.currentTime = 0;
-    placeAudio.play();
+    //placeAudio.play();
 };
 
 
@@ -36,7 +36,7 @@ export function useGameLogic() {
     const [showNotif, setShowNotif] = useState(false);
     const [hasPlayed, setHasPlayed] = useState(false);
     const [msgNotif, setMsgNotif] = useState("hello");
-    const [seed, setSeed] = useState('');
+    const [seed, setSeed] = useState('ihvj');
     const [drawPending, setDrawPending] = useState(false);
     const [drawIndex, setDrawIndex] = useState(null);
 

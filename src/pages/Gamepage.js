@@ -87,7 +87,7 @@ function Game() {
     useEffect(()=>{
         let savedSeed = localStorage.getItem('seed');
         if (!savedSeed) {
-            savedSeed = 'default_seed';
+            savedSeed = 'thesis_demo';
             localStorage.setItem('seed', savedSeed);
         }
         if (savedSeed) setSeed(savedSeed);
@@ -99,6 +99,42 @@ function Game() {
             const newPile = [...pile];
             const newPlayerHand = [];
             const newCpuHand = [];
+
+            /*newPlayerHand.push("1-7");
+            newPlayerHand.push("1-8");
+            newPlayerHand.push("1-9");
+
+            newPlayerHand.push("2-6");
+            newPlayerHand.push("4-6");
+            newPlayerHand.push("1-6");
+
+            newPlayerHand.push("4-10");
+            newPlayerHand.push("4-11");
+
+            newCpuHand.push("2-1")
+            newCpuHand.push("2-2")
+            newCpuHand.push("2-3")
+
+            newCpuHand.push("3-9")
+            newCpuHand.push("2-9")
+            newCpuHand.push("4-9")
+            newCpuHand.push("3-5")
+
+            const toRemove = [
+                "1-7", "1-8", "1-9",
+                "2-6", "4-6", "1-6",
+                "4-10", "4-11",
+                "2-1", "2-2", "2-3",
+                "3-9", "2-9", "4-9", "3-5"
+            ];
+
+            for (const tile of toRemove) {
+                const idx = newPile.indexOf(tile);
+                if (idx !== -1) {
+                    newPile.splice(idx, 1);
+                }
+            }*/
+
 
             //pick tiles for playerhand
             for (let i = 0; i < 14; i++) {

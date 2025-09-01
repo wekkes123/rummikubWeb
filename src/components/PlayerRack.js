@@ -31,7 +31,7 @@ function PlayerRack({ playerhand, onDragEnd, tilesAreDraggable = true, setBoard,
             newBoard[3][dropData.handIndex] = tileId;
             newBoard[3][startHandIndex] = dropTile;
             setBoard(newBoard);
-            placeTileAudio.play();
+            //placeTileAudio.play();
             return;
         }
 
@@ -68,7 +68,7 @@ function PlayerRack({ playerhand, onDragEnd, tilesAreDraggable = true, setBoard,
         }
         setBoard(newBoard);
         setFirstTurnBoard(firstTurnBoard);
-        placeTileAudio.play();
+        //placeTileAudio.play();
     };
 
     const handleTileDragEnd = (item) => {

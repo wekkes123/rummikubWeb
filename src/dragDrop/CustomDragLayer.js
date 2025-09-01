@@ -2,28 +2,63 @@ import React from 'react';
 import { useDragLayer } from 'react-dnd';
 import Tile from '../components/Tile';
 
-/**
- * creates a custom drag layer on top of everything
- * @returns {*|null}
- * @constructor
- */
 function CustomDragLayer() {
-    const { itemType, isDragging, item, initialOffset, currentOffset } = useDragLayer((monitor) => ({
+    const {
+        itemType,
+        isDragging,
+        item,
+        initialOffset,
+        currentOffset,
+        initialClientOffset,
+    } = useDragLayer((monitor) => ({
         item: monitor.getItem(),
         itemType: monitor.getItemType(),
         initialOffset: monitor.getInitialSourceClientOffset(),
         currentOffset: monitor.getSourceClientOffset(),
+        initialClientOffset: monitor.getInitialClientOffset(),
         isDragging: monitor.isDragging(),
     }));
 
-    if (!isDragging || !currentOffset) {
-        return null;
-    }
+    const previewRef = React.useRef(null);
+    const loggedOnceRef = React.useRef(false);
 
-    // Calculate position styles for the dragged item
+    const grabOffset = React.useMemo(() => {
+        if (!initialOffset || !initialClientOffset) return null;
+        return {
+            x: initialClientOffset.x - initialOffset.x,
+            y: initialClientOffset.y - initialOffset.y,
+        };
+    }, [initialOffset, initialClientOffset]);
+
+    React.useEffect(() => {
+        if (isDragging && !loggedOnceRef.current && grabOffset) {
+            requestAnimationFrame(() => {
+                const rect = previewRef.current?.getBoundingClientRect();
+                if (rect) {
+                    const entry = {
+                        x: Math.round(grabOffset.x),
+                        y: Math.round(grabOffset.y),
+                        width: Math.round(rect.width),
+                        height: Math.round(rect.height),
+                    };
+                    const key = 'tile_click_accuracy';
+                    const prev = localStorage.getItem(key);
+                    const list = prev ? JSON.parse(prev) : [];
+                    list.push(entry);
+                    localStorage.setItem(key, JSON.stringify(list));
+                    loggedOnceRef.current = true;
+                }
+            });
+        }
+        if (!isDragging) {
+            loggedOnceRef.current = false;
+        }
+    }, [isDragging, grabOffset]);
+
+    if (!isDragging || !currentOffset) return null;
+
     const getItemStyles = () => {
         const { x, y } = currentOffset;
-
         const transform = `translate(${x}px, ${y}px)`;
         return {
             transform,
@@ -53,7 +88,7 @@ function CustomDragLayer() {
     };
 
     return (
-        <div style={getItemStyles()}>
+        <div ref={previewRef} style={getItemStyles()}>
             {renderItem()}
         </div>
     );
